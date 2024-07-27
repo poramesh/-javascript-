@@ -1,0 +1,150 @@
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+
+
+This code sets up a Node.js environment to read input from the standard input (stdin), process it, and then perform some operations on the input.
+
+_______________________
+Breakdown of the Code
+________________________
+
+Strict Mode:
+'use strict';
+
+This statement enables strict mode which helps catch common coding errors and "unsafe" actions such as defining global variables accidentally.
+
+____________________________
+Setting up Input Handling:
+_________________________
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+process.stdin.resume();: This method resumes the input stream which is paused by default.
+process.stdin.setEncoding('utf-8');: This sets the character encoding for the input stream to UTF-8, which is a standard encoding for text data.
+
+_____________________________
+Variables for Input Handling:
+_____________________________
+
+let inputString = '';
+let currentLine = 0;
+
+inputString: This will store the entire input as a single string.
+currentLine: This keeps track of the current line number being processed.
+
+_____________________
+Reading Input Data:
+___________________
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+This sets up an event listener on the data event of stdin. Whenever data is received (when the user inputs data), it is appended to the inputString.
+
+________________________
+Handling End of Input:
+_________________________
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+This sets up an event listener for the end event of stdin, which is triggered when the input stream is closed (e.g., the user finishes inputting data).
+When this happens:
+inputString is trimmed to remove any leading or trailing whitespace.
+It is then split by newline characters (\n) into an array of strings, each representing a line of input.
+Each line is further trimmed of any leading or trailing whitespace.
+Finally, the main() function is called to process the input data.
+_______________
+Reading a Line:
+___________________
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+The readLine function returns the current line from inputString and increments the currentLine counter. This function is useful for processing each
+line of input one at a time in the main() function.
+__________________________
+How to Use This Code
+__________________________
+
+This code is useful for competitive programming or scenarios where you need to read multiple lines of input from the user. Here’s how it typically works:
+
+The user inputs multiple lines of data.
+The end event is triggered once the user has finished inputting data.
+
+The main() function is then called to process the input data.
+
+Suppose the user inputs the following:
+3
+Hello
+World
+!
+
+After the end event, inputString will be an array: ['3', 'Hello', 'World', '!'].
+You can then process this array in the main() function by calling readLine() to get each line of input.
+
+Adding the main Function
+For completeness, here’s a simple example of what the main() function might look like:
+
+
+function main() {
+    const numberOfLines = parseInt(readLine(), 10); #converts this string into an integer, interpreting it as a decimal (base 10) number.
+    for (let i = 0; i < numberOfLines; i++) {
+        console.log(readLine());
+    }
+}
+
+Consider the input:
+3
+Hello
+World
+!
+
+Here's how the conversion works:
+readLine() reads the first line '3'.
+parseInt('3', 10) converts the string '3' to the integer 3.
+This way, numberOfLines correctly stores the number of lines as an integer, which is crucial for further processing in the main function.
+
+
+If the input is:
+3
+Hello
+World
+!
+
+The output would be:
+Hello
+World
+!
+
+This is a basic setup often used in coding competitions or scripts where input is provided via standard input.
