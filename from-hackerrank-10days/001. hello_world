@@ -1,0 +1,17 @@
+
+
+function greeting(parameterVariable) {
+    // This line prints 'Hello, World!' to the console:
+    console.log('Hello, World!')
+    console.log(parameterVariable)
+
+
+}
+
+greeting("pooja")
+
+//
+output:
+node /tmp/fYEsua5VYG.js
+Hello, World!
+pooja
