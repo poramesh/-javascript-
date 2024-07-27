@@ -1,0 +1,8 @@
+string = "javascriptloops"
+con = ""
+for i in string:
+    if i in ['a','e','i','o','u']:
+        print(i);
+    else: con = con+i
+c=list(con)
+print(*c,sep='\n')
