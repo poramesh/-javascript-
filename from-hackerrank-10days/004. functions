@@ -1,0 +1,234 @@
+________________
+Functions
+_________________
+Functions in JavaScript are declared using the function keyword. A function declaration creates a function that's a Function object having all the 
+properties, methods, and behaviors of Function objects. By default, functions return the value undefined; to return any other value,
+the function must have a return statement that consists of the return keyword followed by the value to
+be returned (this can be a literal value, a variable, or even a call to a function).
+
+example:
+Take some time to review the code below that declares functions and prints their return values.
+
+Input Format
+
+The first line contains a string denoting name.
+The second line contains two space-separated integers, a and b, to be summed.
+
+'use strict';
+process.stdin.on('data', function (data) {
+    let input = String(data).split(new RegExp("[\n ]+"));
+    main(input[0], +(input[1]), +(input[2]));
+});
+/**** Ignore above this line. ****/
+​
+function greetings(name) {
+    console.log("Hello, " + name);
+}
+
+function sum(a, b) {
+    return a + b;
+}
+
+function main(name, a, b) {
+    greetings(name);
+    console.log(sum(a, b));
+}
+
+i/p
+pooja
+8 2
+
+o/p
+Hello, pooja
+10
+_______________________
+The Function Expression
+________________________
+A function expression is very similar to (and has almost the same syntax as) a function statement. The main difference between a function expression and a
+function statement is the function name, which can be omitted from a function expression to create an anonymous function. Function expressions
+are often used as Immediately Invoked Function Expressions (IIFEs), which run as soon as they're defined.
+
+The code below demonstrates an unnamed function expression.
+
+Input Format: A single integer denoting x .
+
+'use strict';
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+    /**
+    *   Defines an unnamed function and assigns it to a variable named square. 
+    *   @param {Number} x
+    *   @returns {Number} The value of argument squared.         
+    **/
+    var square = function(x) {
+        return x * x;
+    };
+
+    // Print the value returned by passing input as x to the 
+    // anonymous function referenced by variable square
+    console.log(square(input));
+}
+
+i/p
+4
+
+o/p
+16
+
+
+________________________
+Named function expression
+________________________
+The code below demonstrates a named function expression.
+
+Input Format: Two space-separated integers describing the respective values of fibn  and factn .
+
+'use strict';
+process.stdin.on('data', function (data) {
+    let input = String(data).split(new RegExp("[\n ]+"));
+    main(+(input[0]), +(input[1]));
+});
+/**** Ignore above this line. ****/
+
+function main(factN, fibN) {
+
+    /**
+    *   Defines a named recursive function as a property of the math variable. 
+    *   @param {Number} n
+    *   @returns {Number} The value of n factorial.         
+    **/
+    var math = {
+        // Declare the factorial property
+        factorial: 
+            // Declare the function as the property's value
+            function factorial(n) {
+                if (n > 1) {
+                    return n * factorial(n - 1);
+                }
+                // Returns 1 if n <= 1
+                return 1;
+            }
+    };
+
+    /**
+    *   Defines a named recursive function referenced by the fib variable. 
+    *   @param {Number} n
+    *   @returns {Number} The value of fibonacci(n).         
+    **/
+    var fib = function fibonacci(n){
+        if (n > 2) {
+            return fibonacci(n - 1) + fibonacci(n - 2);
+        }
+        else if (n < 1) {
+            return 0;
+        }
+        // else, return 1
+        return 1;
+    }
+
+    // Print the value returned by passing factN as n to the 
+    // function referenced by variable math:
+    console.log(math.factorial(factN));
+    // and by passing fibN as n to the function referenced by variable fib:
+    console.log(fib(fibN));
+
+}
+
+
+Factorial of a numnber using recursion:
+
+fact(5) -> 5 * fact(4) -> 4 * fact(3) -> 3 * fact(2) -> 2 * fact(1)  (Base Case:fact(1)=1)
+fact(5) -> 5 * fact(4) -> 4 * fact(3) -> 3 * fact(2) <- 2
+fact(5) -> 5 * fact(4) -> 4 * fact(3) <- 6 
+fact(5) -> 5 * fact(4) <- 24 
+fact(5) = 120 
+so factorial of 5 is 120.
+
+
+Recursion:
+
+This is an extremely important algorithmic concept that involves splitting a problem into two parts: a base case and a recursive case. 
+The problem is divided into smaller subproblems which are then solved recursively until such time as they are small enough and meet
+some base case; once the base case is met, the solutions for each subproblem are combined and their result is the answer to the entire problem.
+
+If the base case is not met, the function's recursive case calls the function again with modified values. The code must be structured in
+such a way that the base case is reachable after some number of iterations, meaning that each subsequent modified value should bring you
+closer and closer to the base case; otherwise, you'll be stuck in the dreaded infinite loop!
+
+It's important to note that any task that can be accomplished recursively can also be performed iteratively (i.e., through a
+sequence of repeatable steps). Recursive solutions tend to be easier to read and understand than iterative ones, but there are often
+performance drawbacks associated with recursive solutions that you're going to want to evaluate on a case-by-case basis. Typically, we 
+use recursion when each recursive call significantly reduces the size of the problem (e.g., if we can halve the dataset during each recursive call). 
+Regardless of the advisability of recursively solving a problem, it's extremely important to practice and understand how to recursively solve problems.
+
+example:
+Two-space seprated integers to be multiplied.
+
+import java.util.*;
+
+class Solution {
+    // Multiply 'n' by 'k' using addition:
+    private static int nTimesK(int n, int k) {
+        // Print current value of n
+        System.out.println("n: " + n);
+
+        // Recursive Case
+        if(n > 1) { 
+            return k + nTimesK(n - 1, k);
+        }
+        // Base Case n = 1
+        else { 
+            return k;
+        }
+    }
+    public static void main(String[] args) {
+    	Scanner scanner = new Scanner(System.in);
+        int result = nTimesK(scanner.nextInt(), scanner.nextInt());
+        scanner.close();
+        System.out.println("Result: " + result);
+    }
+}
+
+i/p: 4 3
+o/p: 12
+
+4 times 3
+3
+3+3
+3+3+3
+3+3+3+3
+
+
+nTimesK(4,3) -> 3 + nTimesK(3,3) -> 3 + nTimesK(2,3) -> 3 + nTimesK(1,3) = (base(1,3) = return 3
+nTimesK(4,3) -> 3 + nTimesK(3,3) -> 3 + nTimesK(2,3) <-6
+nTimesK(4,3) -> 3 + nTimesK(3,3) <- 9
+nTimesK(4,3) <- 12
+
+
+
+js task and code:
+
+Sample Input 0
+4
+Sample Output 0
+24
+
+function factorial(n) {
+    if (n > 1) {
+        return n * factorial(n - 1);
+    } else {
+        return 1;
+    }
+}
+
+// Test the function
+console.log(factorial(5));  // Output: 120
+
+
+
+
+
