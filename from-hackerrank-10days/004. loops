@@ -6,3 +6,5 @@ for i in string:
     else: con = con+i
 c=list(con)
 print(*c,sep='\n')
+we dont have to conver it to list, we can do it directly.
+print(*con, sep='\n')
