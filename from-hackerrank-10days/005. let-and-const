@@ -1,0 +1,178 @@
+______________________________
+Variable Declaration Keywords
+______________________________
+
+var
+We use the var keyword to declare variables. The scope of a variable declared using this keyword is within the context wherever it was declared. 
+For variables declared outside any function, this means they are globally available throughout the program. For variables declared within a
+function, this means they are only available within the function itself.
+
+"use strict"
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+    var a = input;
+
+    // If 'a' is odd:
+    if (a % 2 == 1) {
+        var a = input + 1;
+        console.log("if(a): " + a);
+    }
+
+    console.log("main(a): " + a);
+}
+
+i/p: 11
+o/p: 
+if(a): 12
+main(a): 12
+
+i/p: 12
+o/p: main(a): 12
+
+
+let
+We use the let keyword to declare variables that are limited in scope to the block, statement, or expression in which they are used.
+This is unlike the var keyword, which defines a variable globally or locally to an entire function regardless of block scope.
+
+
+"use strict"
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+    let a = input;
+
+    // If 'a' is odd:
+    if (a % 2 == 1) {
+        // Increment 'a' by 1
+        let a = input + 1;
+        console.log("if(a): " + a);
+    }
+
+    console.log("main(a): " + a);
+}
+
+
+i/p: 11
+o/:
+if(a): 12
+main(a): 11
+
+when var is global and let is local inside the main, then if(a): 12 and main(a): 11
+when let is golbal and and a is not initialised again with let then both the values will be same. if(a): 12 and main(a):12
+
+antoher ex:
+"use strict"
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+    let a = input;
+
+    // This will throw "SyntaxError: Identifier 'a' has already been declared"
+    let a = input + 1;
+
+    console.log(a); 
+}
+
+o/p : error
+
+______
+const
+________
+We use the const keyword to create a read-only reference to a value, meaning the value referenced by this variable cannot be reassigned.
+Because the value referenced by a constant variable cannot be reassigned, JavaScript requires that 
+constant variables always be initialized.
+
+"use strict"
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+    const a = input;
+
+    // This will throw "SyntaxError: Missing initializer in const declaration"
+    const b; 
+
+    console.log(a);
+}
+
+i/P: 11
+o/p: error
+
+
+
+js:
+
+Given the radius = 2.6 , we calculate the following:
+area = pi * r^2 = 21.237166 
+perimeter = 2 * pi * r = 16.336281
+We then print area as our first line of output and perimeter as our second line of output.
+
+Sample Input 
+2.6
+Sample Output
+21.237166338267002
+16.336281798666924
+
+
+code:
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+    
+
+function main() {
+    // Write your code here. Read input using 'readLine()' and print output using 'console.log()'.
+    //const pi=22/7
+     const pi = Math.PI;
+     let radius= +(readLine());
+    
+    // Print the area of the circle:
+    console.log(radius*radius*pi);
+    console.log(2*pi*radius)
+    
+    // Print the perimeter of the circle:
+
+    try {    
+        // Attempt to redefine the value of constant variable PI
+        PI = 0;
+        // Attempt to print the value of PI
+        console.log(PI);
+    } catch(error) {
+        console.error("You correctly declared 'PI' as a constant.");
+    }
+}
+
