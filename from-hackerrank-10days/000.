@@ -148,3 +148,93 @@ World
 !
 
 This is a basic setup often used in coding competitions or scripts where input is provided via standard input.
+
+)_________________________
+python equivalent of this.
+___________________________
+
+let's say you want to read a list of numbers from input, convert them to integers, and print their sum.
+
+import sys
+
+inputString = sys.stdin.read().strip().split('\n')
+currentLine = 0
+
+def readLine():
+    global currentLine
+    line = inputString[currentLine]
+    currentLine += 1
+    return line
+
+def main():
+    # Example main logic: Sum a list of numbers from input
+    n = int(readLine())  # Read the first line which contains the number of subsequent lines
+    total_sum = 0
+    
+    for _ in range(n):
+        number = int(readLine())
+        total_sum += number
+    
+    print(total_sum)
+
+if __name__ == "__main__":
+    main()
+
+Explanation:
+
+Reading the number of input lines:
+n = int(readLine()): Reads the first line which indicates the number of subsequent lines to be read.
+
+Processing each line:
+A loop runs n times, reading each line, converting it to an integer, and adding it to total_sum.
+
+Printing the result:
+print(total_sum): Outputs the sum of the numbers.
+
+Example Input:
+3
+10
+20
+30
+Example Output:
+60
+
+
+javascript equivalent of this.
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function main() {
+    // Example main logic: Sum a list of numbers from input
+    const n = parseInt(readLine(), 10);  // Read the first line which contains the number of subsequent lines
+    let total_sum = 0;
+    
+    for (let i = 0; i < n; i++) {
+        const number = parseInt(readLine(), 10);
+        total_sum += number;
+    }
+    
+    console.log(total_sum);
+}
