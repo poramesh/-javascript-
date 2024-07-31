@@ -1,0 +1,450 @@
+JavaScript Comparison Operators
+_____________________
+Equality Operators
+_________________
+Equality (==)
+
+The equality operator is a binary operator that compares two operands, returning true if they are deemed to be equal. It works by converting 
+the operands if they are not of the same type, then applying strict comparison. If both operands are primitive types, 
+it will compare their values (i.e., 1 == 1 evaluates to true). If both operands are objects, then JavaScript compares their internal references; 
+this means it checks to see if both operands point to the same object (i.e., location) in memory. 
+
+
+
+In JavaScript, the == operator performs type coercion before comparing values. Here's the explanation for each of the console log statements:
+
+
+console.log(1 == 1); //true (Both values are numbers and equal, so the result is true.)
+console.log(1 == "1"); //true (The string "1" is coerced to the number 1, and 1 equals 1, so the result is true.)
+console.log('1' == 1); //true (Similar to the previous example, the string '1' is coerced to the number 1, resulting in true.)
+console.log(0 == false); //true (The boolean false is coerced to the number 0, so 0 equals 0, resulting in true.)
+console.log(0 == null); //false (null is only equal to undefined when using == and does not coerce to any other value, so the result is false.)
+console.log(0 == undefined); //false (Similar to the previous case, undefined does not coerce to 0, resulting in false.)
+console.log(null == undefined); //true (null and undefined are equal to each other when using ==, so the result is true.)
+
+Inequality (!=)
+
+The inequality operator is a binary operator that returns true if the operands are not equal. If the two operands are of different types,
+JavaScript attempts to convert the operands to an appropriate type to compare them. If both operands are objects, then JavaScript compares the internal
+references to see if they are not equal (i.e., refer to different objects in memory).
+
+console.log(1 != 1); //false
+console.log(1 != "1"); //false
+console.log('1' != 1); //false
+console.log(0 != false); //fasle
+console.log(0 != null); //true
+console.log(0 != undefined); //true
+console.log(null != undefined); //false
+
+comparing objects
+
+we have two references that point to different objects taht look the same:
+
+var1!-var2
+
+var1 ->object in memory
+
+var2 -> object in memory
+
+
+we have two referenves that point to the same object:
+
+var1==var2
+
+var1------>    
+           --->object in memory
+var2------>
+
+
+// This creates a custom object named MyObject
+class MyObject {
+    // Each object of this type has an attribute named 'magic'
+    constructor(magic) {
+        this.magic = magic;
+    }
+    // We'll discuss this syntax in more detail later
+}
+
+// Create two objects 
+var variable1 = new MyObject(":)");
+var variable2 = new MyObject(":)");
+
+// Print the result of an equality comparison
+console.log( variable1.magic + " == " + variable2.magic
+            + " evaluates to "
+            + (variable1 == variable2)
+            );
+
+// Set variable1 to reference the same object as variable2
+variable1 = variable2;
+// Print the result of an equality comparison
+console.log( variable1.magic + " == " + variable2.magic
+            + " evaluates to "
+            + (variable1 == variable2)
+            );
+
+o/p
+:) == :) evaluates to false
+:) == :) evaluates to true
+
+Identity or Strict Equality (===)
+
+The identity operator returns true if both of the following conditions are satisfied:
+>The operands are strictly equal.
+>The operands are of the same type.
+
+console.log(1 === 1); //true
+console.log(1 === "1"); //false
+console.log('1' === 1); //false
+console.log(0 === false); //false
+console.log(0 === null); //false
+console.log(0 === undefined); //false
+console.log(null === undefined); //false
+
+Non-Identity or Strict Inequality (!==)
+
+The non-identity operator returns true if the operands satisfy any of the following conditions:
+>The operands are not equal.
+>The operands are not of the same type.
+
+console.log(1 !== 1); //false
+console.log(1 !== "1"); //true
+console.log('1' !== 1); //true
+console.log(0 !== false); //true
+console.log(0 !== null); //true
+console.log(0 !== undefined); //true
+console.log(null !== undefined); //true
+
+_____________________
+Relational Operators
+______________________
+
+console.log(5 > 5); //false (greator than operator)
+console.log(5 >= 5); //true (geater than or equal operator)
+console.log(7 < 6); //false (Less than operator)
+console.log(4 <= 6); //true (Less Than or Equal Operator (<=))
+
+_________________
+Logical Operators
+__________________
+
+console.log((5 < 7) && (4 < 4)) //false
+console.log((5 < 7) && (4 >= 4)) //true(logical and)
+console.log((5 < 7) || (4 < 4))  //true
+console.log((5 >= 7) || (4 > 4)) //false (logical or)
+console.log(!(2**3)) (logical not) //false (logical not)
+
+_________________________
+Short-circuit evaluation
+_________________________
+As logical expressions are evaluated from left to right, they are tested for possible short-circuit evaluation using the following rules:
+
+false && expression is short-circuit evaluated to false.
+true || expression is short-circuit evaluated to true.
+
+___________________
+if-else statements
+___________________
+
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function classifyAge(age) {
+    /* First, let's check the lower bound on our age range: */
+    if (age < 13) {
+        return age + " is a child.";
+    }
+    /* If this condition is checked, we know that age < 13 is false: */
+    else if (age < 20) {
+        return age + " is a teenager.";
+    }
+    /* If this condition is checked, we know both of these are false:
+    *   age < 13 is false
+    *   age < 20 is false
+    *  This tells us that either age >= 20 is true, or age is not a number:
+    */
+    else if (age >= 20){
+        return age + " is an adult.";
+    }
+    /* The input wasn't a number. */
+    else {
+        return "Your input must be an integer.";
+    }
+}
+
+function main(input) {
+    console.log(classifyAge(input));
+}
+______________
+Falsy values
+______________
+
+The following six values are known as Falsy values, meaning they evaluate to false:
+
+false
+undefined
+null
+0
+NaN
+"" (i.e., the empty string)
+
+All other values, including all objects, evaluate to true when used as the condition in a conditional statement.
+
+var a = true;
+var b = new Boolean(false);
+var c = "";
+
+console.log(a); //true
+console.log(b); //[Boolean(false)]
+console.log("\"" + c + "\""); ""
+
+if (a) {
+    console.log("Hello from a");  //hello from a
+}
+
+if (b) {
+    console.log("Hello from b"); //hello from b ( Even though b is created with new Boolean(false), objects are truthy in JavaScript. Therefore, 
+the condition evaluates to true and "Hello from b" is printed.)
+}
+
+if (c) {
+    console.log("Hello from c");  (An empty string ("") is falsy in JavaScript. Therefore, the condition evaluates to false, and the else block is executed, printing "c is false".)
+}
+else {
+    console.log("c is false"); //c is false
+}
+
+_______________________________
+Conditional (Ternary) Operator
+__________________________________
+The conditional (ternary) operator is the only JavaScript operator that takes three operands,
+and it's used as a shortcut for the if statement. 
+
+The basic syntax is: condition ? trueStatement : falseStatement
+
+You can essentially read the ? as the word "then" and the : as the word "else". If
+evaluates to true, then trueStatement is executed; else, falseStatement is executed. 
+
+
+process.stdin.on('data', function (data) {
+    main(+(data)); //4
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+    // The examples below all accomplish the same thing.
+
+    // Example 1:
+    input % 2 == 0 ? console.log(input + " is EVEN") : console.log(input + " is ODD"); //4 is even
+
+    // Example 2:
+    console.log( input + " is " + ((input % 2 == 0) ? "EVEN" : "ODD")); // 4 is Even
+
+    // Example 3:
+    var parity = input % 2 == 0 ? "EVEN" : "ODD"; 
+    console.log(input + " is " + parity); //4 is EVEN
+} 
+
+_____________________________
+Switch conditional statements
+______________________________
+
+A switch statement allows a program to evaluate an expression by attempting to match the expression's value to a case label. If a match is found, the
+program jumps to the statement(s) associated with the matched label and continues executing at that point. Note that execution will continue 
+sequentially through all the statements starting at the jump point unless there is a call to break;, which exits the switch statement. A switch statement looks like this:
+
+switch (expression) {
+    case label1:
+        statement1;
+        break;
+    case label2:
+        statement2;
+        break;
+    case label3:
+        statement3;
+        statement4;
+        break;
+    default:
+        statement;
+}
+
+the default clause
+By convention, the default clause is always listed last. This is because the statements are checked sequentially, so you run into the following issues if you use the default label in 
+an earlier clause
+
+The break; Statement
+The break statement is optional, but you'll typically see one at the end of each case clause to ensure that the program breaks out of the switch statement once 
+the statements associated with a matched case are executed. Once the flow of execution hits break;, it exits the switch statement and continues executing at the next line
+following the end of the switch statement; if the break statement is omitted, the program continues executing the next statement in the switch statement — 
+even if its case label doesn't match .
+
+Given an integer, n, such that 0<n<11 , do the following:
+If n is equal to 2, print A.
+If n is equal to 3, print B.
+If n is equal to 4, print C.
+If n is equal to 5, print D
+For all the other values of n, print E.
+
+Input Format
+A single integer denoting n.
+
+var input = "";
+process.stdin.on('data', function (data) {
+    input = data;
+    switchDemo();
+});
+function readLine() { return input; }
+/**** Ignore above this line. ****/
+
+function switchDemo() {
+    var n = parseInt(readLine());
+
+    switch (n) {
+        case 2:
+            console.log("A");
+            break;
+        case 3:
+            console.log("B");
+            break;
+        case 4:
+            console.log("C");
+            break;
+        case 5:
+            console.log("D");
+            break;
+        default:
+            console.log("E");
+    }
+
+    console.log("Exited switch.");
+}
+i/p: 
+4
+o/p:
+C
+Exited switch.
+
+if there was no break statment above then it would printed:
+C
+D
+E
+Exited switch
+
+cause it stops executing the logic.
+
+In a switch statement, once a case matches, execution continues until a break statement is encountered or the end of the switch block is reached. 
+This is known as the "fall-through" behavior. The switch statement does not re-evaluate the condition for each subsequent case after a match is found.
+----------
+
+another example where case /code does not parse  as an integer. This means it's evaluated
+as an object, where a strict comparison (===) is made comparing the case label to the expression value.
+
+var input = "";
+process.stdin.on('data', function (data) {
+    input = data;
+    switchDemo();
+});
+function readLine() { return input; }
+/**** Ignore above this line. ****/
+
+function switchDemo() {
+    // This will read n as an object.
+    var n = readLine();
+
+    switch (n) {
+        case 2:
+            console.log("A");
+            break;
+        case 3:
+            console.log("B");
+            break;
+        case 4:
+            console.log("C");
+            break;
+        case 5:
+            console.log("D");
+            break;
+        default:
+            console.log("E");
+    }
+
+    console.log("Exited switch.");
+
+o/p:
+E
+Exited switch.
+
+_______________________________________________________________________________________________
+If 25<score<=20, then grade=A.
+If 20<score<=25, then grade=B.
+If 15<score<=20, then grade=C.
+If 10<score<=15, then grade=D.
+If 5<score<=10, then grade=E.
+If 0<score<=5, then grade=F.
+
+
+Input Format
+Stub code in the editor reads a single integer denoting score from stdin and passes it to the function.
+
+Constraints
+0<=score<=30
+
+Output Format
+The function must return the value of grade (i.e., the letter grade) that Julia earned on the exam.
+
+Sample Input 
+11
+
+Sample Output 
+D
+
+Explanation 0
+Because score =11, it satisfies the condition 10<score<=15  (which corresponds to D). Thus, we return D as our answer.
+
+
+DONT USE SWITCH CAUSE IN JS IT DOESNT WORK CAUSE CASE ONLY WORKS FOR STRICT ===
+
+'use strict';
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', inputStdin => {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', _ => {
+    inputString = inputString.trim().split('\n').map(string => {
+        return string.trim();
+    });
+    
+    main();    
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function getGrade(score) {
+    let grade;
+    // Write your code here
+        if (score>25&&score<=30) grade = "A";
+        else if(score>20&&score<=25) grade = "B";
+        else if (score>15&&score<=20) grade = "C";
+        else if(score>10&&score<=15) grade = "D";
+        else if (score>5&&score<=10) grade = "E";
+        else grade = "F";
+    
+    return grade;
+}
+
+function main() {
+    const score = +(readLine());
+    
+    console.log(getGrade(score));
+}
