@@ -35,3 +35,229 @@ a.forEach(function(e, i, array) {
     // 'e' is the element
     console.log(i + ' ' + e);
 });
+
+
+____________________
+Append to the end of array
+_________________
+
+var a = ['first', 'second'];
+
+// Append 'third' to array 'a'
+a.push('third');
+
+console.log('a:', a); #a: [ 'first', 'second', 'third' ]
+
+________________________________
+Remove From the end of an Array
+_______________________________
+
+var a = ['first', 'second', 'third'];
+console.log('Original Array:', a);
+
+// Remove the last element from the array
+let removed = a.pop();
+
+console.log('Modified Array:', a);
+console.log('Removed Element:', removed);
+
+o/p
+Original Array: [ 'first', 'second', 'third' ]
+Modified Array: [ 'first', 'second' ]
+Removed Element: third
+
+_________________________
+Remove from the front of the array
+__________________________________
+
+var a = ['first', 'second', 'third'];
+console.log('Original Array:', a);
+
+// Remove the first element from the array
+let removed = a.shift();
+
+console.log('Modified Array:', a);
+console.log('Removed Element:', removed);
+
+o/p
+Original Array: [ 'first', 'second', 'third' ]
+Modified Array: [ 'second', 'third' ]
+Removed Element: first
+
+
+__________________________________
+add to the front of the array
+______________________________
+
+var a = ['first', 'second', 'third'];
+console.log('Original Array:', a);
+
+// Insert element at the beginning of the array
+a.unshift('fourth');
+
+console.log('Modified Array:', a);
+
+
+o/p;
+
+Original Array: [ 'first', 'second', 'third' ]
+Modified Array: [ 'fourth', 'first', 'second', 'third' ]
+
+_____________________________________
+Find the Index of an Item in the Array
+______________________________________
+
+var a = ['first', 'second', 'third', 'fourth'];
+
+let position = a.indexOf('second');
+
+console.log('a:', a);
+console.log('position:', position);
+
+o/p:
+a: [ 'first', 'second', 'third', 'fourth' ]
+position: 1
+
+___________________________________
+Remove an Item by Index Position
+________________________________
+
+var a = ['first', 'second', 'third', 'fourth', 'fifth'];
+console.log('Original Array:', a); //['first', 'second', 'third', 'fourth', 'fifth']
+let position = 1;
+let elementsToRemove = 2;
+// Remove 'elementsToRemove' element(s) starting at 'position'
+a.splice(position, elementsToRemove);//['first','fourth', 'fifth']
+
+console.log('Modified Array:', a);
+
+
+_______________
+Copy an Array
+____________
+
+var a = ['first', 'second', 'third', 'fourth'];
+console.log('a:', a);
+// Shallow copy array 'a' into a new object
+let b = a.slice();
+console.log('b:', b); //['first', 'second', 'third', 'fourth'];
+
+__________________
+11. Sort an Array
+___________________
+
+var a = ['c', 'a', 'd', 'b', 'aa'];
+var b = [9, 2, 13, 7, 1, 12, 123];
+
+// Sort in ascending lexicographical order using a built-in
+a.sort();
+b.sort();
+console.log('a:', a);
+console.log('b:', b);
+
+o/p:
+a: [ 'a', 'aa', 'b', 'c', 'd' ]
+b: [
+  1, 12, 123, 13, 2,  7,   9
+]
+
+
+var a = ['c', 'a', 'd', 'b', 'aa'];
+var b = [9, 2, 13, 7, 1, 12, 123];
+
+// Sort strings in descending lexicographical order
+a.sort(function(x, y) {
+    if (x < y) return 1;
+    if (x > y) return -1;
+    return 0;
+});
+
+// Sort numbers in descending order
+b.sort(function(x, y) {
+    return y - x;
+});
+
+
+o/p:
+[ 'd', 'c', 'b', 'aa', 'a' ]
+[
+  123, 13, 12, 9,
+    7,  2,  1
+]
+
+
+
+
+var a = ['c', 'a', 'd', 'b', 'aa'];
+// Sort in descending lexicographical order using a compare arrow function
+a.sort((x, y) => (x < y ? 1 : x > y ? -1 : 0));
+console.log('a:', a); // Output: ['d', 'c', 'b', 'aa', 'a']
+
+
+
+__________________________
+Iterate Over an Array
+_________________________
+We can use the for…of statement to iterate over an array. This type of statement creates a loop that lets you iterate over iterable objects such as Array, 
+String, Set, and Map.
+
+var a = ['first', 'second', 'third', 'fourth'];
+for (let e of a) {
+    console.log('e:', e);
+}
+
+o/p:
+
+e: first
+e: second
+e: third
+e: fourth
+
+________________________________________________________________________________________________________
+
+problem:
+
+
+Sample Input 
+5
+A = 2 3 6 6 5
+Sample Output 
+5
+
+Explanation 
+Given the array A, we see that the largest value in the array is 6 and the second largest value is 5. Thus, we return 5  as our answer.
+
+Solution:
+
+function getSecondLargest(nums) { 
+
+let first = nums[0]; let second = -1;
+
+for (let i = 0; i < nums.length; i++) {
+
+
+    if (nums[i] > first) {
+        second = first;
+        first = nums[i]
+    }
+
+    if (nums[i] > second && nums[i] < first) {
+        second = nums[i];
+    }
+}
+return second;
+}
+
+
+(or)
+
+return [...new Set(nums)].sort((a,b) => b-a)[1];
+
+(or)
+
+const unique = Array.from(new Set(nums));
+const reverseSorted = unique.sort(function(a, b){return b - a})
+const second = reverseSorted[1];
+return (second);
+
+
