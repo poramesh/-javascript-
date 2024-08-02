@@ -126,19 +126,6 @@ description: Bull head, man body.
 
 
 
-
-string = "javascriptloops"
-con = ""
-for i in string:
-    if i in ['a','e','i','o','u']:
-        print(i);
-    else: con = con+i
-c=list(con)
-print(*c,sep='\n')
-we dont have to conver it to list, we can do it directly.
-print(*con, sep='\n')
-
-
 __________
 for-of
 ________
@@ -212,3 +199,49 @@ lastName: Roberts
 dateOfBirth: October 28, 1967
 nationality: American
 firstMovie: Satisfaction
+
+__________________________________________
+
+problem:
+
+Input Format
+
+There is one line of input with the string s.
+
+Output Format
+
+First, print each vowel in s on a new line (in the same order as they appeared in s). 
+Second, print each consonant (i.e., non-vowel) in s on a new line (in the same order as they appeared in s).
+
+
+python:
+
+string = "javascriptloops"
+con = ""
+for i in string:
+    if i in ['a','e','i','o','u']:
+        print(i);
+    else: con = con+i
+c=list(con)
+print(*c,sep='\n')
+we dont have to conver it to list, we can do it directly.
+print(*con, sep='\n')
+
+
+Solution:
+
+
+function vowelsAndConsonants(s) {
+    
+    let vowels = ["a", "e", "i", "o", "u"];
+
+    for(let v of s) {
+        if(vowels.includes(v))
+            console.log(v);
+    }
+    
+    for(let v of s) {
+        if(!vowels.includes(v))
+            console.log(v);
+    }
+}
