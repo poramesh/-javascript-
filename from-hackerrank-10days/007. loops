@@ -1,3 +1,132 @@
+Loops are a quick and easy way to repeatedly perform a series of instructions, and they are typically run a finite number of times. 
+JavaScript has the following types of loops:
+for
+while
+do-while
+for-in
+for-of
+_____
+for
+______
+The for statement creates a loop that consists of three optional expressions, enclosed in parentheses and separated by semicolons, followed by one 
+or more statements that will be executed in the loop.
+
+Basic Syntax
+for (initialization; condition; finalExpression) {
+    statement(s);
+}
+
+example:
+function main(input) {
+    for (var i = 1; i <= input; i++) {
+        process.stdout.write(i + " ");
+    }
+}
+______
+while
+_______
+The while statement creates a loop that executes its internal statement(s) as long as the specified  evaluates to true. The condition
+is evaluated before executing the statement.
+
+Basic Syntax
+while (condition) {
+    statement(s);
+}
+
+example:
+function main(input) {
+    var i = 1;
+
+    while (i <= input) {
+        process.stdout.write(i + " ");
+
+        i++;
+    }
+}
+
+_______
+do-while
+-_________
+The do-while statement creates a loop that executes its internal statement(s) until the specified  evaluates to false.
+The condition is evaluated after executing the internal statement(s), so the contents of the loop always execute at least once.
+
+Basic Syntax
+do {
+    statement(s);
+} while (condition);
+
+example:
+function main(input) {
+    var i = 1;
+
+    do {
+        process.stdout.write(i + " ");
+
+        i++;
+    } while (i <= input);
+}
+
+________
+for-in
+____________
+
+This loop iterates (in an arbitrary order) over the name of each enumerable property in an object, allowing statements to be executed
+for each distinct property.
+
+Basic Syntax
+for (var variable in object) {
+    // insert code that uses variable here
+}
+
+exmaple:
+
+var actress = {
+    firstName: "Julia",
+    lastName: "Roberts",
+    dateOfBirth: "October 28, 1967",
+    nationality: "American",
+    firstMovie: "Satisfaction"
+};
+
+for (var property in actress) {
+    console.log("actress." + property + " = " + actress[property]);
+}
+
+
+class Monster {
+    constructor(name, home, description) {
+        this.name = name;
+        this.home = home;
+        this.description = description;
+    }
+}
+
+function main(input) {
+    var monster = new Monster(input[0], input[1], input[2]);
+
+    // Print array
+    console.log(monster);
+
+    // Print each of its elements on a new line
+    for (let property in monster) {
+        console.log(property + ": " + monster[property]);
+    }
+}
+
+i/p: Bull head, man body.
+o/p:
+Monster {
+  name: 'Minotaur',
+  home: 'Labyrinth',
+  description: 'Bull head, man body.'
+}
+name: Minotaur
+home: Labyrinth
+description: Bull head, man body.
+
+
+
+
 string = "javascriptloops"
 con = ""
 for i in string:
@@ -8,3 +137,78 @@ c=list(con)
 print(*c,sep='\n')
 we dont have to conver it to list, we can do it directly.
 print(*con, sep='\n')
+
+
+__________
+for-of
+________
+This loop iterates over iterable objects such as an Array, Map, Set, String, TypedArray, arguments object, etc. It essentially iterates over
+the value of each distinct property in the structure, such as each letter in a word or each element in an array.
+
+Basic Syntax
+for (let variable of iterable) {
+    statement(s);
+}
+
+exmaple:
+
+function main(input) {
+    // Split the words read as input into an array of words
+    var array = input.split(new RegExp("[ \n]+"));
+
+    // Print array
+    console.log(array);
+
+    // Print each of its elements on a new line
+    for (let value of array) {
+        console.log(value);
+    }
+}
+
+i/p: 
+hi bye 
+hello goodbye
+
+o/p:
+[ 'hi', 'bye', 'hello', 'goodbye' ]
+hi
+bye
+hello
+goodbye
+
+
+another example:
+
+let actress = new Map([
+    ["firstName", "Julia"],
+    ["lastName", "Roberts"],
+    ["dateOfBirth", "October 28, 1967"],
+    ["nationality", "American"],
+    ["firstMovie", "Satisfaction"]
+]);
+
+// Print each Key-Value pair in the map
+for (let info of actress) {
+    console.log(info);
+}
+
+// Print each Key and Value as "Key: Value"
+console.log(); //for space
+
+for (let info of actress) {
+    console.log(info[0] + ": " + info[1]);
+}
+
+
+o/p:
+[ 'firstName', 'Julia' ]
+[ 'lastName', 'Roberts' ]
+[ 'dateOfBirth', 'October 28, 1967' ]
+[ 'nationality', 'American' ]
+[ 'firstMovie', 'Satisfaction' ]
+
+firstName: Julia
+lastName: Roberts
+dateOfBirth: October 28, 1967
+nationality: American
+firstMovie: Satisfaction
