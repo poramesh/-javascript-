@@ -1,0 +1,37 @@
+Arrays
+The JavaScript Array object is a global object that is used in the construction of arrays; which are high-level, list-like objects.
+
+_________________
+creating an array:
+_________________
+
+var a = ['first', 'second'];
+
+console.log('a\'s contents:', a); //a's contents: [ 'first', 'second' ]
+console.log('a\'s length:', a.length); //a's length: 2
+
+____________________________________
+Access (Index Into) an Array Item
+_________________________________
+
+let a = ['first', 'second'];
+
+// first = 'first'
+let first = a[0]; 
+
+// last = 'second'
+let last = a[a.length - 1]; 
+
+console.log('a[0]:', first); //first
+console.log('a[a.length - 1]:', last); //second
+
+________________________
+Loop Over an Array
+_________________________
+var a = ['first', 'second'];
+
+a.forEach(function(e, i, array) {
+    // 'i' is the index
+    // 'e' is the element
+    console.log(i + ' ' + e);
+});
