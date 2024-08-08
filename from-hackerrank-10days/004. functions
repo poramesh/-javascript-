@@ -241,5 +241,155 @@ console.log(factorial(5));  // Output: 120
 
 
 
+DIFFERENT WAYS OF DEFINING FUNCTION:
+
+
+
+
+In JavaScript, there are several ways to define functions, each with its own syntax, features, and use cases. Here are the most common methods:
+
+1. Function Declaration
+
+A function declaration defines a named function using the function keyword. It is hoisted, meaning it can be 
+called before it is defined in the code.
+
+
+function add(a, b) {
+    return a + b;
+}
+
+console.log(add(2, 3)); // Output: 5
+
+
+Hoisting: Function declarations are hoisted to the top of their scope, so they can be called before they are defined.
+Naming: The function must have a name, which can be used to call it later.
+
+
+2. Function Expression
+
+A function expression defines a function as part of a variable assignment. This can be either named or anonymous.
+
+
+Anonymous Function Expression:
+
+const multiply = function(a, b) {
+    return a * b;
+};
+
+console.log(multiply(2, 3)); // Output: 6
+
+Named Function Expression:
+
+const divide = function divideNumbers(a, b) {
+    return a / b;
+};
+
+console.log(divide(6, 3)); // Output: 2
+
+Hoisting: Function expressions are not hoisted. You cannot call the function before the expression is defined.
+Naming: An anonymous function expression does not have a name, while a named function expression does.
+
+
+3. Arrow Function
+
+Arrow functions provide a concise way to write functions using the => syntax. They are always anonymous and have a different this
+binding compared to traditional functions.
+
+const subtract = (a, b) => a - b;
+
+console.log(subtract(5, 3)); // Output: 2
+
+Implicit Return: If the function body has a single expression, you can omit the curly braces and return keyword.
+this Binding: Arrow functions do not have their own this; they inherit it from the surrounding context.
+No arguments Object: Arrow functions do not have their own arguments object.
+
+
+4. Method Definition in an Object
+
+Functions can be defined as methods directly within an object. This is useful for defining behavior associated with an object.
+
+const calculator = {
+    add(a, b) {
+        return a + b;
+    },
+    subtract(a, b) {
+        return a - b;
+    }
+};
+
+console.log(calculator.add(2, 3)); // Output: 5
+console.log(calculator.subtract(5, 2)); // Output: 3
+
+Concise Method Syntax: When defining methods in an object, you can omit the function keyword.
+
+5. Constructor Function
+
+Constructor functions are used to create objects and are invoked using the new keyword. They are capitalized by convention.
+
+
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+const alice = new Person('Alice', 30);
+console.log(alice.name); // Output: Alice
+
+this Binding: Inside a constructor function, this refers to the new object being created.
+
+6. Generator Function
+
+Generator functions are a special type of function that can be paused and resumed. They are defined using the function* syntax.
+
+function* count() {
+    yield 1;
+    yield 2;
+    yield 3;
+}
+
+const counter = count();
+console.log(counter.next().value); // Output: 1
+console.log(counter.next().value); // Output: 2
+console.log(counter.next().value); // Output: 3
+
+yield Keyword: Generator functions use the yield keyword to pause execution and return a value.
+
+next() Method: The next() method is used to resume execution and get the next yield value.
+
+7. Immediately Invoked Function Expression (IIFE)
+
+An IIFE is a function that is defined and immediately invoked. It is often used to create a new scope and avoid polluting the global scope.
+
+
+(function() {
+    console.log('This is an IIFE');
+})();
+// Output: This is an IIFE
+
+Scope Isolation: IIFEs are used to encapsulate code and create a private scope, which is useful for avoiding variable collisions.
+
+8. Async Function
+
+Async functions are functions that return a Promise and are defined using the async keyword. They allow you to
+use await within them, making asynchronous code easier to write.
+
+
+async function fetchData() {
+    const response = await fetch('https://api.example.com/data');
+    const data = await response.json();
+    return data;
+}
+
+fetchData().then(data => console.log(data));
+
+await Keyword: The await keyword is used to pause the execution of the async function until a promise is resolved.
+Return Value: An async function returns a Promise that resolves with the value returned by the function.
+
+Summary
+Each of these function types serves different purposes and offers different features. Understanding when and how to use them is 
+key to writing effective JavaScript code.
+
+
+
 
 
