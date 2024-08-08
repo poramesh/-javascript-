@@ -44,6 +44,7 @@ Hello, pooja
 _______________________
 The Function Expression
 ________________________
+
 A function expression is very similar to (and has almost the same syntax as) a function statement. The main difference between a function expression and a
 function statement is the function name, which can be omitted from a function expression to create an anonymous function. Function expressions
 are often used as Immediately Invoked Function Expressions (IIFEs), which run as soon as they're defined.
@@ -147,6 +148,16 @@ fact(5) -> 5 * fact(4) -> 4 * fact(3) <- 6
 fact(5) -> 5 * fact(4) <- 24 
 fact(5) = 120 
 so factorial of 5 is 120.
+
+
+fibnoccci:
+f(0): 0
+f(1): 1
+F(2): 0+1 =1
+F(3): 1+1=2
+F(4): 1+2=3
+F(5): 2+3=5
+F(6): 3+5=8
 
 
 Recursion:
