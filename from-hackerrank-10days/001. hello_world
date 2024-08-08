@@ -20,7 +20,12 @@ pooja
 
 TUTORIAL:
 
+
+__________
 Comments
+__________
+
+
 JavaScript supports two styles of comments, as demonstrated below.
 
 Inline Comments
@@ -44,7 +49,12 @@ console.log("This is an instruction that won't be ignored.");
  * This is part of the same block comment and will be ignored
  */
 
+
+_________
 Literals
+__________
+
+
 A literal is a data value that appears directly in a program. For example:
 
 // The integer number twelve:
@@ -73,7 +83,11 @@ More complex expressions can serve as array and object literals.
 // An array initializer:
 [1, 2, 3, 4, 5] 
 
+
+_____________
 Identifiers
+_______________
+
 
 An identifier is simply a name that you can specify and use as a means of referring back to a specific value or other piece of code. In 
 JavaScript, identifiers are used to name variables and functions, as well as to provide labels for certain code loops.
@@ -93,7 +107,9 @@ A number of identifiers are reserved words or keywords, meaning they are part of
 itself. You cannot use these words as identifiers in your programs. For example, for and function are reserved words in JavaScript. In addition, there
 are a number of predefined global variables and functions; it's important to avoid using these predefined names for your own variables and functions.
 
+
 Optional Semicolon
+
 Like many programming languages, JavaScript uses the semicolon (;) to separate statements from each other. This is important as it makes the meaning
 of your code clear; without a separator, the end of one statement might appear to be the beginning of the next (and vice versa). In JavaScript, you 
 can usually omit the semicolon between two statements as long as those statements are written on separate lines.
