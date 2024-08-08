@@ -1,3 +1,255 @@
+A primitive value or data type is data that is not an object and has no methods. All primitives are immutable, meaning they cannot be changed.
+There are six primitive types:
+Number
+String
+Boolean
+Symbol
+Null
+Undefined
+The seventh data type is Object
+
+_______________
+Number Data Type
+___________________
+According to the ECMAScript standard, all numbers are double-precision 64-bit binary format IEEE 754-2008, meaning there is no specific type for integers.
+
+var var1 = 1;
+var var2 = 0;
+var var3 = -0;
+
+console.log("1 / 0 = " + var1 / var2);   //1 / 0 = Infinity
+console.log("1 / -0 = " + var1 / var3);  //1 / -0 = -Infinity
+console.log("MAX_VALUE: " + Number.MAX_VALUE);    //MAX_VALUE: 1.7976931348623157e+308
+console.log("MAX_VALUE + 1 = " + Number.MAX_VALUE * 2);    //MAX_VALUE + 1 = Infinity
+console.log("MIN_VALUE = " + Number.MIN_VALUE);     //MIN_VALUE = 5e-324
+console.log("MIN_VALUE - 1 = " + Number.MIN_VALUE - 1);    //NaN
+console.log("MAX_SAFE_INTEGER = " + Number.MAX_SAFE_INTEGER);    //MAX_SAFE_INTEGER = 9007199254740991
+console.log("MIN_SAFE_INTEGER = " + Number.MIN_SAFE_INTEGER);   //MIN_SAFE_INTEGER = -9007199254740991
+console.log("SquareRoot(-1) = " + Math.sqrt(-1));     //SquareRoot(-1) = NaN
+console.log("isSafeInteger(100) = " + Number.isSafeInteger(100));    //isSafeInteger(100) = true
+
+
+
+________________
+String Data Type
+_________________
+
+A string value is a chain of zero or more Unicode characters (i.e., letters, digits, and punctuation marks) that we use to represent text.
+We include string literals in our scripts by enclosing them in single (') or double (") quotation marks
+
+var firstString = "Hello, There.";
+var secondString = "How're you?";
+var thirdString = "c";
+var fourthString = '"Wow!!!", she shouted.';
+
+console.log(firstString);
+console.log(secondString);
+console.log(thirdString);
+console.log(fourthString);
+
+//Hello, There.
+How're you?
+c
+"Wow!!!", she shouted.
+
+Unlike in languages like C, JavaScript strings are immutable. This means that once a string is created, it is not possible to
+modify it. However, it is still possible to create another string based on an operation on the original string. For example:
+
+A substring of the original by picking individual letters or using String.substr().
+A concatenation of two strings using the concatenation operator (+) or String.concat().
+
+_________________
+Boolean Data Type
+____________________
+
+A boolean represents a logical entity and can have one of two literal values: true, and false.
+
+
+________________
+Symbol Data Type
+_______________
+
+Symbols are new to JavaScript in ECMAScript Edition 6. A Symbol is a unique and immutable primitive value and may be used as the key of an Object property.
+
+_______________
+Null Data Type
+_______________
+
+The null data type is an internal type that has only one value: null. This is a primitive value that represents the absence of any object value. A
+variable that contains null contains no valid number, string, boolean, array, or object. You can erase the contents of
+a variable (without deleting the variable) by assigning it the null value.
+
+____________________
+Undefined Data Type
+____________________
+
+The undefined value is returned when you use an object property that does not exist, or a variable that has been declared, but has never had a value
+assigned to it.
+
+_____________________
+The typeof Operator
+_____________________
+As demonstrated in some of the code examples above, we can use the typeof operator to determine the type associated with a variable's current value:
+
+// Number Data Type: 
+var firstVar = 1.5e5; 
+
+// String Data Type:
+var secondVar = 'Hello'; 
+
+// Boolean Data Type:
+var thirdVar = true; 
+
+// Symbol Data Type:
+var fourthVar = Symbol("some Symbol variable"); 
+
+// Null Object:
+var fifthVar = null; 
+
+// Undefined Data Type:
+var sixthVar; 
+
+// Object:
+var seventhVar = {a: 1, b: 2}; 
+
+// NaN (It is a Number):
+var eighthVar = Math.sqrt(-1); 
+
+console.log(firstVar + " is a " + typeof firstVar);
+console.log(secondVar + " is a " + typeof secondVar);
+console.log(thirdVar + " is a " + typeof thirdVar);
+console.log(fourthVar.toString() + " is a " + typeof fourthVar);
+console.log(fifthVar + " is an " + typeof fifthVar);
+console.log(sixthVar + " is an " + typeof sixthVar);
+console.log(seventhVar + " is an " + typeof seventhVar);
+console.log(eighthVar + " is a " + typeof eighthVar);
+
+o/p:
+
+150000 is a number
+Hello is a string
+true is a boolean
+Symbol(some Symbol variable) is a symbol
+null is an object
+undefined is an undefined
+[object Object] is an object
+NaN is a number
+
+___________
+Variables
+_________
+
+
+Dynamic Typing
+
+JavaScript is a loosely typed or dynamic language, meaning you don't need to declare a variable's type ahead of time and the language autmatically 
+determines a variable's type while the program is being processed. That also means that you can reassign a single variable to 
+reference different types.
+
+For example:
+
+function print() { 
+    console.log(
+        "someVariable(" + someVariable 
+        + ") is a " + typeof someVariable
+    );
+}
+
+var someVariable = 5; 
+print(someVariable);
+
+var someVariable = "Hello"; 
+print(someVariable);
+
+var someVariable = true; 
+print(someVariable);
+
+o/p
+someVariable(5) is a number
+someVariable(Hello) is a string
+someVariable(true) is a boolean
+
+_______________________________
+Declaration and Initialization
+_______________________________
+
+The first time a variable appears in your script is considered its declaration. The first mention of the variable sets it up in memory,
+and the name allows you to refer back to it in your subsequent lines of code. You should declare variables using the var keyword 
+before using them. If you do not initialize a variable that was declared using the var keyword, it automatically takes on the value undefined.
+
+
+var firstVar; 
+firstVar = 1; 
+var secondVar = "String"; 
+var thirdVar, 
+    fourthVar; 
+thirdVar = true; 
+fourthVar = null; 
+var fifthVar = 1.01, 
+    sixthVar = "Sixth"; 
+var seventhVar;
+
+console.log(firstVar);
+console.log(secondVar);
+console.log(thirdVar);
+console.log(fourthVar);
+console.log(fifthVar);
+console.log(sixthVar);
+console.log(seventhVar);
+
+1
+String
+true
+null
+1.01
+Sixth
+undefined
+
+____________
+Coercion
+___________
+In JavaScript, you can perform operations on values of different types without raising an exception. The JavaScript interpreter implicitly converts,
+or coerces, one of the data types to that of the other, then performs the operation. The rules for coercion of string, number,
+or boolean values are as follows:
+
+If you add a number and a string, the number is coerced to a string.
+If you add a boolean and a string, the boolean is coerced to a string.
+If you add a number and a boolean, the boolean is coerced to a number.
+
+EXAMPLE
+​
+function print(name, variable) {
+    console.log(
+        name + "(" + variable 
+        + ") is a " + typeof variable
+    );
+}
+
+var someNumber = 10;
+var someString = "Ten";
+var someBoolean = false;
+
+var sumOfNumberAndString = someNumber + someString;
+var sumOfBooleanAndString = someBoolean + someString;
+var sumOfNumberAndBoolean = someNumber + someBoolean;
+
+print("sumOfNumberAndString", sumOfNumberAndString);
+print("sumOfBooleanAndString", sumOfBooleanAndString);
+print("sumOfNumberAndBoolean", sumOfNumberAndBoolean);
+
+o/p:
+sumOfNumberAndString(10Ten) is a string
+sumOfBooleanAndString(falseTen) is a string
+sumOfNumberAndBoolean(10) is a number
+
+
+
+
+
+
+
+
+
 /**
 *   The variables 'firstInteger', 'firstDecimal', and 'firstString' are declared for you -- do not modify them.
 *   Print three lines:
@@ -11,27 +263,17 @@
 *   secondString - A string consisting of one or more space-separated words.
 **/
 function performOperation(secondInteger, secondDecimal, secondString) {
-    // Declare a variable named 'firstInteger' and initialize with integer value 4.
     const firstInteger = 4;
     
-    // Declare a variable named 'firstDecimal' and initialize with floating-point value 4.0.
     const firstDecimal = 4.0;
     
-    // Declare a variable named 'firstString' and initialize with the string "HackerRank".
     const firstString = 'HackerRank ';
     
-    // Write code that uses console.log to print the sum of the 'firstInteger' and 'secondInteger' (converted to a Number type) on a new line.
     console.log(firstInteger+Number(secondInteger));
     
-    
-    // Write code that uses console.log to print the sum of 'firstDecimal' and 'secondDecimal' (converted to a Number type) on a new line.
     console.log(firstDecimal+Number(secondDecimal));
 
-    
-    // Write code that uses console.log to print the concatenation of 'firstString' and 'secondString' on a new line. The variable 'firstString' must be printed first.
     console.log(firstString + secondString)
-    
-
 }
 
 (or)
@@ -42,11 +284,11 @@ console.log(firstInteger + (+secondInteger));
 console.log(firstDecimal + (+secondDecimal));
 console.log(firstString + secondString);
 
-input
+input:
 12
 4.32
 is the best place to learn and practice coding!
-Expected Output
+Expected Output:
 16
 8.32
 HackerRank is the best place to learn and practice coding!
