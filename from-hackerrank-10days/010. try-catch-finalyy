@@ -1,0 +1,378 @@
+Error Handling:
+
+THERE ARE THREE TYPES OF ERRORS IN PROGRAMMING
+
+1. Syntax Error (Parsing Error)
+
+In a traditional programming language, this type of error occurs at compile time; 
+because JavaScript is an interpreted language, this type of error arises when the code is interpreted. 
+
+When a syntax error occurs in JavaScript, only the code contained within the same thread as  the syntax error is affected; independent
+code running in other threads will still be executed, as nothing in them depends on the code containing the error.
+
+For example, consider the following code containing a syntax error:
+
+console.log("Hello" 
+This produces the following error: SyntaxError: missing ) after argument list. This is because we failed to add a closing parenthesis to our call to console.log.
+
+
+2. Runtime Error (Exception)
+
+Commonly referred to as exceptions, this type of error occurs during execution (i.e., after compilation or interpretation).
+Once a runtime error is encountered, an exception is thrown in the hope that it will be caught by a subsequent section of code 
+containing instructions on how to recover from the error. Much like syntax errors, these affect the thread where they occured but allow other,
+independent threads to continue normal execution.
+
+For example, consider the following code containing a runtime error:
+
+function sum(a, b) {}
+add(2, 3) 
+
+This produces the following error: ReferenceError: add is not defined. This is because we attempted to call the add function without ever
+declaring and defining it.
+
+3. Logical Error
+
+These are some of the most difficult errors to isolate because they cause the program to operate without terminating or crashing,
+but the operations the code performs are not correct. Unlike syntax and runtime errors which arise due to some violation of the rules of the language,
+these errors occur when there is a mistake in your the code's logic.
+
+function sum(a, b) {
+    return a - b;
+}
+
+2
+3
+
+o.p:-1
+
+In the code above, we're reading two integers from stdin and passing them to our sum function. We expect the function to return the
+sum of two integers,  and ; however, due to a logical error (used the - operator instead of 
+the + operator), it's actually returning the difference between  and . This program is
+functional in that it runs, but it is broken in that it does not properly calculate the 
+sum of two integers.
+
+Tip: When trying to isolate logical errors in code, it's often helpful to print the contents
+of your variables to stderr (standard error) at various stages in the logic using console.warn() o
+r console.error(). For example, if we used this version of the sum function instead:
+
+function sum(a, b) {
+    var result = a - b;
+    console.error("The sum of " + a + " and " + b + " is " + result);
+    return result;
+}
+
+
+
+
+Try, Catch, and Finally
+
+
+The try block is the first step in error handling and is used for any block of code that is likely to raise an exception. 
+It should contain one or more statements to be executed and is typically followed by at least one catch clause and/or the optional finally clause. 
+In other words, the try statement has three forms:
+
+try-catch
+try-finally
+try-catch-finally
+
+The catch block immediately follows the try block and is executed only if an exception is thrown when executing the code within the try block.
+It contains statements specifying how to proceed and recover from the thrown exception; if no exception is thrown when executing the try block, 
+the catch block is skipped. If any statement within the try block (including a function call to code outside of the block) throws an exception, 
+control immediately shifts to the catch clause.
+
+It's important to note that we always want to avoid throwing an exception. It's best if the contents of the try block execute without issue but,
+if an exception is unavoidable, control passes to the catch block which should contain instructions that report and/or recover from the exception.
+
+The finally block is optional. It executes after the try and catch blocks, but before any subsequent statements following these blocks. 
+The finally block always executes, regardless of whether or not an exception was thrown or caught.
+
+
+example:
+
+function getElement(arr, pos) {
+    return arr[pos];
+}
+
+
+//let arr = [1, 2, 3, 4, 5];
+
+try {
+    console.log(getElement(arr, 4));
+} 
+catch (e) {
+    console.log(e.message);
+}
+console.log("The program continued executing!");
+
+o/p:
+
+arr is not defined
+The program continued executing!
+
+
+
+If we remove the catch block and add the finally block shown below, it will instead print Finally Block and then terminate due to the uncaught exception (ReferenceError: arr is not defined).
+
+//let arr = [1, 2, 3, 4, 5];
+
+try {
+    console.log(getElement(arr, 4));
+} 
+finally {
+    console.log("Finally Block");
+}
+console.log("The program continued executing!");
+
+
+
+another example:
+
+
+const arr = [1, 2, 3, 4, 5];
+
+try {
+    arr = [4, 2];
+    console.log(arr.sort());
+} 
+catch (e) {
+    console.log(e.message);
+}
+
+
+o/p:
+
+Assignment to constant variable.
+
+
+
+another example:
+
+const arr = [1, 4, 3, 4, 5];
+
+try {
+    arr = [4, 2];
+    console.log(arr.sort());
+} 
+catch (e) {
+    console.log(e.message);
+} 
+finally {
+    console.log(arr.sort());
+}
+
+
+o/P:
+Assignment to constant variable.
+[ 1, 3, 4, 4, 5 ]
+
+
+_______
+THROW
+________
+
+Throw
+We use the throw statement, denoted by the throw keyword, to throw an exception. There are two ways to do this, shown below.
+
+1. throw value
+
+
+We can throw an exception by following the keyword throw with some  that we wish to use for the exception being thrown. 
+
+example:
+
+function throwString() {
+    // Generate an exception with a String value
+    throw "some exception";
+}
+
+function throwFalse() {
+    // Generate an exception with a boolean value of false
+    throw false;
+}
+
+function throwNumber() {
+    // Generate an exception with a Number value of -1
+    throw -1;
+}
+
+try {
+    throwString();
+}
+catch (e) {
+    console.log(e);
+}
+
+try {
+    throwFalse();
+}
+catch (e) {
+    console.log(e);
+}
+
+try {
+    throwNumber();
+}
+catch (e) {
+    console.log(e);
+}
+
+
+O/p:
+some exception
+false
+-1
+
+
+2. throw new Error(customError)
+
+We can throw an exception by following the keyword throw with new Error(customError), where  is the value we want for the  
+property of the exception being thrown. Click Run below to see this in code.
+
+function throwMyError() {
+    // Generate an exception with a value read from stdin
+    throw new Error(input);
+}
+
+function main() {
+    try {
+        throwMyError();
+    }
+    catch (e) {
+        console.log(e.message);
+    }
+}
+
+
+input = This is my fancy error.
+
+o/p:
+This is my fancy error.
+
+
+ANOTHER EXAMPLE:
+
+
+function getValue(arr, pos) {
+    if (pos < 0) {
+        throw new Error("Index Underflow: " + pos);
+    }
+
+    let len = arr.length;
+
+    if (pos >= len) {
+        throw new Error("Index Overflow: " + pos);
+    }
+
+    return arr[pos];
+}
+
+function main() {
+    var index;  
+    const arr = [1, 2, 3, 4, 5];
+    try {
+        index = readLine() //5
+        console.log(getValue(arr, index));
+    } 
+    catch (e) {
+        console.log(e.message);
+    }
+
+    try {
+        index = readLine(); //2
+        console.log(getValue(arr, index));
+    } 
+    catch (e) {
+        console.log(e.message);
+    }
+
+    try {
+        index = readLine(); //-3
+        console.log(getValue(arr, index));
+    } 
+    catch (e) {
+        console.log(e.message);
+    }
+}
+
+
+o/p:
+
+Index Overflow: 5
+3
+Index Underflow: -3
+
+
+
+
+QUES TO SOLVE
+
+Sample Input
+Number(1234)
+
+Sample Output 
+s.split is not a function
+1234
+
+Explanation 
+s = Number(1234) is not a string type, so it can't be reversed using string functions. When we try to 
+reverse it anyway, it throws an exception. We then catch the exception and print its message,
+which is s.split is not a function. Next, we finally print s which, because it wasn't able
+to be reversed, is Number(1234).
+
+
+function reverseString(s) {
+    try {
+        s = s.split("").reverse().join("");
+    } catch(e) {
+        console.log(e.message);
+    } finally {
+        console.log(s);
+    }
+}
+
+
+
+
+another ques to solve:
+
+Sample Input 2
+2
+-1
+20
+
+Sample Output 2
+Negative Error
+YES
+
+
+/*
+ * Complete the isPositive function.
+ * If 'a' is positive, return "YES".
+ * If 'a' is 0, throw an Error with the message "Zero Error"
+ * If 'a' is negative, throw an Error with the message "Negative Error"
+ */
+
+
+function isPositive(a) {
+if (verify >= 1) { 
+    return 'YES'
+} else if (verify === 0) {
+    throw new Error('Zero Error')
+} else {
+    throw new Error('Negative Error')
+}
+}
+
+
+
+(or)
+
+
+function isPositive(a) {
+    if(a>0){
+        return "YES";
+    } else if(a==0){
+        return "Zero Error";
+    } else if(a<0) return "Negative Error";
+}
