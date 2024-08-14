@@ -48,7 +48,8 @@ b: 2
 c: 3
 d: 4
 
-Iterating Over an Array's Elements
+Iterating Over an Array's Elements.
+
 When we use this loop to iterate over an array, the array's indices behave like properties.
 
 const o = ['first', 'second', false];
@@ -118,4 +119,80 @@ os2 = {x:3,y:3}
 os3 = {x:3,y:4}
 os4 = {x:4,y=5}
 
-Because we have two objects o that satisfy o.x == o.y  (i.e., os0 and os2 ), we return  2 as our answer.
+Because we have two objects o that satisfy o.x == o.y  (i.e., os0 and os2 ), we return 2 as our answer.
+
+
+
+function getCount(objects) {
+return objects.filter((object) => object.x === object.y).length 
+}
+
+
+
+function main() {
+    const n = +(readLine());
+    let objects = [];
+    
+    for (let i = 0; i < n; i++) {
+        const [a, b] = readLine().split(' ');
+        
+        objects.push({x: +(a), y: +(b)});
+    }
+    
+    console.log(getCount(objects));
+}
+
+objects:
+
+[
+  { x: 1, y: 1 },
+  { x: 2, y: 3 },
+  { x: 3, y: 3 },
+  { x: 3, y: 4 },
+  { x: 4, y: 5 }
+]
+ 
+(or)
+
+function getCount(objects) {
+    let counter = 0; 
+
+    objects.forEach( ({x, y}) => {
+        if (x === y) 
+            counter++; 
+    } ); 
+    
+    return counter; 
+}
+
+
+(or)
+
+function getCount(objects) {
+    let count = 0
+    
+    for(let i=0; i<objects.length; i++){
+        if(objects[i].x == objects[i].y){
+            count ++
+        }
+    }
+    
+    return count
+}
+
+
+(or)
+
+
+function getCount(objects) {
+  let count = 0;
+
+  for (let key in objects) {
+    if (objects[key].x === objects[key].y) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
