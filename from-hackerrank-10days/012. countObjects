@@ -1,0 +1,121 @@
+Iterating Over Arrays:
+
+basic for loop: 
+We can use a standard for loop to iterate over an array's elements.
+
+
+const arr = ['a', 'b', 'c', 'd'];
+
+// 'i' is the index
+for (let i = 0; i < arr.length; i++) {
+    console.log('arr[' + i + ']: ' + arr[i]);
+}
+
+o/p:
+
+arr[0]: a
+arr[1]: b
+arr[2]: c
+arr[3]: d
+
+The for...in Statement
+
+The for...in statement iterates over the enumerable properties of an object in an arbitrary
+order, which allows us to execute statements for each distinct property.
+
+In the case of an array, the property would be its elements. In the case of an object, 
+that would be its properties.
+
+const o = {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4
+};
+
+console.log('property: value');
+// 'p' is the property
+for (p in o) {
+    console.log(p + ': ' + o[p]);
+}
+
+
+o/p:
+
+property: value
+a: 1
+b: 2
+c: 3
+d: 4
+
+Iterating Over an Array's Elements
+When we use this loop to iterate over an array, the array's indices behave like properties.
+
+const o = ['first', 'second', false];
+
+// 'p' is the index
+for (let p in o) {
+    console.log(p + ' ' + o[p]);
+}
+
+o/p:
+0 first
+1 second
+2 false
+
+forEach method:
+
+The forEach method iterates through an array and, for each element, it executes a function once.
+
+const arr = ['a', 'b', 'c', 'd'];
+
+arr.forEach((value, index, array) => {
+    console.log('index', index, 'has a value of', value,
+    'which correlates to array[' + index + ']:', array[index]);
+});
+
+arr.forEach((value, index) => {
+    console.log('index', index, 'has a value of', value);
+});
+
+arr.forEach((value) => {
+    console.log('value:', value);
+});
+
+
+index 0 has a value of a which correlates to array[0]: a
+index 1 has a value of b which correlates to array[1]: b
+index 2 has a value of c which correlates to array[2]: c
+index 3 has a value of d which correlates to array[3]: d
+index 0 has a value of a
+index 1 has a value of b
+index 2 has a value of c
+index 3 has a value of d
+value: a
+value: b
+value: c
+value: d
+
+
+
+
+Sample Input 
+5
+1 1
+2 3
+3 3
+3 4
+4 5
+
+Sample Output
+2
+
+
+There are n=5 objects in the objects array:
+os0 = {x:1,y:1}
+os1 = {x:2,y:3}
+os2 = {x:3,y:3}
+os3 = {x:3,y:4}
+os4 = {x:4,y=5}
+
+Because we have two objects o that satisfy o.x == o.y  (i.e., os0 and os2 ), we return  2 as our answer.
