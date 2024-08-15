@@ -1,0 +1,164 @@
+JavaScript’s reduce method is one of the cornerstones of functional programming. Let’s explore how it works, when you should use it,
+and some of the cool things it can do.
+
+
+A Basic Reduction
+
+Use it when: You have an array of amounts and you want to add them all up.
+
+const euros = [29.76, 41.85, 46.5];
+const sum = euros.reduce((total, amount) => total + amount); 
+sum // 118.11
+
+
+The calculation is repeated for each amount in the array, but each time the current value changes to the next number in the array, moving right.
+
+
+var euros = [29.76, 41.85, 46.5]; 
+
+var sum = euros.reduce( function(total, amount){
+  return total + amount
+});
+
+sum // 118.11
+
+We use const instead of var and we replace the word function with a “fat arrow” (=>) after the parameters, and we omit the word ‘return’.
+
+
+const euros = [29.76, 41.85, 46.5];
+
+const average = euros.reduce((total, amount, index, array) => {
+  total += amount;
+  if( index === array.length-1) { 
+    return total/array.length;
+  }else { 
+    return total;
+  }
+});
+
+average // 39.37
+
+
+
+const average = euros.reduce((total, amount, index, array) => {
+  total += amount
+  return total/array.length
+}, 0);
+
+
+In previous examples, the initial value was zero so I omitted it. By omitting the initial value, the total will default to the first amount in the array.
+
+
+const euros = [29.76, 41.85, 46.5];
+
+const doubled = euros.reduce((total, amount) => {
+  total.push(amount * 2);
+  return total;
+}, []);
+
+doubled // [59.52, 83.7, 93]
+
+
+These operations are the map and filter methods rewritten as a reduce method.
+
+
+
+
+const euro = [29.76, 41.85, 46.5];
+
+const above30 = euro.reduce((total, amount) => {
+  if (amount > 30) {
+    total.push(amount);
+  }
+  return total;
+}, []);
+
+above30 // [ 41.85, 46.5 ]
+
+
+
+
+Creating a Tally with the Reduce Method In JavaScript​
+Use it when: You have a collection of items and you want to know how many of each item are in the collection.
+
+
+const fruitBasket = ['banana', 'cherry', 'orange', 'apple', 'cherry', 'orange', 'apple', 'banana', 'cherry', 'orange', 'fig' ];
+
+const count = fruitBasket.reduce( (tally, fruit) => {
+  tally[fruit] = (tally[fruit] || 0) + 1 ;
+  return tally;
+} , {})
+
+count // { banana: 2, cherry: 3, orange: 3, apple: 2, fig: 1 }
+
+
+
+fruitBasket.reduce( (tally, fruit) => {
+  tally[fruit] = 1;
+  return tally;
+}, {})
+
+
+
+fruitBasket.reduce((tally, fruit) => {
+  if (!tally[fruit]) {
+    tally[fruit] = 1;
+  } else {
+    tally[fruit] = tally[fruit] + 1;
+  }
+  return tally;
+}, {});
+
+
+
+
+Flattening an array of arrays with the Reduce Method In JavaScript​​
+
+We can use reduce to flatten nested amounts into a single array.
+We set the initial value to an empty array and then concatenate the current value to the total.
+
+const data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+
+const flat = data.reduce((total, amount) => {
+  return total.concat(amount);
+}, []);
+
+flat // [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+
+
+
+
+
+const data = [
+  {a: 'happy', b: 'robin', c: ['blue','green']}, 
+  {a: 'tired', b: 'panther', c: ['green','black','orange','blue']}, 
+  {a: 'sad', b: 'goldfish', c: ['green','red']}
+];
+
+
+We’re going to step through each object and pull out the colours. We do this by pointing amount.c for each object in the array.
+We then use a forEach loop to push every value in the nested array into out total.
+
+const colors = data.reduce((total, amount) => {
+  amount.c.forEach( color => {
+      total.push(color);
+  })
+  return total;
+}, [])
+
+colors //['blue','green','green','black','orange','blue','green','red']
+
+
+
+If we only need unique number then we can check to see of the number already exists in total before we push it.
+
+const uniqueColors = data.reduce((total, amount) => {
+  amount.c.forEach( color => {
+    if (total.indexOf(color) === -1){
+     total.push(color);
+    }
+  });
+  return total;
+}, []);
+
+uniqueColors // [ 'blue', 'red', 'green', 'black', 'orange']
