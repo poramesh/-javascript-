@@ -11,6 +11,11 @@ const sum = euros.reduce((total, amount) => total + amount);
 sum // 118.11
 
 
+exaplanation:
+
+The syntax for reduce is: array.reduce((accumulator, currentValue) => /* return new accumulator value */, initialValue);
+In the example, didn’t provide an initialValue, so reduce automatically uses the first element of the array as the initial value of the accumulator.
+
 The calculation is repeated for each amount in the array, but each time the current value changes to the next number in the array, moving right.
 
 
@@ -38,7 +43,9 @@ const average = euros.reduce((total, amount, index, array) => {
 
 average // 39.37
 
+note:
 
+In the reduce method, passing the array as an argument to the callback function allows you to access the entire array within the callback. This can be particularly useful when you need to perform operations that depend on the entire array's length or other properties
 
 const average = euros.reduce((total, amount, index, array) => {
   total += amount
@@ -58,6 +65,9 @@ const doubled = euros.reduce((total, amount) => {
 
 doubled // [59.52, 83.7, 93]
 
+note:
+The second argument passed to reduce is [], which is the initial value of the total accumulator. This starts as an 
+empty array and will hold the results as the reduce method processes each element in euros.
 
 These operations are the map and filter methods rewritten as a reduce method.
 
@@ -79,6 +89,7 @@ above30 // [ 41.85, 46.5 ]
 
 
 Creating a Tally with the Reduce Method In JavaScript​
+
 Use it when: You have a collection of items and you want to know how many of each item are in the collection.
 
 
@@ -99,6 +110,13 @@ fruitBasket.reduce( (tally, fruit) => {
 }, {})
 
 
+//
+{
+  'apple': 1,
+  'banana': 1,
+  'orange': 1
+}
+
 
 fruitBasket.reduce((tally, fruit) => {
   if (!tally[fruit]) {
@@ -109,6 +127,8 @@ fruitBasket.reduce((tally, fruit) => {
   return tally;
 }, {});
 
+
+The expression if (!tally[fruit]) checks if tally[fruit] is a "falsy" value, which includes null, undefined, 0, NaN, "" (an empty string), and false.
 
 
 
@@ -140,13 +160,14 @@ We’re going to step through each object and pull out the colours. We do this b
 We then use a forEach loop to push every value in the nested array into out total.
 
 const colors = data.reduce((total, amount) => {
-  amount.c.forEach( color => {
+  amount.c.forEach( color => {                  >>color is passed as an argument to the forEach callback function
       total.push(color);
   })
   return total;
 }, [])
 
 colors //['blue','green','green','black','orange','blue','green','red']
+
 
 
 
