@@ -1,0 +1,129 @@
+THIS:
+
+
+this is a special keyword that refers to the context in which a function or method is executed.
+
+1. Global Context
+
+In the global execution context (i.e., outside any function or object method), this refers to the global object:
+
+In Browsers: this refers to the window object.
+In Node.js: this refers to the global object.
+
+
+console.log(this); // In browsers, this logs the `window` object. In Node.js, it logs the `global` object.
+
+
+2. Inside a Function (Non-Strict Mode)
+
+In a regular function (not an arrow function) within non-strict mode, this refers to the global object (window in browsers, global in Node.js) 
+if the function is called directly. However, if the function is a method of an object, this refers to the object.
+
+
+function showThis() {
+    console.log(this);
+}
+showThis(); // In browsers, this logs the `window` object.
+
+
+When used as a method:
+
+
+const obj = {
+    name: 'Alice',
+    greet: function() {
+        console.log(this.name); // `this` refers to `obj`, so it logs 'Alice'.
+    }
+};
+obj.greet(); // Logs 'Alice'
+
+
+3. Inside a Function (Strict Mode)
+
+In strict mode, this inside a function that is not called as a method will be undefined, rather than the global object.
+
+Example:
+"use strict";
+function showThis() {
+    console.log(this); // Logs `undefined` in strict mode.
+}
+showThis();
+
+4. Inside an Arrow Function
+
+Arrow functions do not have their own this context. Instead, they inherit this from their enclosing lexical context.
+
+Example:
+
+const obj = {
+    name: 'Bob',
+    greet: function() {
+        const innerFunction = () => {
+            console.log(this.name); // `this` refers to `obj` because arrow functions inherit `this`.
+        };
+        innerFunction();
+    }
+};
+obj.greet(); // Logs 'Bob'
+
+anotter example:
+
+const obj = {
+  name: 'Charlie',
+  greet: () => {
+    console.log(this.name); // `this` refers to the global object, not `obj`.
+  }
+};
+obj.greet(); // Logs `undefined` because `this.name` is `undefined` in the global context.
+
+In Example 1, this in the arrow function correctly refers to obj, so this.name is 'Bob'.
+In Example 2, this in the arrow function refers to the global context, so this.name is undefined
+because name is not a property of the global object.
+
+
+
+
+5. In Object Methods
+
+When this is used inside a method of an object, it refers to the object itself.
+
+Example:
+
+const person = {
+    name: 'John',
+    sayName: function() {
+        console.log(this.name); // `this` refers to `person`, so it logs 'John'.
+    }
+};
+person.sayName(); // Logs 'John'
+
+
+
+6. In Class Methods
+
+In a class method, this refers to the instance of the class.
+
+Example:
+
+class Car {
+    constructor(make) {
+        this.make = make;
+    }
+    displayMake() {
+        console.log(this.make); // `this` refers to the Car instance.
+    }
+}
+
+const myCar = new Car('Toyota');
+myCar.displayMake(); // Logs 'Toyota'
+
+Summary
+
+Global Context: this refers to the global object (window in browsers, global in Node.js).
+Functions (Non-Strict Mode): this refers to the global object or the object that owns the method.
+Functions (Strict Mode): this is undefined.
+Arrow Functions: this is inherited from the surrounding lexical context.
+Object Methods: this refers to the object that the method is a part of.
+Class Methods: this refers to the instance of the class.
+
+
