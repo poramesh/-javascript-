@@ -375,6 +375,14 @@ Superclass Calls Using the super Keyword
 We use the super keyword to call functions on an object's parent.
 
 
+*************
+Default Constructor Behavior:
+
+The default constructor in a subclass (like Dog) automatically calls super(...arguments);, passing all arguments it receives to 
+the parent class's constructor (in this case, Animal).
+**************
+
+
 class Animal {
     constructor(name) {
         this.name = name;
@@ -395,13 +403,6 @@ let spot = new Dog('Spot');
 spot.speak();
 
 
-let spot = new Dog('Spot');
-spot.speak();
-
-spot = new Animal('Spot');
-spot.speak();
-
-
 o/P;
 Spot speaks.
 Spot barks.
@@ -416,7 +417,12 @@ subclasses are guaranteed to (at minimum) have the superclass' fields, methods, 
 
 In this example, we call the superclass constructor using super(), override a superclass function (speak()), add an additional property 
 (collarColor), and add a new subclass method (collar()).
-
+***********************
+When you create a new Dog object with let spot = new Dog('Spot', 'red');, the Dog class's constructor is invoked.
+Inside the Dog constructor, super(name); is called, which invokes the Animal class's constructor.
+The Animal constructor sets this.animalType = 'Animal'; and this.name = name;.
+After the super(name); call, the control returns to the Dog constructor, which then sets this.animalType = 'Dog'; and this.collarColor = collarColor;
+***************************************
 
 class Animal {
     constructor(name) {
