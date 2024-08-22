@@ -1,0 +1,163 @@
+Arrow Functions
+
+These expressions lexically bind the this value while using less syntax than a typical function expression. Arrow functions are always anonymous.
+
+Here are some basic examples of arrow function syntax:
+
+(parameter) => {statements}
+parameter => {statements}
+parameter => expression
+parameter => {return expression}
+
+(param1, param2, ..., paramN) => {statements}
+(param1, param2, ..., paramN) => expression
+(param1, param2, ..., paramN) => {return expression}
+
+
+
+1. Single Parameter, Multiple Statements
+Example: (parameter) => { statements }
+This is used when you have a single parameter and multiple statements inside the function body.
+
+
+let square = (x) => { 
+    console.log("Calculating the square of", x);
+    return x * 2; 
+};
+console.log(square(4)); // Outputs: 8
+
+2. Single Parameter, Multiple Statements (Parentheses Around Parameter are Optional)
+Example: parameter => { statements }
+If there's only one parameter, you can omit the parentheses.
+
+let greet = name => { 
+    console.log("Hello", name);
+};
+greet("Alice"); // Outputs: "Hello Alice"
+
+3. Single Parameter, Single Expression
+Example: parameter => expression
+When the function body contains only a single expression, you can omit the curly braces and the return keyword.
+The expression's result is returned automatically.
+
+let double = x => x * 2;
+console.log(double(5)); // Outputs: 10
+
+4. Single Parameter, Single Expression (With Explicit return)
+Example: parameter => { return expression }
+Even though it's not necessary, you can explicitly include the return statement.
+
+let triple = x => { return x * 3 };
+console.log(triple(3)); // Outputs: 9
+
+5. Multiple Parameters, Multiple Statements
+Example: (param1, param2, ..., paramN) => { statements }
+When there are multiple parameters and multiple statements, use parentheses around the parameters and curly braces for the function body.
+
+javascript
+Copy code
+let multiply = (a, b) => { 
+    let result = a * b;
+    console.log("Multiplying", a, "and", b);
+    return result;
+};
+console.log(multiply(3, 4)); // Outputs: "Multiplying 3 and 4" followed by "12"
+
+6. Multiple Parameters, Single Expression
+Example: (param1, param2, ..., paramN) => expression
+If the function body is a single expression, you can omit the curly braces and the return statement.
+
+let add = (a, b) => a + b;
+console.log(add(5, 7)); // Outputs: 12
+
+7. Multiple Parameters, Single Expression (With Explicit return)
+Example: (param1, param2, ..., paramN) => { return expression }
+Again, it's not necessary to use return in this case, but you can if you want to make it explicit.
+
+let subtract = (a, b) => { return a - b };
+console.log(subtract(10, 4)); // Outputs: 6
+
+prblem:
+
+If the element is even, multiply the element by 2.
+If the element is odd, multiply the element by 3.
+
+Sample Input 
+5
+1 2 3 4 5
+
+Sample Output 
+
+3 4 9 8 15
+
+
+
+
+let modifyArray = (nums) => {
+    
+    for(let i=0;i<nums.length;i++){
+        if (nums[i]%2 == 0){
+            
+            nums[i] = nums[i]*2
+        } else{
+            nums[i] = nums[i]*3
+    }
+    
+    }
+    return nums
+}
+
+
+(or)
+
+function modifyArray(nums) {
+    let newarray = nums.map(s => s%2 == 0 ? s*2 : s*3);
+    return newarray;
+}
+
+
+method 1
+
+function modifyArray(nums) {
+    var something = function(n){
+        if(n%2==0)
+            return n*2;
+        else
+            return n*3;
+    }
+    var newArray = nums.map(something);
+    return newArray;
+    
+}
+ method 2
+
+function modifyArray(nums) {
+    var something = function(n){
+        var a = (n%2==0) ? n*2: n*3;
+        return a;
+    }
+    var newArray = nums.map(something);
+    return newArray;
+    
+}
+method 3
+
+function modifyArray(nums) {
+    var something = n => n = (n%2==0) ? n*2: n*3;
+    var newArray = nums.map(something);
+    return newArray;
+    
+}
+method 4
+
+function modifyArray(nums) {
+    var newArray = nums.map(n => n = (n%2==0) ? n*2: n*3);
+    return newArray;
+    
+}
+
+method 5
+
+function modifyArray(nums) {
+    return nums.map(n => n = (n%2==0) ? n*2: n*3);   
+}
