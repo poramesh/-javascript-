@@ -1,0 +1,189 @@
+Map is a built-in object that allows you to store key-value pairs, where both the keys and values can be of any type.
+
+
+1. creating simple map
+
+const map = new Map();
+
+map.set('name', 'John');
+map.set('age', 30);
+map.set('profession', 'Developer');
+
+console.log(map.get('name')); // Output: John
+console.log(map.get('age'));  // Output: 30
+cconsole.log(map.size); // Output: 3
+
+2. Using Different Data Types as Keys
+
+Unlike objects, where keys are strings or symbols, Map allows keys to be of any type.
+
+const map = new Map();
+
+const objKey = { id: 1 };
+const arrKey = [1, 2, 3];
+const funcKey = function() { return 'Hello'; };
+
+map.set(objKey, 'Object Value');
+map.set(arrKey, 'Array Value');
+map.set(funcKey, 'Function Value');
+
+console.log(map.get(objKey));  // Output: Object Value
+console.log(map.get(arrKey));  // Output: Array Value
+console.log(map.get(funcKey)); // Output: Function Value
+
+
+
+3. Iterating Over a Map
+
+You can iterate over the keys, values, or entries of a Map.
+
+const map = new Map([
+    ['name', 'Alice'],
+    ['age', 25],
+    ['city', 'New York']
+]);
+
+for (let key of map.keys()) {
+    console.log(key);
+}
+
+Output: 
+name
+age
+city
+
+for (let value of map.values()) {
+    console.log(value);
+}
+
+Output:
+Alice
+25
+New York
+
+for (let [key, value] of map.entries()) {
+    console.log(`${key}: ${value}`);
+}
+Output:
+name: Alice
+age: 25
+city: New York
+
+4. Checking for Existence of a Key
+
+You can check whether a key exists in a Map.
+
+const map = new Map();
+map.set('color', 'blue');
+
+console.log(map.has('color')); // Output: true
+console.log(map.has('size'));  // Output: false
+
+5. Removing Elements
+
+You can remove individual elements or clear the entire map.
+
+const map = new Map();
+map.set('name', 'Bob');
+map.set('age', 40);
+console.log(map.size); // Output: 2
+
+map.delete('age');
+console.log(map.size); // Output: 1
+console.log(map.has('age')); // Output: false
+
+map.clear();
+console.log(map.size); // Output: 0
+
+6. Using Objects as Keys
+
+Using objects as keys can be very powerful when you need to map complex data
+
+const map = new Map();
+
+const user1 = { id: 1, name: 'John' };
+const user2 = { id: 2, name: 'Jane' };
+
+map.set(user1, 'User 1 Data');
+map.set(user2, 'User 2 Data');
+
+console.log(map.get(user1)); // Output: User 1 Data
+console.log(map.get(user2)); // Output: User 2 Data
+
+for (let key of keys) {
+    console.log(key);
+} // or this would work too console.log([...map.keys()]); //{ id: 1, name: 'John' } { id: 2, name: 'Jane' }
+
+7. Chaining Map Operations
+
+Since map.set() returns the Map object itself, you can chain multiple set operations together.
+
+const map = new Map()
+    .set('key1', 'value1')
+    .set('key2', 'value2')
+    .set('key3', 'value3');
+
+console.log(map.size); // Output: 3
+console.log(map.get('key2')); // Output: value2
+
+8. Copying a Map
+
+You can create a shallow copy of a map using the new Map() constructor
+
+const originalMap = new Map()
+    .set('a', 1)
+    .set('b', 2);
+
+const copyMap = new Map(originalMap);
+
+console.log(copyMap.get('a')); // Output: 1
+console.log(copyMap.get('b')); // Output: 2
+
+9. Converting a Map to an Array
+
+You can convert a Map to an array using the Array.from() method or spread operator.
+
+const map = new Map()
+    .set('x', 10)
+    .set('y', 20)
+    .set('z', 30);
+
+const arr = Array.from(map);
+console.log(arr);
+// Output: [['x', 10], ['y', 20], ['z', 30]]
+
+// Convert using spread operator
+const arr2 = [...map];
+console.log(arr2);
+// Output: [['x', 10], ['y', 20], ['z', 30]]
+
+10. Working with Nested Maps
+
+You can have maps within maps, which can be useful for complex data structures.
+
+const userPermissions = new Map();
+
+userPermissions.set('user1', new Map([
+    ['read', true],
+    ['write', false],
+    ['delete', false]
+]));
+
+userPermissions.set('user2', new Map([
+    ['read', true],
+    ['write', true],
+    ['delete', false]
+]));
+
+console.log(userPermissions.get('user1').get('write')); // Output: false
+console.log(userPermissions.get('user2').get('write')); // Output: true
+
+
+
+
+
+
+
+
+
+
