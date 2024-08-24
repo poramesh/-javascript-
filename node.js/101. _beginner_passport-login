@@ -54,6 +54,13 @@ initializePassport(passport)
 
  this is how we import a file in js. 
 
+______________________________
+
+npm i method-override 
+
+
+to use delete fucntion/logout
+
 
 
 
