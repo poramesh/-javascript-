@@ -58,6 +58,70 @@ const result = numbers.find((num, index, array) => num > average);
 console.log(result); // Output: 30
 
 
+example 5 for thisarg:
+
+class Finder {
+  constructor(target) {
+    this.target = target;
+  }
+
+  findInArray(arr) {
+    return arr.find(function(element) {
+      return element === this.target;
+    }, this); // this refers to the Finder instance
+  }
+}
+
+const finder = new Finder('apple');
+const fruits = ['orange', 'banana', 'apple', 'grape'];
+
+const foundFruit = finder.findInArray(fruits);
+
+console.log(foundFruit); // Output: 'apple'
+
+
+if you dont pass thisarg,
+
+array.find(callback(element[, index[, array]])[, thisArg])
+
+
+Context Loss: When you don't pass this as the second argument to find, the callback function loses the context of theFinder instance. In a 
+regular function, the value of this inside the callback will be undefined in strict mode or the global object 
+(window in browsers) in non-strict mode.
+
+No Access to Instance Property: Since this does not refer to the Finder instance inside the callback, this.target is either undefined or
+refers to something else, causing the comparison element === this.target to fail. As a result, find cannot find the correct
+element, and undefined is returned.
+
+
+but it work with Using Arrow Functions (Implicit Context)
+One way to avoid having to pass thisArg is to use an arrow function, which automatically retains the this context from the surrounding 
+lexical scope (the Finder instance in this case).
+
+Example with Arrow Function
+
+class Finder {
+  constructor(target) {
+    this.target = target;
+  }
+
+  findInArray(arr) {
+    return arr.find((element) => {
+      return element === this.target;
+    }); // Arrow function, so `this` refers to the Finder instance
+  }
+}
+
+const finder = new Finder('apple');
+const fruits = ['orange', 'banana', 'apple', 'grape'];
+
+const foundFruit = finder.findInArray(fruits);
+
+console.log(foundFruit); // Output: 'apple'
+
+
+
+
 
 
 in python it would be:
