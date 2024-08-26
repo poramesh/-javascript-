@@ -1,0 +1,89 @@
+we import a module in js using require function node.js 
+
+
+const express = require('express') //pull express lib
+const app = express() //app be running the express fu
+
+
+When you use require('module-name'), Node.js looks for the module with that name. It can be a built-in module (like fs or path), a file 
+in your project, or a third-party module installed via npm.
+
+When you use const, you're creating a constant reference to the module. This means you cannot reassign the variable to something else later
+in your code, which helps prevent accidental changes.
+
+
+require is a function in Node.js that is used to import modules, libraries, or other files into your code. It loads the module and returns
+the exports object of the module, which you can then use in your code.
+
+
+
+
+Let's break this down with an example.
+
+Creating a Module
+math.js (a module file):
+
+// Define some functions
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+// Export the functions
+module.exports = {
+  add,
+  subtract
+};
+
+ This means that add and subtract will be available when other files require this module.
+
+app.js (your application file):
+
+const math = require('./math'); // Load the module
+
+console.log(math.add(5, 3));       // Output: 8
+console.log(math.subtract(5, 3));  // Output: 2
+
+The math variable now holds the object { add: [Function: add], subtract: [Function: subtract] }.
+so basically,
+require loads a module, executes its code, and gives you access to whatever the module has exported via its exports objec
+
+Encapsulation: Each module has its own scope, so variables and functions defined in a module are not accessible outside unless explicitly exported.
+Reusability: Modules allow you to reuse code across different files and projects.
+
+
+
+
+so lately, In ES modules (introduced with ES6), you use import to load modules. This method is more modern and is becoming the standard 
+for JavaScript modules.
+
+
+
+ES Modules (import): Allows importing specific functions or objects from a module using named exports. 
+Example: import { add } from './math.js'; equicalent to "from itertools import groupby"
+
+
+CommonJS (require): Imports the entire module and then accesses specific functions or properties. 
+Example: const math = require('./math');.
+
+
+just for my understanding: 
+
+import numpy as np 
+This is somewhat similar to using an alias in JavaScript 
+const np = require('numpy')
+
+
+
+import os in Python is conceptually similar to const fs = require('fs') in JavaScript. Both are used to import modules
+
+imports the os module, which provides a way to interact with the operating system (e.g., file manipulation, environment variables
+
+
+
+
+
+
