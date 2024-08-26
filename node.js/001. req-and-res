@@ -69,3 +69,49 @@ res.send(): Sends the greeting message back to the client.
 Summary:
 req (Request): Represents the incoming HTTP request and provides details about the request, such as URL, parameters, headers, and body.
 res (Response): Represents the outgoing HTTP response and provides methods to send data, set status codes, and configure response headers.
+
+
+_____________________________________________________
+
+app.use('express.json()')
+
+Automatically parses JSON bodies from incoming HTTP requests in an Express application.
+Makes the parsed data available in req.body for handling within route handlers.
+
+
+const express = require('express');
+const app = express();
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Route handler
+app.post('/data', (req, res) => {
+  console.log(req.body);  // Parsed JSON data is available here
+  res.send('Data received');
+});
+
+app.listen(3000);
+
+
+
+and json.loads() in python is different.
+
+Typically used when you receive JSON data as a string and need to parse it to work with it in Python.
+
+import json
+
+# JSON string
+json_string = '{"name": "John", "age": 30}'
+
+# Parse JSON string into a Python dictionary
+data = json.loads(json_string)
+
+print(data)  # Output: {'name': 'John', 'age': 30}
+print(data['name'])  
+
+
+express.json(): Middleware used in Express.js to automatically parse JSON bodies of incoming HTTP requests and populate req.body.
+json.loads(): Function in Python used to manually parse JSON strings into Python objects.
+
+
