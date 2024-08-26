@@ -5,8 +5,7 @@ satisfies a provided testing function.
 
 array.find(callback(element[, index[, array]])[, thisArg])
 
-
-
+example 1:
 
 const numbers = [4, 9, 16, 25, 36];
 
@@ -15,7 +14,8 @@ const firstOver15 = numbers.find(num => num > 15);
 
 console.log(firstOver15); // Output: 16
 
-______________
+example 2:
+
 const numbers = [5, 12, 15, 7, 22];
 
 // Find the first number greater than 10 that is located at an even index
@@ -33,6 +33,29 @@ const result = numbers.find((num, index) => num > 10 && index % 2 === 0);
 
 console.log(result); // Output: 12
 
+
+example 3:
+
+const fruits = ['apple', 'banana', 'cherry', 'date'];
+
+// Find the first fruit with more than 5 characters
+const longFruit = fruits.find((fruit, index, arr) => fruit.length > 5);
+
+console.log(longFruit); // Output: 'banana'
+
+
+
+example 4:
+
+const numbers = [10, 20, 30, 40, 50];
+
+// Calculate the average of the numbers
+const average = numbers.reduce((acc, num) => acc + num, 0) / numbers.length;
+
+// Find the first number greater than the average
+const result = numbers.find((num, index, array) => num > average);
+
+console.log(result); // Output: 30
 
 
 
