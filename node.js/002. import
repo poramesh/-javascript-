@@ -83,6 +83,21 @@ import os in Python is conceptually similar to const fs = require('fs') in JavaS
 imports the os module, which provides a way to interact with the operating system (e.g., file manipulation, environment variables
 
 
+Python (os module):
+
+
+import os
+
+print(os.getcwd())  # Prints the current working directory
+
+JavaScript (fs module):
+
+const fs = require('fs');
+
+fs.readFile('file.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
 
 
 
