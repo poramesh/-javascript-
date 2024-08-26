@@ -35,8 +35,9 @@ a.forEach(function(e, i, array) {
     // 'e' is the element
     console.log(i + ' ' + e);
 });
-
-
+//
+0: first
+1: second
 ____________________
 Append to the end of array
 _________________
@@ -206,19 +207,39 @@ A positive number if a should come after b. (POSTINVE - SWAPPPPP)
 A-B IS FOR ASCENDING (SMALLER TO BIG)
 B-A IS FOR DESCENDING(BIIGGER TO SMALL) - AND ULTA IS FOR DESCENDING
 
+
+
+
+
 ___________________________________________________________________________
 
-Example: Sorting Numbers in Ascending Order
+ Sorting Numbers in Ascending Order
 
 let numbers = [10, 1, 21, 2];
 numbers.sort((a, b) => a - b);
 console.log(numbers); // Output: [1, 2, 10, 21]
 
-Example: Sorting Numbers in Descending Order
+10-1 = 9 (+)
+1, 10
+
+
+const array = [5, 2, 9, 1, 5, 6];
+array.sort((a, b) => {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0; // a and b are equal
+});
+console.log(array); // Output: [1, 2, 5, 5, 6, 9]
+
+
+
+Sorting Numbers in Descending Order
 
 let numbers = [10, 1, 21, 2];
 numbers.sort((a, b) => b - a);
 console.log(numbers); // Output: [21, 10, 2, 1]
+
+1-10 = -9 (-)
 
 Sorting Strings Alphabetically
 
@@ -235,7 +256,7 @@ console.log(words); // Output: ['apple', 'Banana', 'cherry', 'date']
 words.sort((a, b) => b.toLowerCase().localeCompare(a.toLowerCase()));
 console.log(words);  // Output: ["date", "Cherry", "Banana", "apple"]
 
-so baiscally it converts to lower case and then performs the a-b or b-a operation haha 
+so basically it converts to lower case and then performs the a-b or b-a operation haha 
 
 Example: Sorting Strings Based on Locale
 
