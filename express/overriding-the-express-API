@@ -1,0 +1,166 @@
+The Express API consists of various methods and properties on the request and response objects. These are inherited by prototype. 
+There are two extension points for the Express API:
+
+1. The global prototypes at express.request and express.response.
+2. App-specific prototypes at app.request and app.response.
+
+
+Methods
+
+You can override the signature and behavior of existing methods with your own, by assigning a custom function.
+
+Following is an example of overriding the behavior of res.sendStatus.
+
+app.response.sendStatus = function (statusCode, type, message) {
+  // code is intentionally kept simple for demonstration purpose
+  return this.contentType(type)
+    .status(statusCode)
+    .send(message)
+}
+The above implementation completely changes the original signature of res.sendStatus. It now accepts a status code, encoding type, 
+and the message to be sent to the client.
+
+The overridden method may now be used this way:
+
+res.sendStatus(404, 'application/json', '{"error":"resource not found"}')
+
+
+Breakdown of the Code:
+
+app.response.sendStatus = function (statusCode, type, message) { ... }:
+
+This line defines a new method sendStatus on the app.response object.
+
+The method takes three parameters:
+statusCode: The HTTP status code to be sent in the response (e.g., 200, 404, 500).
+type: The MIME type of the response content (e.g., text/plain, application/json).
+message: The message or body of the response.
+return this.contentType(type).status(statusCode).send(message):
+
+this refers to the app.response object itself.
+
+this.contentType(type): Sets the Content-Type header of the response to the value provided in type.
+This method likely exists on the app.response object and is used to specify the media type of the response.
+
+this.status(statusCode): Sets the HTTP status code of the response to statusCode.
+This is a standard method available on Express's response object.
+
+this.send(message): Sends the message as the body of the response to the client.
+After sending the response, it typically ends the request-response cycle.
+The method chain is returned, which allows for further chaining if necessary.
+
+Example Usage:
+Here’s how you might use this sendStatus method in an Express route handler:
+
+app.get('/example', function(req, res) {
+  res.sendStatus(200, 'text/plain', 'Everything is OK!');
+});
+
+
+
+
+the dots (.) you see in the code snippet represent method chaining, which is a common pattern in JavaScript and many other programming languages
+
+
+Without chaining:
+
+app.response.contentType(type);
+app.response.status(statusCode);
+app.response.send(message);
+
+With chaining:
+
+app.response.contentType(type).status(statusCode).send(message);
+This would set the status code to 200, the content type to text/plain, and the response body to Everything is OK!.
+
+
+
+Properties
+
+
+Properties in the Express API are either:
+
+Assigned properties (ex: req.baseUrl, req.originalUrl)
+Defined as getters (ex: req.secure, req.ip)
+
+Since properties under category 1 are dynamically assigned on the request and response objects in the context of the current
+request-response cycle, their behavior cannot be overridden.
+
+Properties under category 2 can be overwritten using the Express API extensions API.
+
+The following code rewrites how the value of req.ip is to be derived. Now, it simply returns the value of the Client-IP request header.
+
+Object.defineProperty(app.request, 'ip', {
+  configurable: true,
+  enumerable: true,
+  get () { return this.get('Client-IP') }
+})
+
+
+
+Yes, Object.defineProperty is a method in JavaScript used to define or modify properties directly on an object. It allows
+you to configure a property in ways that the simpler assignment operation (obj.property = value) does not. Specifically,
+Object.defineProperty lets you control aspects of a property such as:
+
+Configurability (configurable): Whether the property can be deleted from the object or changed using 
+another Object.defineProperty call.
+
+Enumerability (enumerable): Whether the property shows up during enumeration of the object's 
+properties, such as in for...in loops or Object.keys().
+
+Writability (writable): Whether the value of the property can be changed after it is set.
+
+Getters and Setters (get and set): Functions that define custom behavior when getting or setting the property's value.
+
+
+The syntax of Object.defineProperty is:
+
+Object.defineProperty(obj, propertyName, descriptor)
+obj: The object on which the property is to be defined or modified.
+propertyName: The name of the property being defined or modified.
+descriptor: An object that describes the property's attributes (such as configurable, enumerable, writable, value, get, set).
+
+
+ex:
+
+const person = {};
+
+Object.defineProperty(person, 'name', {
+  value: 'Alice',
+  writable: false, // The value cannot be changed
+  enumerable: true, // The property will show up in enumeration
+  configurable: false // The property can't be deleted or redefined
+});
+
+console.log(person.name); // Output: Alice
+person.name = 'Bob'; // This will not change the value because writable is false
+console.log(person.name); // Output: Alice
+
+
+another ex:Using Getters and Setters
+
+
+const person = {
+  firstName: 'Alice',
+  lastName: 'Smith'
+};
+
+Object.defineProperty(person, 'fullName', {
+  get() {
+    return `${this.firstName} ${this.lastName}`;
+  },
+  set(value) {
+    const [firstName, lastName] = value.split(' ');
+    this.firstName = firstName;
+    this.lastName = lastName;
+  },
+  enumerable: true,
+  configurable: true
+});
+
+console.log(person.fullName); // Output: Alice Smith
+
+person.fullName = 'Bob Johnson';
+console.log(person.firstName); // Output: Bob
+console.log(person.lastName); // Output: Johnson
+
