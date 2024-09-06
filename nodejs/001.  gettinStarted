@@ -8,6 +8,178 @@ try not to install it by command line, it wont work.
 in order to run a file.js we use node file.js
 
 
+npm init -y //all default values
+
+isntall packages to create express server.
+npm i express bcrypt
+
+restart the server
+npm i --save-dev nodemom
+
+delete test attribute and put "devStart":"nodemon server.js" -> script to allow to start nodemon got ot  package.json ->
+
+WHEN YOU INSTALL IT AS npm i --save-dev nodemon
+
+
+{
+  "name": "authentication_simple_",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
+
+
+
+
+WWHN YOU INSTALL IT AS npm i-nodemon
+
+
+{
+  "name": "authentication_simple_",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2"
+    "nodemon": "^3.1.4"
+  }
+}
+
+
+________________________________________________
+
+
+
+//server.js
+
+const express = require('express') //pull express lib
+const app = express() //app be running the express fu
+
+
+app.listen(3000) //start server on port 3000
+
+
+const users = [{name:'Name'}] //it will respond this
+
+app.get('/users',(req,res)=>{
+res.json(users)
+})
+
+
+you can install the package from the visual studioa called REST Client - huachao mao to do what postman does
+
+
+create request.rest file
+
+GET http://localhost:3000/users 
+
+and when you click on send reqs , it sends the req
+
+
+POST http://localhost:3000/users
+content-Type:application/json
+
+{
+"name":"poha"
+"password":"poha"
+}
+
+
+app.use(express.json()) //lets the app accept the json
+
+const users = []
+
+app.post('/users', (req,res)=>{
+const user = {name: req.body.name, password: req.body.password}
+users.push(user)
+res.status(201).send() //send blank response.
+})
+
+
+and once you hit the get req , you would users data that was sent from POST
+
+we gotta hashed the password and we do that with bcrypt
+
+
+const bcrypt = require('bcrypt')
+
+hash('password') //adsasdasdsad if we hash that password it will hasdhed same, they craeck one password they can crack other password if it 
+lands in malcious hands
+
+bcrupt is a asyn liib
+
+
+app.post('/users', async (req,res)=>{
+try{
+const salt = await bcrypt.genSalt()
+const hashedPassword = await bcrypt.hash(req.body.password, salt)
+//instead of this two lines we can just await bcrypt.hash(req.body.password, 10)
+console.log(salt)
+console.log(hashedPassword)
+
+const user = {name: req.body.name, password:hashedPassword}
+users.push(user)
+res.status(201).send() //send blank response.
+}catch{
+res.status(500).send()
+}
+})
+
+
+
+
+POST http://localhost:3000/users
+content-Type:application/json
+
+{
+"name":"poha"
+"password":"poha"
+}
+
+
+
+app.post('/users/login',async(req,res)=>{
+const user = users.find(user=>user.name = req.body.name)
+if(user ==null){
+retunr res.status(400).send('cannot find the user')
+}
+
+try{
+if( await bcrypt.compare(req.body.password,user.password){
+res.send('success')
+} esle{
+res.send('not alloweed to login')
+}
+}catch{
+res.status(500).send()
+}
+
+})
+
+
+_____________________________________
+
+
 {
   "name": "realtimechatapp_socketio",    // Name of your project
   "version": "1.0.0",                    // Version of your project
