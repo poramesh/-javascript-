@@ -1,3 +1,6 @@
+Socket.IO, a library that enables real-time, bidirectional communication between web clients and servers.
+
+
 1. Connection Establishment:
 
 When a client connects to a server using Socket.IO, the server creates a new socket instance for that specific connection. This socket 
@@ -32,29 +35,26 @@ This ID is a unique identifier for that particular connection session.
 
 Internal Mechanism:
 
-Transport Layer: When the connection is established, the client and server exchange a handshake message. In this process, the server assigns a new socket ID to the client.
+Transport Layer: When the connection is established, the client and server exchange a handshake message. In this process, the server assigns a new 
+socket ID to the client.
 Lifecycle: This ID exists for the duration of the connection. If the connection is dropped and re-established, a new ID is assigned.
-
-
 
 
 A new connection in Socket.IO is established through a combination of protocols and steps, ensuring real-time, bidirectional communication between 
 the server and client. 
 
+
+
 1. Client Requests Connection (Handshake):
 
-When a client (usually a web browser or Node.js client) attempts to connect to a Socket.IO server, it initiates a handshake.
-The handshake involves the client sending an HTTP request to the server with certain information, including the desired connection URL and protocol (WebSocket or HTTP long-polling).
-This is usually done through the Socket.IO client library, which manages the details for you.
-
-Example from a browser client:
 
 const socket = io('http://localhost:3000'); // This triggers the connection attempt
 
  you call the io() function, which initiates the handshake with the server. This function belongs to the Socket.IO client library.
 
 The client sends an HTTP request to the server's Socket.IO endpoint 
-(in this case, 'http://localhost:3000/socket.io/?EIO=4&transport=polling&t=1234567890').
+(in this case, 'http://localhost:3000/socket.io/?EIO=4&transport=polling&t=1234567890')
+
 This request includes necessary parameters, such as protocol versions, transport methods, and timestamps.
 
 
@@ -62,7 +62,9 @@ Initial https requees:
 
 The initial handshake is done via a standard HTTP request, which includes the following key information:
 
-EIO (Engine.IO Version): The protocol version used by Socket.IO to handle the low-level communication. For instance, EIO=4 refers to Engine.IO version 4,
+EIO (Engine.IO Version): The protocol version used by Socket.IO to handle the low-level communication.
+
+For instance, EIO=4 refers to Engine.IO version 4,
 which is used by the latest version of Socket.IO.
 
 Transport Method: The client requests a transport method for the connection, usually starting with polling (long-polling). The query
@@ -72,6 +74,8 @@ Other Information: The request can also include client information such as cooki
 which the server can use for authentication or validation
 
 typcial handshake url: http://localhost:3000/socket.io/?EIO=4&transport=polling&t=1234567890
+
+
 
 2. Server Responds to Handshake:
 
@@ -114,6 +118,8 @@ Once the negotiation phase is complete, a persistent connection is established b
 bidirectional communication.
 The server keeps track of the connection using the unique socket.id assigned to the client.
 Both client and server can now send and receive events (messages, notifications, etc.).
+
+
 After connection, you can listen for events:
 
 socket.on('connect', () => {
