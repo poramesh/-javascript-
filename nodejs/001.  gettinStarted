@@ -1,0 +1,30 @@
+we have gotta have node js installed and added its path to the environment variable. we cna simply do this by installing the packaage from its official site.
+and path will be added automatically.
+you can verify if its installed or not by using thsi command 
+node -v and npm -v
+
+try not to install it by command line, it wont work.
+
+in order to run a file.js we use node file.js
+
+
+{
+  "name": "realtimechatapp_socketio",    // Name of your project
+  "version": "1.0.0",                    // Version of your project
+  "main": "index.js",                    // Main entry point file (index.js by default, but your actual file is server.js)
+  "scripts": {
+    "devstart": "nodemon server.js"      // Script to start the server in development mode using Nodemon
+  },
+  "author": "",                          // You can add your name here as the author of the project
+  "license": "ISC",                      // License for your project (you can change this if needed)
+  "description": "",                     // Description of your project (optional)
+  "dependencies": {
+    "socket.io": "^4.7.5"                // Production dependency - Socket.IO for real-time communication
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"                  // Development dependency - Nodemon for automatic server restarts during development
+  }
+}
+
+
+"devstart": "nodemon server.js" runs your app in development mode with nodemon, which automatically restarts your server when changes are made to server.js.
