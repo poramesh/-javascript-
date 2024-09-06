@@ -1,0 +1,25 @@
+var chai = require('chai')
+  , authenticate = require('../../lib/middleware/authenticate')
+  , Passport = require('../..').Passport;
+
+is same as 
+
+var chai = require('chai');
+var authenticate = require('../../lib/middleware/authenticate');
+
+The path ../../lib/middleware/authenticate is a relative path. This means it's relative to the directory of the current
+file where the require statement is located.
+
+Node.js resolves this path starting from the current file's directory, moving up and down the directory structure as specified by the path.
+
+../: This moves up one directory level.
+
+../../: Since there are two ../ segments, this means you move up two directory levels from the current file's location.
+
+lib/middleware/authenticate: After moving up two levels, Node.js looks for a directory named lib, then a subdirectory named middleware, 
+and finally a file named authenticate.
+
+
+var Passport = require('../..').Passport;
+
+//This loads a module located two directories up (../..) and then accesses the Passport property of the module's export.
