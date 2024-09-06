@@ -1,0 +1,120 @@
+
+you are going to start off with
+>> npm init 
+it basically helps you with dependencies.
+and keep pressing enter for bunch of times.
+
+and it will give you package.json which is where we are going to store  all our dependencies.
+
+>> npm i express(application server) ejs (templating lang)
+>> npm i --save-dev nodemon dotenv(restart our server automatically when we make change ) 
+(dotenv - whihc allows env variables which we can store in the file which we can load into our server)
+
+
+you create .env file and add it along with node _modules to .gitignore cause .env got sensitive info and node_modules contains dependenscies
+
+________________
+
+inside the script section from the package.json, remove this line
+
+"test": "echo \"Error: no test specified\" && exit 1"
+
+and paste it with 
+
+"devstart":"nodemon server.js"
+
+create the server.js file
+__________________
+and then if you run
+ 
+>>npm run devstart
+________________________
+
+everytime we make change to the server, it will restart the server and rerun all over again.
+
+since we have mentioned app.listen(3000) we have to go to localhost:3000 to see whats happenign there.
+
+_____________________
+  
+npm i bcrypt (hash password to make our password is entirely secure.)
+
+____________________________________________
+npm i passport passport-local express-session express-flash
+ 
+local essentially allows usernames and pwds to logging
+passport ->google, fb, local-passport
+
+____________________________
+we can put it all in erver.js but it becomes bloated so its better to put passport realted info in passport-config.js
+
+
+const passport = require('passport') //installed passport which we are passing it to the module 
+const initializePassport = require('./passport-config')
+initializePassport(passport) // we are calling this function instead of our passsport config 
+
+
+and we do all og our configuration of passport inside of the single file called ./passport-config
+
+
+
+ //passport-config.js
+_______________________________________
+const LocalStrategy = require('passport-local').Strategy
+
+//and to use the local version of passport we want to define the local strategy variable and set it to require('passport-local').strategy
+
+const bcrypt = require('bcrypt')
+//we would need bcrypt to  bcrypt the password
+
+function initialize(passport, getUserByEmail, getUserById) {
+  const authenticateUser = async (email, password, done) => {
+    const user = getUserByEmail(email) 
+    if (user == null) {
+      return done(null, false, { message: 'No user with that email' })
+    }
+
+    try {
+      if (await bcrypt.compare(password, user.password)) {
+        return done(null, user)
+      } else {
+        return done(null, false, { message: 'Password incorrect' })
+      }
+    } catch (e) {
+      return done(e)
+    }
+  }
+
+  passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
+
+//use the local stratgey inside this it takes options, 1 option is username field, it eseentaly says what username is called, in our example
+we ae calling an email, and you can asl pwd , it defaults to password in our application we alreadt called a passport or password so we are perfectly fine.
+the next thing is second variable to call the authenticate the user,  and we are gonna pass in that function name which will
+will cerate here as a function called authenticateUser.
+
+
+it takes in two parametrer, 1.email 2. password 3. done (whenevver we are done with authencateUser functuon)
+passport.serializeUser((user, done) => done(null, user.id))
+//to store inside of the session.
+
+passport.deserializeUser((id, done) => {
+    return done(null, getUserById(id))
+  })
+//deserialise the user
+
+}
+
+module.exports = initialize
+
+//export that function.  so that we can can call that function by requireing in the our passport config in server.js
+
+_______________
+
+
+ this is how we import a file in js. 
+
+______________________________
+
+npm i method-override 
+
+
+to use delete fucntion/logout
