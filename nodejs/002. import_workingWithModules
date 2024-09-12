@@ -98,3 +98,43 @@ fs.readFile('file.txt', 'utf8', (err, data) => {
   if (err) throw err;
   console.log(data);
 });
+
+
+
+
+
+___________________________________
+
+
+tutorial.js
+const sum = (num1, num2) => num1 + num2;
+const PI = 3.14;
+class SomeMathObject{
+   constructor(){
+     console.log('object created');
+  }
+}
+
+module.exports.sum = sum;
+module.exports.PI = PI;
+module.exports.SomeMathObject = SomeMathObject;
+
+instead of this we can do this
+
+module.exports = {sum: sum, PI:PI, SomeMathObject: SomeMathObject}
+
+
+
+
+app.js
+const tutorial = require('./tutorial');
+console.log(tutorial); //(if it is only one function that is exported then it will be [Function: sum]) console.log(tutorial(1,1)); //2
+console.log(tutorial.sum(1,1)); //2
+console.log(tutorial.PI); //3.14 
+console.log(new tutorial.SomeMathObject(); //object created SomeMathObject{}
+
+>>node app
+{[Function: sum],
+PI:3.14,
+SomeMathObject: [Function: SomeMathObject] }
+
