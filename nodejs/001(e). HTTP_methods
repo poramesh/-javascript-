@@ -57,6 +57,7 @@ STATUS CODE   MEANING     DESCRIPTION
 401        Unauthrorised  The server requires aythentication before it can repsping to the req.
 403        Forbidden      The server understands the reqs, but the client has no permisson to access the reqtd resouces.
 404        Not found      The server could not find the requested resource.
+405        Not allowed    when you try to do get instead of post when you have built an api for post.
 500        InternalServer The server encoounters an error while processed the request.
            Error
 503        Service        The server is currently unable to handle the req due to maintenance or overload.
