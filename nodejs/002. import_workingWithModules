@@ -1,3 +1,40 @@
+
+n Node.js, a module is essentially a reusable block of code that can be used to perform a specific set of tasks or provide a specific functionality. A module can contain variables, functions, classes, objects, 
+or any other code that can be used to accomplish a particular task or set of tasks
+
+The primary purpose of using modules in Node.js is to help organize code into smaller, more manageable pieces. A modules can then be imported at any time and used flexibly which helps in creating reusable code
+components that can be shared across multiple projects.
+
+example:
+
+
+This is the code in hello.js file:
+
+function sayHello(name){
+    console.log(`Hello ${name}`);
+}
+module.exports = sayHello
+
+This is the code in app.js file:
+
+const sayHello = require('./hello.js');
+
+sayHello('John');
+sayHello('Peter');
+sayHello('Rohit');
+
+o/p;
+Hello John
+Hello Peter
+Hello Rohit
+
+
+module.exports is a special object in NodeJS that allows you to export functions, objects, or values from a module, so 
+that other modules can access and use them.
+
+
+
+
 we import a module in js using require function node.js 
 
 
@@ -121,7 +158,7 @@ module.exports.SomeMathObject = SomeMathObject;
 
 instead of this we can do this
 
-module.exports = {sum: sum, PI:PI, SomeMathObject: SomeMathObject}
+module.exports = {sum: sum, PI:PI, SomeMathObject: SomeMathObject,foo:'bar'}
 
 
 
@@ -131,6 +168,7 @@ const tutorial = require('./tutorial');
 console.log(tutorial); //(if it is only one function that is exported then it will be [Function: sum]) console.log(tutorial(1,1)); //2
 console.log(tutorial.sum(1,1)); //2
 console.log(tutorial.PI); //3.14 
+console.log(tutorial.foo); //'bar'
 console.log(new tutorial.SomeMathObject(); //object created SomeMathObject{}
 
 >>node app
