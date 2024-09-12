@@ -1,0 +1,441 @@
+The FS Module
+
+This module helps you with file handling operations such as:
+
+Reading a file (sync or async way)
+Writing to a file (sync or async way)
+Deleting a file
+Reading the contents of a director
+Renaming a file
+Watching for changes in a file, and much more
+
+
+___________
+fs.mkdir()
+___________
+
+The fs.mkdir() function in Node.js is used to create a new directory. 
+
+It takes two arguments: the path of the directory to be created 
+and an optional callback function that gets executed when the operation is complete.
+
+path: Here, path refers to the location where you want to create a new folder. This can be an absolute or a relative path. 
+In my case, the path to the present working directory (the folder I am currently in), is: C:\Desktop\NodeJSTut.
+
+callback function: The purpose of the callback function is to notify that the directory creation process has completed.
+This is necessary because the fs.mkdir() function is asynchronous, meaning that it does not block the execution of the rest of the code 
+while the operation is in progress. Instead, it immediately returns control to the callback function,
+allowing it to continue executing other tasks. Once the directory has been created, the callback function is called with
+an error object (if any) and any other relevant data related to the operation.
+In the below code, we are just using it to display a success message in the console or any error.
+
+const fs = require('fs');
+
+// Present Working Directory: C:\Desktop\NodeJSTut
+// Making a new directory called ./myFolder:
+
+fs.mkdir('./myFolder', (err) => {
+    if(err){
+        console.log(err);
+    } else{
+        console.log('Folder Created Successfully');
+    }
+})
+
+After executing the above code, you will see a new folder called myFolder created in the NodeJSTut directory.
+
+
+______________
+fs.writeFile()
+_______________
+
+After the myFolder directory is created successfully, it's time to create a file and write something to it by using the fs module.
+
+There are basically 2 ways of doing this:
+
+Synchronous Approach: In this approach, we create a file and write the data to it in a blocking manner, which means that NodeJS waits for 
+the creation and write operation to complete before moving on to the next line of code. If an error occurs during this process, it throws an exception
+that must be caught using try...catch.
+
+
+Asynchronous Approach: In this approach, we create and write data to a file in a non-blocking manner, which means that NodeJS does not wait for 
+the write operation to complete before moving on to the next line of code. Instead, it takes a callback function that gets
+called once the entire process is completed. If an error occurs during the write operation, the error object is passed to the callback function.
+
+In this tutorial, we will be using the fs.writeFile() function which follows the asynchronous approach.
+
+The method takes three arguments:
+
+The path of the file to write to (including the file name and extension)
+The data to write to the file (as a string or buffer)
+An optional callback function that is called once the write operation is complete or an error occurs during the write operation.
+
+When writeFile() is called, Node.js creates a new file or overwrites an existing file at the specified path. It then writes the
+provided data to the file and closes it. Since the method is asynchronous, the write operation does not block the event loop,
+allowing other operations to be performed in the meantime.
+
+Below is the code where we create a new file called myFile.txt in the myFolder directory and write this data to it: Hi,this is newFile.txt.
+
+const fs = require('fs');
+
+const data = "Hi,this is newFile.txt";
+
+fs.writeFile('./myFolder/myFile.txt', data, (err)=> {
+    if(err){
+        console.log(err);
+        return;
+    } else {
+        console.log('Writen to file successfully!');
+    }
+})
+
+
+Since newFile.txt didn't exist previously, Hence the writeFile() function created this file for us on the provided path and then
+wrote the value in the data variable to the file. Suppose this file already existed. In that case, writeFile() will just open the file
+, erase all the existing text present in it and then write the data to it.
+
+The problem with this code is: when you run the same code multiple times, it erases the previous data that is already present in newFile.txt
+and writes the data to it.
+
+In case you do not want the original data to get deleted and just want the new data to be added/appended at the end of the file,
+you need to make a little change in the above code by adding this "options object": {flag: 'a'} 
+as the third parameter to writeFile() – like this:
+
+const fs = require('fs');
+
+const data = 'Hi,this is newFile.txt';
+
+fs.writeFile('./myFolder/myFile.txt', data, {flag: 'a'}, (err) => {
+    if(err){
+        console.log(err);
+        return;
+    } else {
+        console.log('Writen to file successfully!');
+    }
+})
+
+
+_______________
+fs.readFile()
+_____________
+
+
+Again there are 2 ways of doing this: Synchronous approach and the Asynchronous approach (just like the previous function). 
+Here we are going to use the readFile() function provided by fs module which performs the reading operation asynchronously.
+
+The readFile() function takes 3 parameters:
+
+>The path to the file which is to be read.
+
+>The encoding of the file.
+
+>The callback function that gets executed once the reading operation is completed or if any error occurs during the reading operation.
+It accepts 2 parameters: first parameter stores the file data (if read operation is successful) and the second parameter
+stores the error object (if read operation fails due to some error).
+
+
+
+const fs = require('fs');
+
+fs.readFile('./myFolder/myFile.txt', {encoding: 'utf-8'}, (err, data) => {
+    if(err){
+        console.log(err);
+        return;
+    } else {
+        console.log('File read successfully! Here is the data');
+        console.log(data);
+    }
+})
+
+
+It is to be noted here that the encoding property is set to 'utf-8'. At this point, some of you may not know about the encoding property,
+
+The encoding parameter in the fs.readFile() method of Node.js is used to specify the character encoding used to interpret 
+the file data. By default, if no encoding parameter is provided, the method returns a raw buffer.
+
+<Buffer 54 68 69 73 20 69 73 20 73 6f 6d 65 20 64 61 74 61 20 69 6e 20 61 20 66 69 6c 65>
+
+This raw buffer is difficult to read and interpret as it represents the contents of the file in binary form. To convert the buffer to a r
+eadable string, you can specify an encoding parameter when calling readFile().
+
+In our case, we specified the 'utf8' encoding as the second parameter of the readFile() method. This tells Node.js to interpret the file
+contents as a string using the UTF-8 character encoding
+
+'ascii': Interpret the file contents as ASCII-encoded text.
+'utf16le': Interpret the file contents as 16-bit Unicode text in little-endian byte order.
+'latin1': Interpret the file contents as ISO-8859-1 (also known as Latin-1) encoded text.
+
+
+__________________________________________
+Reading and Writing to a File Synchronously
+__________________________________________
+
+readFileSync() and writeFileSync().
+
+Note that since these are synchronous operations, they need to be wrapped in a try...catch block. In case the operations fail for some reason,
+the errors thrown will be caught by the catch block.
+
+In the below code, we first create a new file: ./myFolder/myFileSync.txt and write to it using the writeFileSync() method.
+
+
+const fs = require('fs');
+
+try{
+    // Write to file synchronously
+    fs.writeFileSync('./myFolder/myFileSync.txt', 'myFileSync says Hi');
+    console.log('Write operation successful');
+
+    // Read file synchronously
+    const fileData = fs.readFileSync('./myFolder/myFileSync.txt', 'utf-8');
+    console.log('Read operation successful. Here is the data:');
+    console.log(fileData);
+
+} catch(err){
+    console.log('Error occurred!');
+    console.log(err);
+}
+
+When you run the above code, a new file called myFileSync.txt is created in the myFolder directory and it contains the following text in it: 
+myFileSync says Hi. This is the output printed in the console:
+
+Write operation successful
+Read operation successful.
+
+Here is the data:
+myFileSync says Hi
+
+
+__________________________________________________________
+How to read the contents of a directory using fs.readdir()
+_________________________________________________________
+
+
+If you have been following along until now, you will see that we currently have 2 files in the myFolder directory,
+i.e, myFile.txt and myFileSync.txt. The fs module provides you with readdir() function using which you can read the contents of 
+a directory (the files and folders present in the directory).
+
+The readdir() function accepts 2 parameters:
+
+>The path of the folder whose contents are to be read.
+
+>Callback function which gets executed once the operation is completed or if any error occurs during the operation.
+This function accepts 2 parameters: The first one which accepts the error object (if any error occurs) and the second parameter
+which accepts an array of the various files and folders present in the directory whose path has been provided.
+
+const fs = require('fs');
+fs.readdir('./myFolder', (err, files) => {
+    if(err){
+        console.log(err);
+        return;
+    }
+    console.log('Directory read successfully! Here are the files:');
+    console.log(files);
+})
+
+
+
+This is an asynchronous function that reads the contents of the directory specified (in this case, ./myFolder).
+The function takes two parameters:
+The path of the directory to read ('./myFolder').
+
+A callback function that will execute once the directory has been read or if an error occurs.
+   >The callback function (err, files) is passed to fs.readdir and is called when the directory read operation completes. Node.js follows 
+   the error-first callback pattern, where the first parameter (err) is reserved for errors, and the second parameter (files) holds the result
+   (in this case, an array of file names).
+
+   >If there’s an error, such as the directory not existing, the err parameter will contain details about the error. The code inside the if (err) 
+   block will be executed, logging the error and exiting the function.
+   >If the directory read is successful, err will be null or undefined, and files will contain an array of file names. The code proceeds to 
+   print a success message and the array of files.
+
+
+
+
+[ 'myFile.txt', 'myFileSync.txt' ]
+
+
+________________________________________
+How to rename a file using fs.rename()
+________________________________________
+
+
+The fs.rename() method in Node.js is used to rename a file or directory. The method takes two arguments, the current file path and the new file path, 
+and a callback function that is executed when the renaming is complete.
+
+Here's the syntax for the fs.rename() method:
+
+fs.rename(oldPath, newPath, callback);
+
+where:
+
+oldPath (string) - The current file path
+newPath (string) - The new file path
+callback (function) - A callback function to be executed when the renaming is complete. This function takes an error object as its only parameter.
+
+Let's rename the newFile.txt file to newFileAsync.txt:
+
+const fs = require('fs');
+
+fs.rename('./newFolder/newFile.txt', './newFolder/newFileAsync.txt', (err)=>{
+    if(err){
+        console.log(err);
+        return;
+    }
+    console.log('File renamed successfully!')
+})
+
+
+Note that you should only provide valid paths (absolute or relative) to the rename() function and not just the names of the files. 
+Remember it's oldPath and newPath and NOT oldName and newName.
+
+For example, consider this code: fs.rename('./newFolder/newFile.txt', 'newFileAsync.txt', ...rest of the code). 
+
+In this case, since we did not provide a proper path in the 2nd parameter, rename() assumes that the path to the newly named file should be:
+./newFileAsync.txt. Thus, it basically removes the newFile.txt from the newFolder directory, renames the file to newFileAsync.txt and 
+moves it to the current working directory.
+
+
+
+______________________________________
+How to delete a file using fs.unlink()
+______________________________________
+
+Last but not the least, we have the fs.unlink() function which is used to delete a file. It takes in 2 parameters:
+
+The path of the file which you want to delete, and
+The callback function which gets executed once the delete operation is over or if any error occurs during the operation.
+
+const fs = require('fs');
+
+fs.unlink('./myFolder/myFileSync.txt', (err) => {
+    if(err){
+        console.log(err);
+        return;
+    }
+    console.log('File Deleted Successfully!')
+})
+
+
+
+
+Synchronous File Deletion
+
+Alternatively, you can delete a file synchronously using fs.unlinkSync():
+
+const fs = require('fs');
+
+try {
+  fs.unlinkSync('example.txt');
+  console.log('File deleted successfully!');
+} catch (err) {
+  console.error('Error deleting file:', err);
+}
+
+
+_______________
+deleting folder:
+________________
+
+const fs = require('fs');
+
+// Delete the folder named 'newFolder'
+fs.rmdir('newFolder', (err) => {
+  if (err) {
+    return console.error(err);
+  }
+  console.log('Directory deleted successfully!');
+});
+
+
+
+
+
+__________________________________________
+Working with Readable and Writable Streams
+__________________________________________
+
+
+Streams in Node.js are objects that allow you to read data from a source or write data to a destination in a continuous manner.
+
+There are four types of streams in Node.js:
+
+Readable: Stream that is used for reading data.
+Writable: Stream used for writing data.
+Duplex: Stream that is both readable and writable.
+Transform: A type of duplex stream that modifies the data as it is read or written.
+
+
+ Readable Stream
+
+Let’s read the contents of a file using a readable stream.
+
+const fs = require('fs');
+const readableStream = fs.createReadStream('example.txt', 'utf8');
+
+readableStream.on('data', (chunk) => {
+  console.log('Data chunk: ', chunk);
+});
+
+readableStream.on('error', (err) => {
+    console.error('Error reading file:', err.message);
+  });
+
+In this example, the file example.txt is read in chunks, which makes the process efficient when dealing with large files.
+
+Writable Stream
+
+const fs = require('fs');
+const writableStream = fs.createWriteStream('output.txt');
+
+writableStream.write('Hello, World!\n');
+writableStream.write('This is a writable stream.\n');
+writableStream.end();
+
+Here, the data is written to the output.txt file.
+
+3. Why You Should Use Streams
+
+Streams are highly efficient, especially when working with large files or large amounts of data, as they process data in chunks 
+rather than loading everything into memory at once.
+
+Advantages of Streams:
+
+Memory Efficiency: Since streams process data in chunks, you don't need to load the entire file into memory. This is particularly beneficial 
+when handling large files.
+Speed: Streams start processing data as soon as it arrives, allowing you to begin working with data immediately rather than waiting for the entire data
+set to load.
+Asynchronous Operations: Node.js streams are event-driven, which means they allow for non-blocking I/O operations. This is important for maintaining fast, 
+responsive applications.
+
+________________________________________________
+ Readable Stream with Piping to Writable Stream
+ _____________________________________________
+
+Here’s an example that shows the real power of streams by reading from one file and writing to another in chunks using pipe().
+
+const fs = require('fs');
+const readableStream = fs.createReadStream('source.txt');
+const writableStream = fs.createWriteStream('destination.txt');
+
+readableStream.pipe(writableStream);
+
+console.log('File copied successfully!');
+
+
+
+more example on streams
+
+const fs = require('fs');
+
+const readStream = fs.createReadStream('./example.txt');
+const writeSteam  = fs.createWriteStream('./example.txt');
+readStream.on('data',(chunk)) =>{
+    writeStream.write(chunk);
+});
+
+
+we are basically reading it in chunks instead of reading all at once. the buffer is small.
+
+
+
+
