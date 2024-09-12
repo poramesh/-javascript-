@@ -1,0 +1,691 @@
+
+HTTP methods, also known as HTTP verbs, are actions that a Client can perform on a Server.
+The 4 HTTP Methods are:
+
+GET: Retrieves a resource from the server
+POST: Inserts a resource in the server
+PUT: Updates an existing resource in the server
+DELETE: Deletes a resource from the server
+
+
+GET: Retrieves a resource from the server
+When you enter http://www.google.com in your web browser's address bar and press enter,
+your browser sends a HTTP GET request to the Google server asking for the HTML content of the Google homepage. 
+That's then rendered and displayed by your browser.
+
+POST: Inserts a resource in the server
+Imagine you're filling out a registration form to create an account on Google. When you submit the form, 
+your browser sends a POST request to Google's server with the data you typed in the form fields like: Username, Age, Birthdate, Address,
+Phone Number, Email, Gender and so on.
+
+
+The server will then create a new user account in its database storing all the information sent 
+to it using the POST Request. So a POST request is used to add/insert a resource in the server.
+
+PUT: Updates an existing resource in the server
+Now imagine you want to update your Google account's password. You would send a PUT request to the server
+with the new password. The server would then update your user account in its database with the new password.
+
+DELETE: Deletes a resource from the server
+Finally, imagine you want to delete your Google user account. You would send a DELETE request to the server 
+indicating that you want your account to be deleted. The server would then delete your user account from its database.
+
+example:
+
+GET read data
+POST insert data
+PUT update data
+DELETE delete data
+
+GET www.store.com/api/orders  // get all orders
+POST www.store.com/api/orders  //place an order(send data)
+GET www.store.com/api/orders/:id  //get single order (path params)
+PUT www.store.com/api/orders/:id  //update specific orders(params+ send data)
+DELETE www.store.com/api/orders/:id  //delete order (path params)
+
+status code:
+
+HTTP status codes are three-digit numbers that indicate the status of a HTTP request made to a server. They are server responses that 
+provide information about the request's outcome.
+
+STATUS CODE   MEANING     DESCRIPTION
+
+200        OK             The request has succeeded, and the server has returend the requested data.
+201        CREATED        The request has been fulfilled, and a new resource has been created.
+204        No Content     The server has succesfuly processed the rquest, byt theres no datat to return
+400        Bad Request    The server couldnt understand the requrst(missing required params).
+401        Unauthrorised  The server requires aythentication before it can repsping to the req.
+403        Forbidden      The server understands the reqs, but the client has no permisson to access the reqtd resouces.
+404        Not found      The server could not find the requested resource.
+500        InternalServer The server encoounters an error while processed the request.
+           Error
+503        Service        The server is currently unable to handle the req due to maintenance or overload.
+           Unavailable
+
+
+
+
+
+
+Lets create a server:
+
+Step 1: Import the http module like this:
+
+const http = require('http');
+
+Step 2: the http module provides with http.createServer() funciton which helps you create a server. 
+
+const http = require('http');
+
+ This function accepts a callback function with 2 parameters – req (which stores the incoming request object) and res which stands for the 
+response to be sent by the server. This callback function gets executed every time someone hits the server.
+
+const server = http.createServer((req, res) => {
+    res.end('Hello World');
+})
+
+res.send() is a function attached on the res object using which we can send some data back to the client. 
+
+
+Step 3: Listening the server at some port using the listen() method.
+
+The listen() function in Node.js http module is used to start a server that listens for incoming requests. It takes a port number as an argument 
+and binds the server to that port number so that it can receive incoming requests on that port.
+
+In the below code, we use the listen() function to start the server and bind it to port 5000. The second argument to the listen() function is a 
+callback function that is executed when the server starts listening on the specified port. We are using this callback function just to display a 
+success message in the console.
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.end('Hello World');
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000');
+})
+
+
+
+
+If you try to visit some other port like 5001 (http://localhost:5001/), which is not bound to your server, 
+you won't see any response because your server is not listening on that port. You will likely receive an error message
+stating that the connection to the server could not be established.
+
+At this point, we've made a server that renders a simple Hello World message every time someone tries to access it.
+This is quite good but there is a problem....
+
+The problem is that for every route, the server sends the same message.
+For example, if I try to access the about page or the contact page, still
+the server shows the same message:
+
+http://localhost:5000/ -> Hello World
+http://localhost:5000/about -> Hello World
+http://localhost:5000/contact -> Hello World
+
+
+There is a simple way to fix this: there's a property called url in the req object which gives
+the URL of the request or in other words it tells you about the resource the client is trying to access.
+
+Suppose if I type in: http://localhost:5000/about in my web browser's search bar, this means
+I am performing a GET Request on the server and I am trying to access the /about page. 
+So In this case the value of req.url will be /about.
+
+Similarly for the below requests, the value of req.url will be:
+
+URL	                              req.url
+http://localhost:5000	            /
+http://localhost:5000/about	        /about
+http://localhost:5000/contact	    /contact
+http://localhost:5000/error	        /error
+
+
+We can use some conditionals if...else along with the req.url property to make our 
+server respond to different requests differently. This is how we can achieve this:
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    if(req.url === '/'){
+        res.end('This is my Home Page');
+    } else if(req.url === '/about'){
+        res.end('This is my About Page');
+    } else if(req.url === '/contact'){
+        res.end('This is my Contact Page');
+    } else {
+        res.end('404, Resource Not Found');
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000');
+})
+
+
+
+Now we have a perfect server that responds to different requests differently. We are sending back
+responses using a method called res.end(). But there is an even better way of sending back a response in
+which we can add on 2 more methods along with res.end():
+
+res.writeHead() – This method is used to send the response headers to the client. The 
+status code and headers like content-type can be set using this method.
+
+res.write() – This method is used to send the response body to the client.
+
+res.end() – This method is used to end the response process.
+
+Below is the modified code where we added the writeHead() and write() methods along with 
+end() method:
+
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    if(req.url === '/'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write('<h1>Home Page</h1>');
+        res.end();
+    } else if(req.url === '/about'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write('<h1>About Page</h1>');
+        res.end();
+    } else if(req.url === '/contact'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write('<h1>Contact Page</h1>');
+        res.end();
+    } else {
+        res.writeHead(404, {'content-type': 'text/html'});
+        res.write('<h1>404, Resource Not Found <a href="/">Go Back Home</a></h1>');
+        res.end();
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000');
+})
+
+
+
+Set up the navbar-app folder locally
+
+Use the fs module to read the contents of the HTML, CSS, JS file and the Logo
+
+Using the http Module to render the files when someone tries to access the / route or the home page.
+
+So Let's Get Started:
+In the below code, we are using the fs module's readFileSync() method to read the contents of
+the HTML, CSS, JS file and the Logo.
+
+Note that we are going to serve the contents of the file and not the file itself.
+So readFileSync() comes into picture.
+
+Then, we serve the contents of the HTML file (stored in homePage variable) using the res.write() method.
+Remember to set the content-type as text/html as we are serving HTML content.
+We have also set up responses for /about route and also a 404 page.
+
+const http = require('http');
+const fs = require('fs');
+
+// Get the contents of the HTML, CSS, JS and Logo files
+const homePage = fs.readFileSync('./navbar-app/index.html');
+const homeStyles = fs.readFileSync('./navbar-app/style.css');
+const homeLogo = fs.readFileSync('./navbar-app/logo.svg');
+const homeLogic = fs.readFileSync('./navbar-app/browser-app.js');
+
+// Creating the Server
+const server = http.createServer((req, res) => {
+    const url = req.url;
+    if(url === '/'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(homePage);
+        res.end();
+    } else if(url === '/about'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(<h1>About Page</h1>);
+        res.end();
+    } else{
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(<h1>404, Resource Not Found</h1>);
+        res.end();
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000');
+})
+
+
+We see that the other routes work fine, but the home page doesn't look as we expected. The problem is that we only see the HTML Structure of the navbar being displayed and not
+the other stuff like the CSS, logo, and JavaScript.
+
+
+// ... above code
+const server = http.createServer((req, res) => {
+    const url = req.url;
+    console.log(url);
+
+    // ... rest of the code
+})
+
+Once we refresh the page, we see that initially the browser asks for the home page
+and makes a GET request with the / URL. Afterward it makes 3 more requests:
+
+/style.css – asking for the CSS file
+/browser-app.js – asking for the JS file
+/logo.svg – asking for the logo
+
+
+
+
+The browser makes request for the contents of the / path and the server just sends back the HTML content. 
+Once the browser receives the HTML content, it interprets it and starts displaying the elements.
+While parsing HTML, if the browser encounters any additional resource like a CSS page or JS page,
+it will make a request to the server for the same.
+
+Since we are not sending the CSS, JS and Logo in the response, we do not see them on the screen.
+We can fix this by adding some more if()s in the code and sending those resources which the browser 
+asks for and BOOM – this bug is fixed.
+
+
+
+
+const http = require('http');
+const fs = require('fs');
+
+// Get the contents of the HTML, CSS, JS and Logo files
+const homePage = fs.readFileSync('./navbar-app/index.html');
+const homeStyles = fs.readFileSync('./navbar-app/style.css');
+const homeLogo = fs.readFileSync('./navbar-app/logo.svg');
+const homeLogic = fs.readFileSync('./navbar-app/browser-app.js');
+
+// Creating the Server
+const server = http.createServer((req, res) => {
+    const url = req.url;
+    if(url === '/'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(homePage);
+        res.end();
+    } else if(url === '/style.css'){
+        res.writeHead(200, {'content-type': 'text/css'});
+        res.write(homeStyles);
+        res.end();
+    } else if(url === '/browser-app.js'){
+        res.writeHead(200, {'content-type': 'text/javascript'});
+        res.write(homeLogic);
+        res.end();
+    } else if(url === '/logo.svg'){
+        res.writeHead(200, {'content-type': 'image/svg+xml'});
+        res.write(homeLogo);
+        res.end();
+    } else if(url === '/about'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(<h1>About Page</h1>);
+        res.end();
+    } else{
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(<h1>404, Resource Not Found</h1>);
+        res.end();
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000');
+})
+
+
+
+
+
+
+navbar-app/browser-app.js
+
+const navToggle = document.querySelector('.nav-toggle')
+const links = document.querySelector('.links')
+
+navToggle.addEventListener('click', function () {
+  links.classList.toggle('show-links')
+})
+
+
+navbar-app/index.html
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbar</title>
+    <!-- font-awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+
+    <!-- styles -->
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="nav-center">
+        <!-- nav header -->
+        <div class="nav-header">
+          <img src="./logo.svg" class="logo" alt="logo" />
+          <button class="nav-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+        <!-- links -->
+        <ul class="links">
+          <li>
+            <a href="index.html">home</a>
+          </li>
+          <li>
+            <a href="about.html">about</a>
+          </li>
+          <li>
+            <a href="projects.html">projects</a>
+          </li>
+          <li>
+            <a href="contact.html">contact</a>
+          </li>
+        </ul>
+        <!-- social media -->
+        <ul class="social-icons">
+          <li>
+            <a href="https://www.twitter.com">
+              <i class="fab fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.twitter.com">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.twitter.com">
+              <i class="fab fa-behance"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.twitter.com">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.twitter.com">
+              <i class="fab fa-sketch"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- javascript -->
+    <script src="./browser-app.js"></script>
+  </body>
+</html>
+
+
+navbar-app/style.css
+
+/*
+=============== 
+Fonts
+===============
+*/
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
+
+/*
+=============== 
+Variables
+===============
+*/
+
+:root {
+  /* dark shades of primary color*/
+  --clr-primary-1: hsl(205, 86%, 17%);
+  --clr-primary-2: hsl(205, 77%, 27%);
+  --clr-primary-3: hsl(205, 72%, 37%);
+  --clr-primary-4: hsl(205, 63%, 48%);
+  /* primary/main color */
+  --clr-primary-5: hsl(205, 78%, 60%);
+  /* lighter shades of primary color */
+  --clr-primary-6: hsl(205, 89%, 70%);
+  --clr-primary-7: hsl(205, 90%, 76%);
+  --clr-primary-8: hsl(205, 86%, 81%);
+  --clr-primary-9: hsl(205, 90%, 88%);
+  --clr-primary-10: hsl(205, 100%, 96%);
+  /* darkest grey - used for headings */
+  --clr-grey-1: hsl(209, 61%, 16%);
+  --clr-grey-2: hsl(211, 39%, 23%);
+  --clr-grey-3: hsl(209, 34%, 30%);
+  --clr-grey-4: hsl(209, 28%, 39%);
+  /* grey used for paragraphs */
+  --clr-grey-5: hsl(210, 22%, 49%);
+  --clr-grey-6: hsl(209, 23%, 60%);
+  --clr-grey-7: hsl(211, 27%, 70%);
+  --clr-grey-8: hsl(210, 31%, 80%);
+  --clr-grey-9: hsl(212, 33%, 89%);
+  --clr-grey-10: hsl(210, 36%, 96%);
+  --clr-white: #fff;
+  --clr-red-dark: hsl(360, 67%, 44%);
+  --clr-red-light: hsl(360, 71%, 66%);
+  --clr-green-dark: hsl(125, 67%, 44%);
+  --clr-green-light: hsl(125, 71%, 66%);
+  --clr-black: #222;
+  --ff-primary: "Roboto", sans-serif;
+  --ff-secondary: "Open Sans", sans-serif;
+  --transition: all 0.3s linear;
+  --spacing: 0.1rem;
+  --radius: 0.25rem;
+  --light-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --dark-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  --max-width: 1170px;
+  --fixed-width: 620px;
+}
+/*
+=============== 
+Global Styles
+===============
+*/
+
+*,
+::after,
+::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--ff-secondary);
+  background: var(--clr-grey-10);
+  color: var(--clr-grey-1);
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+ul {
+  list-style-type: none;
+}
+a {
+  text-decoration: none;
+}
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: var(--spacing);
+  text-transform: capitalize;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+  font-family: var(--ff-primary);
+}
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.25rem;
+}
+h4 {
+  font-size: 0.875rem;
+}
+p {
+  margin-bottom: 1.25rem;
+  color: var(--clr-grey-5);
+}
+@media screen and (min-width: 800px) {
+  h1 {
+    font-size: 4rem;
+  }
+  h2 {
+    font-size: 2.5rem;
+  }
+  h3 {
+    font-size: 1.75rem;
+  }
+  h4 {
+    font-size: 1rem;
+  }
+  body {
+    font-size: 1rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1;
+  }
+}
+/*  global classes */
+
+/* section */
+.section {
+  padding: 5rem 0;
+}
+
+.section-center {
+  width: 90vw;
+  margin: 0 auto;
+  max-width: 1170px;
+}
+@media screen and (min-width: 992px) {
+  .section-center {
+    width: 95vw;
+  }
+}
+main {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+/*
+=============== 
+Navbar
+===============
+*/
+nav {
+  background: var(--clr-white);
+  box-shadow: var(--light-shadow);
+}
+.nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+.nav-toggle {
+  font-size: 1.5rem;
+  color: var(--clr-primary-5);
+  background: transparent;
+  border-color: transparent;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.nav-toggle:hover {
+  color: var(--clr-primary-1);
+  transform: rotate(90deg);
+}
+.logo {
+  height: 40px;
+}
+.links a {
+  color: var(--clr-grey-3);
+  font-size: 1rem;
+  text-transform: capitalize;
+  letter-spacing: var(--spacing);
+  display: block;
+  padding: 0.5rem 1rem;
+  transition: var(--transition);
+}
+.links a:hover {
+  background: var(--clr-primary-8);
+  color: var(--clr-primary-5);
+  padding-left: 1.5rem;
+}
+.social-icons {
+  display: none;
+}
+.links {
+  height: 0;
+  overflow: hidden;
+  transition: var(--transition);
+}
+.show-links {
+  height: 10rem;
+}
+@media screen and (min-width: 800px) {
+  .nav-center {
+    max-width: 1170px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  .nav-header {
+    padding: 0;
+  }
+  .nav-toggle {
+    display: none;
+  }
+  .links {
+    height: auto;
+    display: flex;
+  }
+  .links a {
+    padding: 0;
+    margin: 0 0.5rem;
+  }
+  .links a:hover {
+    padding: 0;
+    background: transparent;
+  }
+  .social-icons {
+    display: flex;
+  }
+  .social-icons a {
+    margin: 0 0.5rem;
+    color: var(--clr-primary-5);
+    transition: var(--transition);
+  }
+  .social-icons a:hover {
+    color: var(--clr-primary-7);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
