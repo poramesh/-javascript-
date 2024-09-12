@@ -1,0 +1,78 @@
+bringing event driven programming into the nodejs.
+
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
+
+
+//this code only get executed when the tutorial event occurs.
+eventEmitter.on('tutorial', () =>{
+console.log('tutorial event has occured');
+})
+
+eventEmitter.on('argument', (num1,num2) =>{
+console.log(num1+num2);
+})
+
+eventEmitter.emit('tutorial');
+evenEmitter.emit('argument',1,2);
+
+______________
+>>node app.js
+tutorial event has occured
+3
+_________________
+//with custom objects.
+
+class Person extends EventEmitter{
+  constructor(name){
+     super();
+     this._name = name;
+}
+  get name(){
+    return this._name;
+}
+}
+
+//pedro is an instance of Person
+let pedro = new Person('pedro');
+let chros = new Person('chros');
+
+pedro.on('name',()=>{
+  console.log('my name is' + pedro.name)
+})
+
+chros.on('name',()=>{
+ console.log('my name is' + chros.name);
+})
+
+pedro.emit('name'); //my name is pedro
+chros.emit('name'); //my name is chros
+
+(or)
+
+// Store instances in an array
+let people = [pedro, chros];
+
+people.forEach(person => {
+  person.on('name', () => {
+    console.log('My name is ' + person.name);
+  });
+
+  person.emit('name');
+});
+
+
+
+
+
+Person extends the event emitter class, which means that pedro is also an instance of the event emitter alss.
+
+pedro is also an instance of the class EventEmitter class
+
+
+
+
+
+
+
+
