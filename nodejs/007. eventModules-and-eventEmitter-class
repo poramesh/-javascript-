@@ -70,6 +70,38 @@ Person extends the event emitter class, which means that pedro is also an instan
 pedro is also an instance of the class EventEmitter class
 
 
+another example:
+
+// Importing 'events' module and creating an instance of the EventEmitter Class
+const EventEmitter = require('events');
+const myEmitter = new EventEmitter();
+
+const welcomeUser = () => {
+    console.log('Hi There, Welcome to the server!');
+}
+
+myEmitter.on('userJoined', welcomeUser);
+
+myEmitter.emit('userJoined');
+
+
+another example:
+
+
+const EventEmitter = require('events');
+const myEvent = new EventEmitter();
+
+const greetBirthday = (name, newAge) => {
+    // name = John
+    // newAge = 24
+    console.log(`Happy Birthday ${name}. You are now {newAge}!`);
+}
+
+myEmitter.on('birthdayEvent', greetBirthday);
+
+myEmitter.emit('birthdayEvent', 'John', '24');
+
+
 
 
 
