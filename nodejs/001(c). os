@@ -1,0 +1,64 @@
+The OS Module
+
+The OS Module (as its name implies) provides you methods/functions with which you can get information about your Operating System.
+
+To use this module, the first step is to import it like this:
+
+
+const os = require('os')
+
+const systemUptime = os.uptime();
+const userInfo = os.userInfo();
+
+const otherInfo = {
+    name: os.type(),
+    release: os.release(),
+    totalMem: os.totalmem(),
+    freeMem: os.freemem(),
+}
+
+console.log(systemUptime); //521105
+console.log(userInfo);
+
+//{
+    uid: -1,
+    gid: -1,
+    username: 'krish',
+    homedir: 'C:\\Users\\krish',
+    shell: null
+}
+console.log(otherInfo);
+
+//
+{
+    name: 'WindowsNT', // Name of my OS
+    release: '10.0.22621', // Release Version of my OS
+    totalMem: 8215212032, // Total Memory Available in bytes (~ 8 GB)
+     freeMem: 1082208256 // Free Memory Available in bytes (~ 1 GB) 
+}
+
+
+Let's break down the above code and output:
+
+os.uptime() tells the system uptime in seconds. This function returns the number of seconds the system has been
+running since it was last rebooted. If you check the first line of the output: 521105 is the number of seconds, my system has been running since
+it was last rebooted. Of course, it will be different for you.
+
+os.userInfo() gives the information about the current user. This function returns an object with information about the current user including 
+the user ID, group ID, username, home directory, and default shell. Below is the breakdown of the output in my case:
+    {
+        uid: -1,
+        gid: -1,
+        username: 'krish',
+        homedir: 'C:\\Users\\krish',
+        shell: null
+    }
+
+The uid and gid is set to -1 in Windows, because Windows does not have the concept of user IDs like Unix-based systems. 
+The username of my OS is krish and the home directory is 'C:\\Users\\krish'. The shell is set to null because the concept of a default shell
+does not exist on Windows.
+Windows has a default command interpreter program called Command Prompt (cmd.exe), which runs commands and manages the system.
+
+The other methods related to OS Module like os.type(), os.release() and so on, which you saw in the above code has been
+used within the otherInfo object. Here is a breakdown of what these methods do:
+
