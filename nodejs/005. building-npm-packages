@@ -92,3 +92,67 @@ console.log(helloWorld());
 Continuous Integration (CI): Set up a CI pipeline using GitHub Actions, Travis CI, or another service to automatically run tests and publish your package.
 Linting and Code Quality: Use tools like ESLint and Prettier to maintain code quality.
 Versioning: Follow semantic versioning (SemVer) to keep track of your package versions.
+
+
+
+
+to uninstall a package you just use npm uninstall *package_name*
+
+
+
+
+
+SEMANTIC VERSIONING
+
+Semantic Versioning, often abbreviated as SemVer, is a versioning scheme for software that aims to 
+convey meaning about the underlying changes with each release.
+
+Dependencies: 4.15.2 
+
+major.minor.patch
+
+
+MAJOR version: Incremented for incompatible changes that require users to make adjustments.
+MINOR version: Incremented for backward-compatible additions or improvements.
+PATCH version: Incremented for backward-compatible bug fixes.
+
+
+
+Caret(^):
+
+Allows updates that do not change the leftmost non-zero digit of the version number. 
+
+^1.2.3:
+Acceptable versions: 1.2.3, 1.3.0, 1.4.5, etc. (patch and minor updates)
+Not acceptable: 2.0.0 (major version change, potentially breaking)
+
+^0.2.3 (When the major version is zero, it only allows patch updates):
+Acceptable versions: 0.2.3, 0.2.4, 0.2.5, etc.
+Not acceptable: 0.3.0 or 1.0.0 (minor and major changes)
+
+
+Tilde (~):
+
+Allows patch updates but restricts minor and major updates. It will only update the patch number but not the minor or major version.
+
+Example:
+
+~1.2.3:
+Acceptable versions: 1.2.3, 1.2.4, 1.2.5, etc. (patch updates only)
+Not acceptable: 1.3.0 or 2.0.0 (minor or major version changes)
+
+~0.2.3 (When the major version is zero, behaves similarly):
+Acceptable versions: 0.2.3, 0.2.4, 0.2.5, etc.
+Not acceptable: 0.3.0 or 1.0.0 (minor and major changes)
+
+
+^ (Caret): Allows both minor and patch updates, but not major updates.
+~ (Tilde): Allows only patch updates, more restrictive than ^.
+
+
+if we dont mention either of this, it will not update anything. it wil remain the same.
+
+
+
+
+
