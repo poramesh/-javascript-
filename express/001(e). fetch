@@ -80,9 +80,19 @@ console.log(data): Prints the response data to the console.
 .catch(error => console.error('Error:', error)); // Handle any errors
 
 
+Testing Your Endpoint
+
+To test your endpoint, you can use tools like Postman or curl. Here’s how you can use curl to test the JSON endpoint:
+
+
+curl -X POST http://localhost:3000/json \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'
 
 
 
+
+and also 
 WE CAN USE THis API in various contexts:
 
 
