@@ -78,9 +78,52 @@ Access: req.body (when using express.urlencoded())
 Usage: Used for handling form submissions, such as user registrations or feedback forms.
 
   
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); //
 
 app.post('/form', (req, res) => {
   const { name, age } = req.body;
   res.send(`Name: ${name}, Age: ${age}`);
 });
+
+
+What extended: true Means:
+
+extended: true: This option uses the qs library for parsing URL-encoded data. The qs library allows
+for rich objects and arrays to be encoded into the URL-encoded format, which is 
+more flexible and supports complex data structures.
+
+Example: Allows for nested objects and arrays in URL-encoded data:
+
+name=John&age=30&address[city]=New%20York&address[zip]=10001
+
+Parsing with qs:
+
+// Resulting `req.body` will be:
+{
+  name: 'John',
+  age: '30',
+  address: {
+    city: 'New York',
+    zip: '10001'
+  }
+}
+
+
+What extended: false Means
+
+extended: false: This option uses the querystring library for parsing URL-encoded data. The querystring library only 
+supports simple key-value pairs and does not handle nested objects or arrays.
+
+Example: Only supports simple key-value pairs:
+
+
+name=John&age=30
+
+Parsing with querystring:
+
+
+// Resulting `req.body` will be:
+{
+  name: 'John',
+  age: '30'
+}
