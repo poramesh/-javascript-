@@ -1,0 +1,86 @@
+In an Express application, the kind of data you receive in the request can vary based on the type of request and what
+  the client sends
+
+
+  
+Query Parameters
+  
+Type: Key-value pairs sent in the URL of a GET request.
+Example: /search?query=express&sort=desc
+Access: req.query
+Usage: Often used for filtering or searching data.
+
+app.get('/search', (req, res) => {
+  const { query, sort } = req.query;
+  res.send(`Search query: ${query}, Sort order: ${sort}`);
+});
+
+
+Request Parameters
+
+Type: Values embedded in the URL path (dynamic segments).
+Example: /users/123
+Access: req.params
+Usage: Typically used to identify specific resources.
+
+app.get('/users/:id', (req, res) => {
+  const { id } = req.params;
+  res.send(`User ID: ${id}`);
+});
+
+Request Body
+  
+Type: Data sent in the body of POST, PUT, or PATCH requests. Can be JSON, form-data, or URL-encoded.
+Example: { "name": "John", "age": 30 } in a JSON request body.
+Access: req.body
+Usage: Used to send data to be processed or stored, such as form submissions or API payloads.
+
+  
+app.post('/submit', (req, res) => {
+  const { name, age } = req.body;
+  res.send(`Name: ${name}, Age: ${age}`);
+});
+
+Headers
+  
+Type: Metadata sent in the request headers.
+Example: Content-Type: application/json
+Access: req.headers
+Usage: Provides information about the request, such as content type or authentication tokens.
+  
+app.get('/headers', (req, res) => {
+  const contentType = req.headers['content-type'];
+  res.send(`Content-Type: ${contentType}`);
+});
+
+
+Cookies
+  
+Type: Data stored in cookies sent with the request.
+Example: session_id=abc123
+Access: req.cookies (requires a cookie-parser middleware)
+Usage: Often used for session management or tracking.
+
+  
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+app.get('/cookies', (req, res) => {
+  const sessionId = req.cookies.session_id;
+  res.send(`Session ID: ${sessionId}`);
+});
+
+Form Data
+
+Type: Data sent via form submissions, often URL-encoded or multipart.
+Example: name=John&age=30
+Access: req.body (when using express.urlencoded())
+Usage: Used for handling form submissions, such as user registrations or feedback forms.
+
+  
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/form', (req, res) => {
+  const { name, age } = req.body;
+  res.send(`Name: ${name}, Age: ${age}`);
+});
