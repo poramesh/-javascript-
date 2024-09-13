@@ -16,6 +16,7 @@ Enter app.js, or whatever you want the name of the main file to be. If you want 
 Now, install Express in the myapp directory and save it in the dependencies list. 
 
 For example:
+
 $ npm install express
 
 To install Express temporarily and not add it to the dependencies list:
@@ -28,12 +29,23 @@ HELLOW WORLD
 
 
 
-const express = require('express')
-const app = express()
+const express = require('express') 
+// when we require this, we are gettign back a func and this function returns a object, and this obj had bunch of methods that we can use in the application
+const app = express() 
 const port = 3000
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
+})
+
+localhost:3000/example/pedro/99?tutorial=paramtutorial&sort=byage
+
+we use params when something cant be empty, query is when it is optional
+
+app.get('/example/:name/:age',(req,res)=>{
+  console.log(req.params); //{name:'pedro',age:'99'}
+  console.log(req.query); //{tutorial:'paramtutorial', sort:'byage'}
+  res.send(req.params.name + " : " + req.params.age)
 })
 
 app.listen(port, () => {
@@ -84,7 +96,8 @@ $ express -h
         --git           add .gitignore
     -f, --force         force on non-empty directory
 
-For example, the following creates an Express app named myapp. The app will be created in a folder named myapp in the current working directory and the view engine will be set to Pug:
+For example, the following creates an Express app named myapp. The app will be created in a folder named myapp in the current
+working directory and the view engine will be set to Pug:
 
 $ express --view=pug myapp
 
