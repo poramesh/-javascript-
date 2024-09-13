@@ -1,0 +1,121 @@
+Set Up Middleware in Your Express Application:
+
+
+const express = require('express');
+const app = express();
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+app.post('/json', (req, res) => {
+  const data = req.body; // Parsed JSON data
+  res.send(`Received JSON data: ${JSON.stringify(data)}`);
+});
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+
+
+2. Sending JSON Data in Requests
+
+When sending JSON data to an Express server, make sure to set the Content-Type header to application/json.
+Here’s how you can send a JSON payload using fetch in JavaScript:
+
+
+fetch('http://localhost:3000/json', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ key: 'value' })
+})
+.then(response => response.text())
+.then(data => console.log(data));
+
+
+
+_______________________________________________________________________________________________________________
+The fetch() function is used to make network requests. It returns a Promise that resolves to the Response 
+object representing the response to the request.
+
+syntax:
+fetch(url, options)
+url: The URL to which the request is sent.
+options: An object containing settings for the request (e.g., method, headers, body).
+
+Method and Headers
+
+fetch() is used to send a POST request with the following options:
+
+method: 'POST':
+Specifies that the HTTP method to be used is POST. This is typically used for sending data to the server.
+
+headers:
+'Content-Type': 'application/json': This header tells the server that the data being sent in the request body is in JSON format.
+
+Request Body
+
+body: JSON.stringify({ key: 'value' })
+
+body: Contains the data to be sent to the server.
+JSON.stringify({ key: 'value' }): Converts the JavaScript object { key: 'value' } into a JSON string, which is then sent as the request body.
+
+
+Handling the Response
+
+
+The fetch() function returns a Promise that resolves to the Response object. The response can be processed as follows:
+
+.then(response => response.text())
+
+response.text(): Reads the response body as plain text. This returns another Promise that resolves to the text content of the response.
+
+.then(data => console.log(data)):
+
+data: The resolved text content of the response.
+
+console.log(data): Prints the response data to the console.
+
+.catch(error => console.error('Error:', error)); // Handle any errors
+
+
+
+
+
+WE CAN USE THis API in various contexts:
+
+
+In a Web Browser
+
+The most common use of fetch() is in client-side JavaScript running in a web browser. This allows you to
+make network requests to servers or APIs from web applications.
+
+Example:
+
+
+// Fetch data from a public API
+fetch('https://api.example.com/data')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error))
+
+
+2. In a Node.js Environment
+Although fetch() is built into web browsers, it's not available in Node.js by default. However, you
+can use the node-fetch library to provide similar functionality in Node.js.
+
+Install node-fetch:
+
+npm install node-fetch
+
+Example:
+
+const fetch = require('node-fetch');
+
+fetch('https://api.example.com/data')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+
+
