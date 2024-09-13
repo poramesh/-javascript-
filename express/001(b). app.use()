@@ -1,0 +1,136 @@
+ Express.js, app.use() is a method used to mount middleware functions to your application. It allows you to specify middleware that will be executed for every incoming
+request or for specific routes, handling tasks like logging, parsing, authentication, serving static files and more
+
+
+Global Middleware: If you don't specify a path, the middleware will apply to every route in your application.
+
+
+app.use((req, res, next) => {
+  console.log('Request received');
+  next(); // Call next() to pass control to the next middleware
+});
+
+
+Path-Specific Middleware: You can also mount middleware for a specific path. In this case, the middleware will only be applied to routes that match the given path.
+
+// Mounting middleware for paths starting with '/api'
+app.use('/api', (req, res, next) => {
+  console.log('API request received');
+  next(); // Pass control to the next middleware
+});
+
+
+app.get('/api/users', (req, res) => {
+  res.send('Here are the users');
+});
+
+
+Multiple Middleware: app.use() can be used multiple times to stack or chain middleware functions. Each middleware function can perform some
+processing on the request, response, or both, and then call next() to pass control to the next middleware in line.
+
+
+app.use(loggingMiddleware);
+app.use(authMiddleware);
+app.use(routeHandler);
+
+
+
+example: 
+
+const express = require('express');
+const app = express();
+
+// Middleware to log requests
+function loggingMiddleware(req, res, next) {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next(); // Pass control to the next middleware
+}
+
+// Middleware to check for authentication
+function authMiddleware(req, res, next) {
+  if (req.headers.authorization === 'Bearer mysecrettoken') {
+    next(); // Authorized, pass control to the next middleware
+  } else {
+    res.status(401).send('Unauthorized'); // Unauthorized, send a response
+  }
+}
+
+// Route handler
+function routeHandler(req, res) {
+ 
+  res.send('Hello, this is the route handler!');
+}
+
+// Apply middleware
+app.use(loggingMiddleware);
+app.use(authMiddleware);
+app.use(routeHandler);
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+
+
+
+
+loggingMiddleware:
+
+Purpose: Logs each incoming request with a timestamp and the request method and URL.
+How It Works: It logs the request details and then calls next() to pass control to the next 
+middleware or route handler.
+
+authMiddleware:
+
+Purpose: Checks if the request has the correct authorization header.
+How It Works: If the header matches the expected token, it calls next() to pass control further.
+Otherwise, it sends a 401 Unauthorized response.
+
+routeHandler:
+
+Purpose: Handles the actual request logic for the matched route.
+How It Works: Sends a response to the client. Since it’s placed after the other middlewares,
+it will only be reached if the request passes through all previous middleware.
+
+
+more example:
+
+
+
+
+function requestTimingMiddleware(req, res, next) {
+  req.startTime = Date.now();
+  next();
+}
+
+app.use(requestTimingMiddleware);
+
+app.get('/', (req, res) => {
+  const duration = Date.now() - req.startTime;
+  res.send(`Request processed in ${duration} ms`);
+});
+
+
+
+Purpose: Adds a timestamp to the request object and calculates how long the request took to
+process.
+
+
+
+ANOTHER IMP EXMAPLE::
+
+
+if express.json() is not used in your Express application, the body of incoming requests with JSON payloads won’t be automatically parsed. 
+This means req.body will be undefined for requests that contain JSON data
+
+app.use(express.json())
+
+When a client sends a request to your server with a JSON payload (e.g., in a POST or PUT request), this middleware parses the JSON data and 
+attaches it to the req.body object.
+
+
+The express.json() middleware looks at the Content-Type header of the incoming request. If the header is set to application/json, 
+it knows to parse the request body as JSON.
+After parsing, the JSON data is attached to req.body for use in your route handlers.
+
+
+
