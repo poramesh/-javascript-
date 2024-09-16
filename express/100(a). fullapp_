@@ -1,0 +1,107 @@
+_______________________________________________
+ Understanding Server Requests and Responses
+________________________________________________
+
+Request and URL Breakdown: The backend starts processing when it receives a request from a client, typically through a URL.
+
+A URL consists of several components:
+
+Protocol: Determines if the request is encrypted (HTTP vs. HTTPS).
+
+Host: Identifies the server (e.g., youtube.com) but isn't used for handling the request after reaching the server.
+
+Path: Specifies the section of the server's code to run.
+
+Query String: Modifies the response for a given path using query parameters (e.g., search_query on YouTube).
+
+Actions and Request Methods:
+
+The URL alone isn't enough to process a request. The server also considers an action (or method):
+
+>GET, POST, PUT, DELETE: These methods determine which part of the server code to run.
+>The server uses the combination of the action and the path to find the correct section to process.
+
+Dynamic Responses:
+
+Typically, the server responds with dynamically generated HTML pages. For example, a YouTube search page uses the same path but
+returns different results based on the query parameters.
+
+
+Server Security:
+
+The server defines which sections of its code are accessible to the outside world. Secure information (like databases) can be safely
+stored on the server as long as it isn’t exposed through a specific path.
+
+______________________________________________________________________________________________________________
+REST (Representation State Transfer): A design pattern for managing server interactions using standard HTTP methods.
+_____________________________________________________________________________________________________________
+
+Core Concept: Treats server URLs as access points for resources (e.g., users).
+
+Basic HTTP Actions:
+
+GET: Retrieve data.
+POST: Create new data.
+PUT: Update existing data.
+DELETE: Remove data.
+URL Examples:
+
+http://example.com/users
+
+GET: Get a list of all users.
+POST: Create a new user.
+
+http://example.com/users/1
+
+GET: Get details of the user with ID 1.
+PUT: Update the user with ID 1.
+DELETE: Delete the user with ID 1.
+
+Flexibility in URLs: URLs can vary in format, but must represent resources and support CRUD operations using GET, POST, PUT, and DELETE.
+
+Goal: Standardize interactions with server resources for consistency and ease of use.
+
+
+__________________
+MVC Architecture
+_________________
+
+MVC: Stands for Model, View, and Controller. It is a design pattern used to structure complex web applications by separating concerns.
+
+Components:
+
+Model:
+
+Role: Handles data, logic, and persistence.
+Function: Manages data validation, interacts with the database, and performs business logic.
+Interaction: Provides data to the Controller and responds to its requests.
+
+View:
+
+Role: Manages presentation.
+Function: Renders HTML pages or other UI elements based on data provided by the Model.
+Interaction: Receives data from the Controller and displays it to the user.
+
+
+Controller:
+
+Role: Manages user input and coordinates between the Model and the View.
+Function: Handles incoming requests, processes them (with the help of the Model), and updates the View with the data.
+Interaction: Retrieves data from the Model and sends it to the View for presentation. It does not directly handle data or presentation.
+
+
+How It Works:
+
+User Request: User interacts with the application (e.g., submits a form).
+Controller: Receives the request, processes it, and queries the Model for necessary data.
+Model: Performs data operations and returns the result to the Controller.
+Controller: Passes the data to the View.
+View: Renders the final HTML or UI based on the data from the Controller and presents it to the user.
+
+Benefits:
+Separation of Concerns: Divides the application into distinct components (Model, View, Controller) for better manageability.
+Flexibility: Allows changes to be made to one part of the application (e.g., the user interface) without affecting others.
+Maintainability: Simplifies debugging and updating by isolating the different aspects of the application.
+
+MVC is a widely used architecture because it helps in organizing code efficiently, improving maintainability, and providing a clear structure
+for developing complex web applications.
