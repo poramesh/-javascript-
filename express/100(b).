@@ -1,0 +1,68 @@
+Start off with 
+npm init -y
+
+create  server.js and make it as main
+
+npm i express ejs express-ejs-layouts//templatating lang and creates layouts for all the html files
+
+it adss them packages in the dependencies section.
+
+now isntall development dependencies.
+
+npm i --save-dev nodemon //refreshes our server evertime we make a change.
+
+
+we can run a scripts:
+
+"start": "node server.js"  //for production
+"devStart": nodemon server.js
+
+in server.js
+
+const express = require('express')
+const app = express()
+const expressLayouts = require ('express-ejs-layouts')
+
+app.set('view-engine',ejs)
+app.set('views', __dirname + '/views') //where views is coming from
+
+#create views folder.
+
+app.set('layout','layouts/layout') #basically have commong header and footer in the common file.
+app.use(expressLayouts) #use expressLayouts. 
+app.use(express.static('public')) #where we are going to have stylesheet, iamges, js
+
+#create public 
+
+app.listen(process.env.PORT || 3000)
+
+npm run devStart
+
+nwo lets create routes folder which is also called contoller
+
+and then create models. 
+
+index.js inside the routes folder
+
+
+const express = require('express')
+cosnt router = express.Router()
+
+
+router.get('/', (req,res)=>{ 
+ res.send('hello world')
+})
+
+module.exports = router
+
+we need to to improt this router in the server.
+
+
+//server.js
+
+const indexRouter = require(./routes/index)
+
+app.use('/', indexRouter)
+
+
+
