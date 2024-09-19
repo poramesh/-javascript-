@@ -64,5 +64,151 @@ const indexRouter = require(./routes/index)
 
 app.use('/', indexRouter)
 
+in the views
+create layouts/layouts.ejs
+
+
+boiler plate html.
+<! and enter
+
+inside the <body> before and after every single page.
+
+<body>
+Before
+<br>
+<%- body %>
+<br>
+After
+</body>
+
+view => index.ejs
+
+Middle 
+
+now 
+index.js
+
+instead of send we render the tmepalte.
+
+router.get('/', (req,res)=>{ 
+ res.render(index.ejs)
+})
+
+
+before
+middle
+after
+
+
+lets integrate the model.
+
+installign the mongo db
+
+install the lib
+
+npm i mongoose //integrate mongodb
+
+const mongoose = require('mongoose')
+mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser:true})
+const db = mongoose.connection
+db.on('error', error => console.error(error))
+db.once('open', () => console.error('connected to mongoose'))
+
+install dot env whic helps in configuring the env vari in the prject.
+
+npm i --save-dev dotenv
+
+create .env and put diff varibles
+
+ 
+
+if (process.env.NODE_ENV !== 'production'){
+  require('dotenv').parse()
+}
+
+
+.gitignore
+
+.env
+node_modules
+
+
+create an account on heroku
+
+
+app name : mybrarry
+create app
+
+heroku login
+
+
+email:
+password:
+
+
+git push heroku master
+
+
+set up the environemny on heorku
+
+settings -> 
+
+config vars
+
+database_uri
+
+mongodb atlat
+
+build cluster: aws -> countty closest.
+default.
+create cluster.
+
+pull the url, and put it in the heroku.
+
+
+create a mongoDB user
+
+username: passwrd:
+
+conenct to application.
+
+connecgion stirng and paste it in uri
+
+
+
+
+In the mongodb
+
+use newDB
+switched to db newDB
+db.items.insert({name:"name"})
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('66ec70a21cd646fb0d9bbc72')
+  }
+}
+db.items.insertOne({name:"name"})
+{
+  acknowledged: true,
+  insertedId: ObjectId('66ec70b31cd646fb0d9bbc73')
+}
+db.items.find()
+{
+  _id: ObjectId('66ec70a21cd646fb0d9bbc72'),
+  name: 'name'
+}
+{
+  _id: ObjectId('66ec70b31cd646fb0d9bbc73'),
+  name: 'name'
+}
+SHOW DATABASES;
+
+
+
+
+
+
 
 
