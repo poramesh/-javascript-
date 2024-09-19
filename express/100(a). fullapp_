@@ -9,10 +9,19 @@ A URL consists of several components:
 Protocol: Determines if the request is encrypted (HTTP vs. HTTPS).
 
 Host: Identifies the server (e.g., youtube.com) but isn't used for handling the request after reaching the server.
+It tells the internet which server should receive the request. The Host is part of the URL and is crucial 
+for directing the request to the correct server.
+
+Once the request reaches the server (e.g., YouTube’s server), the Host part of the URL is no longer used for handling the request. 
+The server itself is responsible for processing the request based on other parts of 
+the URL and the HTTP method used (e.g., GET, POST).
 
 Path: Specifies the section of the server's code to run.
 
 Query String: Modifies the response for a given path using query parameters (e.g., search_query on YouTube).
+The query string is composed of key-value pairs separated by &. Each key and value are joined by an = sign. 
+
+For example, in the URL http://example.com/search?query=python&sort=latest, the query string is query=python&sort=latest.
 
 Actions and Request Methods:
 
@@ -44,6 +53,7 @@ GET: Retrieve data.
 POST: Create new data.
 PUT: Update existing data.
 DELETE: Remove data.
+
 URL Examples:
 
 http://example.com/users
