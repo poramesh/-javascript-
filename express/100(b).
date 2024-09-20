@@ -185,7 +185,7 @@ node_modules
 
 DATABASE_URL = mongodb://localhost/bookbro
 
-
+______________________________
 create an account on heroku
 
 
@@ -210,7 +210,7 @@ config vars
 
 database_uri
 
-mongodb atlat
+mongodb atlaS
 
 build cluster: aws -> countty closest.
 default.
@@ -226,6 +226,8 @@ username: passwrd:
 conenct to application.
 
 connecgion stirng and paste it in uri
+
+_____________________________________________________________________
 
 
 
@@ -259,8 +261,59 @@ db.items.find()
 SHOW DATABASES;
 
 
+_____________________________________________
 
 
+
+
+create a new file author.js in routes folder.
+
+create authors, search authors
+
+
+
+const express = require('express')
+const router = express.Router()
+
+
+//all authors route
+router.get('/',(req,res)=>{
+  res.render('authors/index')
+})
+
+router.get('/new',(req,res)=>{
+  res.render('authors/new')
+})
+
+//create author route
+router.post('/', (req,res)=>{
+res.send('create')
+
+})
+
+module.exports = router
+
+
+
+view -> create folder -> authors -> index.ejs and new.ejs
+
+
+inside server.js
+
+
+const authorRouter = require('/router/authors')
+
+
+app.use('/authors',authorRouter)  // authors/new
+
+
+
+
+and now create partials -> it allows to break into smaller files. so we dont have to duplicate the code.
+
+
+
+we will have to require body patse lib to read the input data sent in the url
 
 
 
