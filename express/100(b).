@@ -5,6 +5,31 @@ create  server.js and make it as main
 
 npm i express ejs express-ejs-layouts//templatating lang and creates layouts for all the html files
 
+
+
+''''
+
+Express:
+
+What it is: A fast, unopinionated, and minimal web framework for Node.js.
+Why it's used: Express simplifies building web applications and APIs by providing a robust set of features for routing, middleware management, 
+handling HTTP requests, and more.
+
+
+EJS (Embedded JavaScript):
+
+What it is: A templating engine that allows you to generate HTML markup with JavaScript.
+Why it's used: EJS allows you to embed JavaScript logic (like loops or conditionals) within your HTML, making it useful for rendering dynamic
+content on the server side.
+
+express-ejs-layouts:
+
+What it is: A middleware package for Express that helps manage layouts in EJS views.
+Why it's used: It simplifies the use of layouts in EJS templates, allowing you to define a common layout (like a header and footer) and 
+dynamically insert page-specific content into that layout
+
+''''
+
 it adss them packages in the dependencies section.
 
 now isntall development dependencies.
@@ -114,6 +139,28 @@ const db = mongoose.connection
 db.on('error', error => console.error(error))
 db.once('open', () => console.error('connected to mongoose'))
 
+
+''''
+
+mongoose.connect(): This function establishes a connection to your MongoDB database.
+
+process.env.DATABASE_URL: This accesses the DATABASE_URL environment variable from your .env file, which should contain the connection
+string for your MongoDB database (e.g., mongodb://username:password@host:port/database).
+
+mongoose.connection: This creates a reference to the connection object, which can be used to listen for certain events 
+(such as errors or successful connections).
+
+
+db.on('error', ..) This sets up an event listener that listens for an 'error' event on the connection object.
+If the connection fails, the error is logged to the console using console.error(error).
+
+db.once('open', ...): This listens for the 'open' event, which is triggered when the connection to MongoDB is successfully established.
+Once the connection is open, it logs "connected to mongoose" to the console.
+
+''''
+
+
+
 install dot env whic helps in configuring the env vari in the prject.
 
 npm i --save-dev dotenv
@@ -131,6 +178,12 @@ if (process.env.NODE_ENV !== 'production'){
 
 .env
 node_modules
+
+
+
+.env
+
+DATABASE_URL = mongodb://localhost/bookbro
 
 
 create an account on heroku
