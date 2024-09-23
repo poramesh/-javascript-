@@ -6,8 +6,7 @@ create  server.js and make it as main
 npm i express ejs express-ejs-layouts//templatating lang and creates layouts for all the html files
 
 
-
-''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 Express:
 
@@ -28,7 +27,137 @@ What it is: A middleware package for Express that helps manage layouts in EJS vi
 Why it's used: It simplifies the use of layouts in EJS templates, allowing you to define a common layout (like a header and footer) and 
 dynamically insert page-specific content into that layout
 
-''''
+example covering all the above three concepts:
+
+
+1. Setting up Express:
+
+First, install the required packages:
+
+npm init -y
+npm i express ejs express-ejs-layouts
+
+2. Basic Example of Each Component:
+
+a) creating express app
+
+//app.js
+
+const express = require('express');
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+app.listen(port, () => {
+  console.log(`App running at http://localhost:${port}`);
+});
+
+Run your app using node app.js, 
+then visit http://localhost:3000 in your browser to see "Hello, World!".
+
+b) EJS Example:
+
+To use EJS templating, set up your app to use EJS as the view engine.
+fFirst, tell Express to use EJS for rendering:
+
+app.set('view engine', 'ejs');
+
+Create a folder called views and inside it, create a file index.ejs:
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My EJS Page</title>
+</head>
+<body>
+  <h1>Welcome, <%= name %>!</h1>
+</body>
+</html>
+
+
+Update your route to render the EJS file:
+
+app.get('/', (req, res) => {
+  res.render('index', { name: 'Pooja' });
+});
+
+When you visit http://localhost:3000, you'll see "Welcome, Pooja!" displayed in the browser.
+
+c) express-ejs-layouts Example:
+
+Now, to use layouts with express-ejs-layouts:
+
+Tell Express to use the express-ejs-layouts middleware:
+
+const expressLayouts = require('express-ejs-layouts');
+app.use(expressLayouts);
+
+Create a file views/layout.ejs, which will be your main layout template:
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+</head>
+<body>
+  <header>
+    <h1>Website Header</h1>
+  </header>
+
+  <main>
+    <%- body %> <!-- This will insert the content from the child templates -->
+  </main>
+
+  <footer>
+    <p>Website Footer</p>
+  </footer>
+</body>
+</html>
+
+Modify the index.ejs file (inside the views folder) to use this layout automatically:
+
+<h1>Welcome, <%= name %>!</h1>
+<p>This content is rendered inside the layout template.</p>
+
+Your app should now serve the index.ejs content inside the layout. Every view you render will automatically include the layout with the header and footer.
+
+Complete app.js:
+
+const express = require('express');
+const expressLayouts = require('express-ejs-layouts');
+const app = express();
+const port = 3000;
+
+
+//you don’t need to explicitly require('ejs') in your code because Express automatically requires it behind the scenes when you set 
+'ejs' as the view engine. Express is smart enough to load the EJS module as long as it's installed in your project.
+
+app.set('view engine', 'ejs'); // Set EJS as the templating engine and enable layouts
+app.use(expressLayouts);
+
+// Basic route
+app.get('/', (req, res) => {
+  res.render('index', { name: 'Pooja' });
+});
+
+app.listen(port, () => {
+  console.log(`App running at http://localhost:${port}`);
+});
+
+Summary:
+Express handles routing.
+EJS renders dynamic content in HTML.
+express-ejs-layouts manages common layouts like headers/footers across different views.
+
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 
 it adss them packages in the dependencies section.
 
@@ -57,7 +186,7 @@ app.set('layout','layouts/layout') #basically have commong header and footer in 
 app.use(expressLayouts) #use expressLayouts. 
 app.use(express.static('public')) #where we are going to have stylesheet, iamges, js
 
-#create public 
+#create public folder
 
 app.listen(process.env.PORT || 3000)
 
@@ -127,9 +256,7 @@ after
 
 lets integrate the model.
 
-installign the mongo db
-
-install the lib
+install the mongo db
 
 npm i mongoose //integrate mongodb
 
@@ -146,6 +273,10 @@ mongoose.connect(): This function establishes a connection to your MongoDB datab
 
 process.env.DATABASE_URL: This accesses the DATABASE_URL environment variable from your .env file, which should contain the connection
 string for your MongoDB database (e.g., mongodb://username:password@host:port/database).
+
+since we are running it locally in our case, we just gotta put DATABASE_URL = mongodb://localhost/NAMEOFYOURDATABSE in the env file and
+
+localhost:27017/ 27017 is the default port.
 
 mongoose.connection: This creates a reference to the connection object, which can be used to listen for certain events 
 (such as errors or successful connections).
@@ -167,7 +298,7 @@ npm i --save-dev dotenv
 
 create .env and put diff varibles
 
- 
+DATABASE_URL = mongodb://localhost/deerbooks
 
 if (process.env.NODE_ENV !== 'production'){
   require('dotenv').parse()
@@ -186,46 +317,66 @@ node_modules
 DATABASE_URL = mongodb://localhost/bookbro
 
 ______________________________
-create an account on heroku
+Create an Account on Heroku:
 
+Go to the Heroku website and sign up for a free account.
+After logging in, create a new app:
+App Name: Enter the_app_name.
 
-app name : mybrarry
-create app
+Click on Create App.
+Log in to Heroku via Command Line we have an option to install it from the UI and after installing it, open your terminal or command prompt and run:
 
 heroku login
+Enter your email and password when prompted.
 
+Deploy Your App:
 
-email:
-password:
-
+In your terminal, navigate to your project directory and run:
 
 git push heroku master
 
+This command pushes your code to Heroku, deploying your application.
 
-set up the environemny on heorku
+Set Up Environment Variables on Heroku:
 
-settings -> 
+Go to your Heroku app dashboard.
+Navigate to Settings.
+Under Config Vars, add a new variable:
+Key: DATABASE_URI
+Value: (this will be your MongoDB connection string from MongoDB Atlas).
 
-config vars
+Create a MongoDB Atlas Cluster:
 
-database_uri
+Go to MongoDB Atlas.
+Sign in or create an account.
+Click on Build a Cluster:
+Choose AWS and select the region closest to your target audience.
+Click on Create Cluster.
+Get Your MongoDB Connection String:
 
-mongodb atlaS
+Once your cluster is created, go to the Database Deployments section.
+Click on Connect for your cluster.
+Choose Connect your application.
 
-build cluster: aws -> countty closest.
-default.
-create cluster.
+Copy the connection string provided (it will look something like this):
 
-pull the url, and put it in the heroku.
+mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
 
+Create a MongoDB User:
 
-create a mongoDB user
+In the MongoDB Atlas dashboard, go to Database Access.
+Click on Add New Database User:
+Set a username and password for the user.
+Ensure the user has the appropriate permissions.
 
-username: passwrd:
+Update Connection String:
+Replace <username> and <password> in your connection string with the credentials you just created.
+Replace <dbname> with the name of the database you want to use (you can create it later, or MongoDB will create it when you first insert data).
 
-conenct to application.
+Paste the Connection String in Heroku:
 
-connecgion stirng and paste it in uri
+Go back to Heroku's Config Vars.
+Set the value of DATABASE_URI to the updated MongoDB connection string.
 
 _____________________________________________________________________
 
@@ -258,6 +409,7 @@ db.items.find()
   _id: ObjectId('66ec70b31cd646fb0d9bbc73'),
   name: 'name'
 }
+
 SHOW DATABASES;
 
 
