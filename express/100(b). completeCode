@@ -420,9 +420,6 @@ _____________________________________________
 
 create a new file author.js in routes folder.
 
-create authors, search authors
-
-
 
 const express = require('express')
 const router = express.Router()
@@ -433,6 +430,8 @@ router.get('/',(req,res)=>{
   res.render('authors/index')
 })
 
+
+//new author route
 router.get('/new',(req,res)=>{
   res.render('authors/new')
 })
@@ -440,7 +439,6 @@ router.get('/new',(req,res)=>{
 //create author route
 router.post('/', (req,res)=>{
 res.send('create')
-
 })
 
 module.exports = router
@@ -453,20 +451,236 @@ view -> create folder -> authors -> index.ejs and new.ejs
 inside server.js
 
 
-const authorRouter = require('/router/authors')
+const authorRouter = require('./router/authors')
+const indexRouter = require('./route/index')
 
 
-app.use('/authors',authorRouter)  // authors/new
-
-
-
-
-and now create partials -> it allows to break into smaller files. so we dont have to duplicate the code.
+app.use('/authors',authorRouter)  // authors/ will be / in authors router
+app.use('/',indexRouter)
 
 
 
-we will have to require body patse lib to read the input data sent in the url
+
+and now create partials in the views fodler -> it allows to break into smaller files. so we dont have to duplicate the code.
+
+
+partials/header.ejs
+
+<header>
+<nav>
+   <a href = "/">mybrary </a>
+   <ul>
+     </li><a href = "/authors"> Authors </a> <li>
+     </li><a href = "/authors/new"> Add Authors </a> <li>    
+   </ul>
+</nav>
+</header>
+
+and now got back to the layout.ejs where we need to include this :
+<body>
+<% include('../partials/header.ejs')%> two dots to back from the folder and then find the partials folder.
+<% body %>
+</body>
+
+go to models folder and create author.js
+
+const mongoose = require('mongoose') //require into our app
+
+const authorSchema = new mongoose.schema({ //define json object
+     name: {
+         type: String,
+         required: true     
+ }
+})
+
+module.exports = mongoose.model('Author','authorSchema')
+
+//author is essentially the name of the table and pass the schema that degines the tables ans that is authorschemma.
+
+inside route/author.js
+
+const Author = require('../models/author') //going to give an access to the author model.
+
+
+//new author route
+router.get('/new',(req,res)=>{
+  res.render('authors/new',{author: new Author()}) //this doesnt actually creates anything in the db but it does create an author that wecan use to save/deelete inside the db and also use the object in the ejs file. 
+})
+
+
+and now getting back to authors/new.ejs
+
+<h2> New Author</h2>
+<form action = '/authors' method = 'POST'>
+  <% include('_form_fields')%>
+   <a href = '/authors/cancel'>cancel</a>
+   <button type = "submit"> create </button>
+</form>
+
+
+Instead of duplicating the input file, since we are gonna have the same details in create/edit we can create it in the partials
+
+views/author/_form_fields.ejs //_ is to indicate that it is partials files
+
+
+<div class="form-row">
+  <div class="form-item">
+    <label>Name</label>
+    <input type="text" name="name" value="<%= author.name %>"> //body.name if, it coming from the edit page, it will have
+  </div>
+</div>
 
 
 
+express doesnt have an easy way to getting the body values so we will install a lib called body_parse.
+
+
+npm i body-parser
+//access diff inpput elemtn from the server.
+
+
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.urlencoded(limit:'10mb',extended:false))  //we will be readign the info from url
+
+router.post('/',(req,res)=>{
+ res.send(req.body.name)
+})
+
+
+in order to ceate new author we will pass diff paramaeter which is omcing from req.body.name
+
+
+router.post('/',(req,res)=>{
+  const author = new author({
+       name = req.body.name
+})
+author.save((err, newAuthor)=>{
+   if(err){
+   res.render ('author/new',{
+    author: author,
+    errorMessage: 'Error createing author'
+   })
+  else {
+  //res.redirect('author/$(newAuthor:id)')   
+    res.redirect('authors')
+}
+}
+})
+res.send(req.body.name)
+})
+
+partials/errorMessage.ejs
+
+<%=errorMessage %>
+ as we stlye it , it will belike the one below
+
+<% if (locals.errorMessage != null) { %>
+  <div class="error-message"><%= errorMessage %></div>
+<% } %>
+
+
+
+and then we gotta include the file in the layout.ejs
+
+<% include('../partials/errormessage.ejs') %>
+
+
+we can use asyn await  to make it look much better:
+
+
+router.post('/', async (req, res) => {
+  const author = new Author({
+    name: req.body.name
+  })
+  try {
+    const newAuthor = await author.save()
+    res.redirect(`authors/${newAuthor.id}`)
+  } catch {
+    res.render('authors/new', {
+      author: author,
+      errorMessage: 'Error creating Author'
+    })
+  }
+})
+
+we need to dispaly errorMessage only if there is error or else it will display an erorr since it will expecting hte vlaue
+
+
+<% if (locals.errorMessage != null) { %>
+ <%= errorMessage %>
+<% } %>
+
+
+and we update the get route with / with asyn 
+
+// All Authors Route
+router.get('/', async (req, res) => {
+  try {
+    const authors = await Author.find({})
+    res.render('authors/index', {
+      authors: authors,
+    })
+  } catch {
+    res.redirect('/') //homepage
+  }
+})
+
+and nowc create an index page to viewing our diff authors
+
+index.ejs
+
+<h2> search authors  </h2>
+<form action ="/authors" method ="GET"> //its a get route so
+ <label> Name</label>
+ <input type="text" name = "name">
+ <button type="submit"> search </button>
+</form>
+<br>
+//we are gonna lopp through to diplsy the authors
+
+<% author.forEach(author => { %>
+   <div> <%= author.name %> </div> 
+
+<% }) %>
+
+
+now we gotta implement the search 
+
+since we are sending the inforation through get , it will be req.query
+and post req is sent through he body
+
+
+router.get('/', async (req, res) => {
+  let searchOptions = {}
+  if (req.query.name != null && req.query.name !== '') {
+    searchOptions.name = new RegExp(req.query.name, 'i') //i flag, it is capital insensitive.
+  }
+  try {
+    const authors = await Author.find(searchOptions)
+    res.render('authors/index', {
+      authors: authors,
+      searchOptions: req.query //to repopulated the field
+    })
+  } catch {
+    res.redirect('/')
+  }
+})
+
+index.ejs
+
+<h2> search authors  </h2>
+<form action ="/authors" method ="GET"> //its a get route so
+ <label> Name</label>
+ <input type="text" name = "name" value = "<%= searchOptions.name %>">
+ <button type="submit"> search </button>
+</form>
+<br>
+//we are gonna lopp through to diplsy the authors
+
+<% author.forEach(author => { %>
+   <div> <%= author.name %> </div> 
+<% }) %>
+
+ 
 
