@@ -683,4 +683,312 @@ index.ejs
 <% }) %>
 
  
+BOOKS ROUTES:::::
+
+create book.js in router file
+
+const express = require('express')
+const router = express.Router()
+const path - require('path')
+const book = require('../models/book')
+const multer = require('multer')
+const fs = requrie('fs') //to make sure we arent saving a soemthign that it is not valid
+const uploadPath = path.join('public', Book.coverImagesBasePath) 
+const Author = require('../models/author')
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
+const upload = multer({
+  dest: uploadPath 
+  fileFilter: (req,file,callback)=>{
+      callback(null, imageMimeTypes.includes(file.mimetype))
+  }
+})
+
+-------
+router.get('/',async(req,res) =>{
+try {
+    const books = await Book.find({})
+    res.render('books/index', {
+      books: books,
+      searchOptions: req.query
+    })
+  } catch {
+    res.redirect('/')
+  }
+})
+
+router.get('/new',async(req,res) =>{
+//res.sedn('new book')
+renderNewPage(res,new Book())
+  
+
+})
+
+''''
+// All Books Route
+router.get('/', async (req, res) => {
+  let query = Book.find()
+  if (req.query.title != null && req.query.title != '') {
+    query = query.regex('title', new RegExp(req.query.title, 'i'))
+  }
+  if (req.query.publishedBefore != null && req.query.publishedBefore != '') {
+    query = query.lte('publishDate', req.query.publishedBefore)
+  }
+  if (req.query.publishedAfter != null && req.query.publishedAfter != '') {
+    query = query.gte('publishDate', req.query.publishedAfter)
+  }
+  try {
+    const books = await query.exec()
+    res.render('books/index', {
+      books: books,
+      searchOptions: req.query
+    })
+  } catch {
+    res.redirect('/')
+  }
+})
+
+
+router.post('/', upload.single('cover'), async(req,res) =>{
+// res.send('create book')
+ const fileName = req.file! = null ? req.file.filname : null
+const book = new Book({
+  title = req.body.title,
+  author = req.body.author,
+  publishDate: new Date(req.body.publishDate),
+  pageCount = new.body.pageCount,
+  converImageName: fileName
+  description = req.body.description
+
+  try{
+    const newBook = await book.save()
+     //res.redirect('/books/$(newBook.id)')
+     res.redirect('books')
+  }catch{
+lets create a  logic so we only have to encapsulate in one place.
+
+if (books.coverImageName != null){
+removeBookCover(book.CoverImageName)
+}
+renderNewPage(res,book,true)
+  }
+
+
+function removeBookCover(filename){
+   fs.unlink(path.join(uploadPath, filename), err =>{
+if(err)=>{
+console.error (err)
+}
+})
+}
+
+async function renderNewPage(res,book,hasError = false){
+try{
+   const authors = await Author.find({})
+  // const book = new Book() // we do this so we could populate the field with the values , just in case if they enter invalid values
+const params ={
+authors:authors,
+book: book
+}
+if (hasError) params.errorMessage = 'error creating book '
+res.render('books/new',params)
+'''
+//res.render('books/new')  {
+//  author:authors,
+// book: book
+}
+'''
+} catch{
+    res.redirect('/books')
+}
+
+
+//use a lib to multer npm i multer, which allows us to work w multpart form files
+//Multer is a middleware for handling multipart/form-data in Node.js, primarily used for uploading files. It's built on top of the busboy
+library and makes it easy to upload files to your server, such as images, documents, etc.
+
+
+})
+
+})
+
+module.exports = router
+
+
+
+create books.js in models.
+
+
+const mongoose = require('mongoose')
+const path = require('path')
+const coverImageBasePath = 'uploads/bookCovers'
+ const bookSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String
+  },
+  publishDate: {
+    type: Date,
+    required: true
+  },
+  pageCount: {
+    type: Number,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  coverImageName: {
+    type: String, ///iniitally it was coverImageName and set it to String, isnteas of passing image itself intodb, we are gonna be passing the string.
+    required: true
+  },
+'''
+  coverImageType: {
+    type: String,
+    required: true
+  },
+''''
+  author: {
+    type: mongoose.Schema.Types.ObjectId, //reference author from author collections. just telling that its referencing another obj inside the collection.
+    required: true,
+    ref: 'Author'
+  }
+})
+//virtual prperty is same as that of any proerpty mentioned above but virtual is derived using the property above
+bookSchema.virtual('coverImagePath').get(function() {
+  if (this.coverImageName != null '''&& this.coverImageType != null''') {
+    return path.join('/',coverimageBasePath,this.coverImageName)
+///`data:${this.coverImageType};charset=utf-8;base64,${this.coverImage.toString('base64')}`
+  }
+})
+
+module.exports = mongoose.model('Book', bookSchema)
+module.exposts.coverImageBasepAth = coverImageBasePth
+
+
+go to partials and add the links in the heeder file which contains 
+
+
+and now create books -> _forms_fields.ejs and new.ejs, index.ejs
+
+
+new.ejs
+
+<h2>New book</h2>
+<form action='/books' methods='POST' enctype = 'multipart/form-data'> //it telss that our form could be sending multi part which oculd include the file
+ <%- include('_forms_fields') %>
+ <a href='/books'>cancel</a>
+ <button type = 'submit'> create </button>
+<form>
+
+
+_forms_fields.ejs
+
+
+
+    <label>Title</label>
+    <input type="text" name="title" value="<%= book.title %>">
+
+    <label>Author</label>
+// we arent doing author.find({}).each
+    <select name="author">
+      <% authors.forEach(author => { %>
+        <% if (author.id === book.author) { %> //if user has already selected author then it will show it up
+          <option selected label="<%= author.name %>" value="<%= author.id %>">
+        <% } else { %>
+          <option label="<%= author.name %>" value="<%= author.id %>">
+        <% } %>
+      <% }) %>
+    </select>
+
+
+
+    <label>Publish Date</label>
+    <input type="date" name="publishDate"
+          value="<%= book.publishDate == null ? '' : book.publishDate.toISOString().split('T')[0] %>">2019-09-19T12:23
+
+    <label>Page Count</label>
+    <input type="number" name="pageCount" min="1" value="<%= book.pageCount %>"> //we can never have a book which is less than one
+
+
+
+    <label>Cover</label>
+    <input type="file" name="cover" class="book-cover filepond"> //it doesnt allow to have value properties
+
+    <label>Description</label>
+    <textarea name="description"><%= book.description %></textarea>
+
+
+
+//index.ejs
+
+<h2>Search Book</h2>
+<form action="/books" method="GET"> 
+ <div>
+      <label>Title</label>
+      <input type="text" name="title" value="<%= searchOptions.title %>">
+  </div>
+    <div>
+      <label>Published After</label>
+      <input type="date" name="publishedAfter" value="<%= searchOptions.publishedAfter %>">
+    </div>
+       <div>
+      <label>Published Before</label>
+      <input type="date" name="publishedBefore" value="<%= searchOptions.publishedBefore %>">
+    </div>
+  <div>
+    <button type="submit">Search</button>
+  </div>
+</form>
+<br>
+<% books.forEach(book=> {%>
+   <img height='150' width = '100' src="<%= book.coverImagePath%>"
+<%})%>
+////
+<%- include('../partials/bookGrid', { books: books, large: true }) %>
+
+<% bookCoverClass = locals.large ? 'book-cover-large' : '' %>
+<% bookGridClass = locals.large ? 'book-grid-large' : '' %>
+<div class="book-grid <%= bookGridClass %>">
+  <% books.forEach(book => { %>
+    <a href="/books/<%= book.id %>">
+      <img <%= bookCoverClass %>" src="<%= book.coverImagePath %>">
+    </a>
+  <% }) %>
+</div>
+
+
+//views
+index.ejs
+
+<h2>Recently added </h2>
+<div>
+ <%  books.forEach(book=> {%>
+ <img height='150' width ='100' src = " <%= book.coverImagePath %>"
+<% }) %>
+</div>
+
+
+
+index.js
+
+const express = require('express')
+const router = express.Router()
+const book = require('../models/book')
+
+router.get('/', (req,res)=>{
+let books
+try{
+books = await book.find().sort({createAT:'desc'}).limit(10).exec()
+}catch{
+ book = []
+}
+res.render('index',{booksbooks})
+})
+
+module.exports = router
 
