@@ -992,3 +992,6 @@ res.render('index',{booksbooks})
 
 module.exports = router
 
+
+.gitignore
+/public/uplaods
