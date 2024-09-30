@@ -565,7 +565,7 @@ router.post('/',(req,res)=>{
   const author = new author({
        name = req.body.name
 })
-author.save((err, newAuthor)=>{
+author.save((err, newAuthor)=>{ //newAuthor is the result of saving the author instance to the MongoDB database using Mongoose.
    if(err){
    res.render ('author/new',{
     author: author,
@@ -613,6 +613,7 @@ router.post('/', async (req, res) => {
     })
   }
 })
+
 
 we need to dispaly errorMessage only if there is error or else it will display an erorr since it will expecting hte vlaue
 
