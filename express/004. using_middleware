@@ -67,7 +67,8 @@ app.use('/user/:id', (req, res, next) => {
   next()
 })
 
-Route handlers enable you to define multiple routes for a path. The example below defines two routes for GET requests to the /user/:id path. The second route will not cause any 
+Route handlers enable you to define multiple routes for a path. The example below defines two routes for GET requests to the /user/:id path. The second 
+route will not cause any 
 problems, but it will never get called because the first route ends the request-response cycle.
 
 This example shows a middleware sub-stack that handles GET requests to the /user/:id path.
@@ -274,7 +275,8 @@ Error-handling middleware always takes four arguments. You must provide four arg
 Even if you don’t need to use the next object, you must specify it to maintain the signature. Otherwise, the next object will be
 interpreted as regular middleware and will fail to handle errors.
 
-Define error-handling middleware functions in the same way as other middleware functions, except with four arguments instead of three, specifically with the signature (err, req, res, next):
+Define error-handling middleware functions in the same way as other middleware functions, except with four arguments instead of three, specifically with the 
+signature (err, req, res, next):
 
 app.use((err, req, res, next) => {
   console.error(err.stack)
@@ -283,7 +285,8 @@ app.use((err, req, res, next) => {
 For details about error-handling middleware, see: Error handling.
 
 Built-in middleware
-Starting with version 4.x, Express no longer depends on Connect. The middleware functions that were previously included with Express are now in separate modules; see the list of middleware functions.
+Starting with version 4.x, Express no longer depends on Connect. The middleware functions that were previously included with Express are now in separate
+modules; see the list of middleware functions.
 
 Express has the following built-in middleware functions:
 
