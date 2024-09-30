@@ -129,6 +129,17 @@ Parsing with querystring:
 }
 
 
+Note:
 
 
+As of Express 4.16.0, you no longer need to use the body-parser package separately for parsing URL-encoded and JSON bodies. 
+Express now has built-in middleware functions that you can use directly, which simplifies your code.
+
+so we dont have to install body-parser explicitly instead, we can just use express
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extedned:true}))
+
+we can just 
+app.use(express.urlencoded(extedned:true))
 
