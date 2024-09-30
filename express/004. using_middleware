@@ -207,6 +207,67 @@ app.use('/admin', router, (req, res) => {
 })
 
 
+
+WHY NOT APP.USE WHY ROUTER?
+
+you could technically use app.get('/') in the routes folder, but it's not considered a good practice for several important reasons
+related to code organization, scalability, and maintainability. Here's why:
+
+1. Separation of Concerns
+Modular Structure: Using app.get('/') in the main app.js or server.js ties route definitions directly to the core server configuration, making your 
+application less modular.
+Router Abstraction: By using express.Router() in separate route files, you keep route definitions decoupled from the main application logic. This makes
+the codebase more maintainable and easier to read.
+
+2. Scalability
+Managing Large Applications: As your application grows and you add more routes, putting all routes in a single app.js file can quickly become unmanageable.
+Routing Modules: By using express.Router(), you can create separate files for different routes (e.g., user.js, auth.js, product.js) 
+and then import them into your main app.js. This allows you to organize your routes logically as your application scales.
+
+const userRoutes = require('./routes/user');
+const productRoutes = require('./routes/product');
+app.use('/users', userRoutes);
+app.use('/products', productRoutes);
+
+
+3.Cleaner Code
+When you define your routes directly in app.js using app.get('/path', ...), all your routes end up in one file, and as your 
+application grows, this file can get very large and difficult to manage.
+Using express.Router() allows you to organize related routes into separate files, keeping your codebase cleaner and easier to maintain.
+
+4. Reusability and Flexibility
+By using express.Router(), you can easily import and reuse routes in different parts of your application. You can also define route-specific 
+middleware within the route modules, making your code more flexible.
+
+// Example in user.js
+const express = require('express');
+const router = express.Router();
+
+// Middleware specific to user routes
+router.use((req, res, next) => {
+  console.log('User route accessed');
+  next();
+});
+
+router.get('/', (req, res) => {
+  res.send('User list');
+});
+
+module.exports = router;
+
+5. Routing Prefixes
+When you use app.use() to include route modules, you can easily add route prefixes. For example:
+
+app.use('/users', userRoutes);  // All user-related routes will start with /users
+If you had all routes in app.js, you'd have to manually manage these prefixes, which could get messy.
+
+
+Summary:
+Modularity: Keeping routes in their own files allows for easier maintenance.
+Separation of concerns: Keeps your routing logic separate from your server configuration.
+Scalability: Makes it easier to add new routes as your app grows.
+
+
 Error-handling middleware
 
 Error-handling middleware always takes four arguments. You must provide four arguments to identify it as an error-handling middleware function.
