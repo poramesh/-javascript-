@@ -81,7 +81,7 @@ Create a folder called views and inside it, create a file index.ejs:
 Update your route to render the EJS file:
 
 app.get('/', (req, res) => {
-  res.render('index', { name: 'Pooja' });
+  res.render('index', { name: 'P' });
 });
 
 When you visit http://localhost:3000, you'll see "Welcome, Pooja!" displayed in the browser.
@@ -161,7 +161,7 @@ express-ejs-layouts manages common layouts like headers/footers across different
 
 it adss them packages in the dependencies section.
 
-now isntall development dependencies.
+now install development dependencies.
 
 npm i --save-dev nodemon //refreshes our server evertime we make a change.
 
@@ -171,11 +171,14 @@ we can run a scripts:
 "start": "node server.js"  //for production
 "devStart": nodemon server.js
 
+and use this to run the application >>npm run devstart
+
+
 in server.js
 
 const express = require('express')
 const app = express()
-const expressLayouts = require ('express-ejs-layouts')
+const expressLayouts = require('express-ejs-layouts')
 
 app.set('view-engine',ejs)
 app.set('views', __dirname + '/views') //where views is coming from
@@ -296,7 +299,7 @@ install dot env whic helps in configuring the env vari in the prject.
 
 npm i --save-dev dotenv
 
-create .env and put diff varibles
+create .env and put diff variables
 
 DATABASE_URL = mongodb://localhost/deerbooks
 
@@ -314,7 +317,7 @@ node_modules
 
 .env
 
-DATABASE_URL = mongodb://localhost/bookbro
+DATABASE_URL = mongodb://localhost/deerbooks
 
 ______________________________
 Create an Account on Heroku:
@@ -324,6 +327,7 @@ After logging in, create a new app:
 App Name: Enter the_app_name.
 
 Click on Create App.
+
 Log in to Heroku via Command Line we have an option to install it from the UI and after installing it, open your terminal or command prompt and run:
 
 heroku login
@@ -385,17 +389,17 @@ _____________________________________________________________________
 
 In the mongodb
 
-use newDB
-switched to db newDB
-db.items.insert({name:"name"})
-DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+>>use newDB
+<<switched to db newDB
+>>db.items.insert({name:"name"})
+<<DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
 {
   acknowledged: true,
   insertedIds: {
     '0': ObjectId('66ec70a21cd646fb0d9bbc72')
   }
 }
-db.items.insertOne({name:"name"})
+>>db.items.insertOne({name:"name"})
 {
   acknowledged: true,
   insertedId: ObjectId('66ec70b31cd646fb0d9bbc73')
@@ -411,6 +415,12 @@ db.items.find()
 }
 
 SHOW DATABASES;
+
+
+In MongoDB, the db object is a reference to the current database you are working with. So yes, you generally need to use db to perform operations
+such as inserting, querying, updating, or deleting documents in a collection.
+
+
 
 
 _____________________________________________
@@ -504,7 +514,7 @@ const Author = require('../models/author') //going to give an access to the auth
 
 //new author route
 router.get('/new',(req,res)=>{
-  res.render('authors/new',{author: new Author()}) //this doesnt actually creates anything in the db but it does create an author that wecan use to save/deelete inside the db and also use the object in the ejs file. 
+  res.render('authors/new',{author: new Author()}) //this doesnt actually creates anything in the db but it does create an author obejct that wecan use to save/deelete inside the db and also use the object in the ejs file. 
 })
 
 
