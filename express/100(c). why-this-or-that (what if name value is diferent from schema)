@@ -1,0 +1,142 @@
+
+
+it's generally a good practice for the name of the input fields in your HTML forms to match the property names defined in your schema 
+when you're working with a framework like Mongoose in a Node.js application. Here’s why:
+
+1. Consistency:
+Keeping the names consistent between your HTML form and your schema helps avoid confusion and makes the code easier to read and maintain. 
+When you see name in both places, it’s clear that they refer to the same data.
+
+2. Data Binding:
+When a form is submitted, the values of the input fields are sent to the server as key-value pairs. The key (i.e., the name attribute)
+will be used to access the corresponding property on the request body (e.g., req.body.name). If the names match the schema, 
+you can directly map the incoming data to the model.
+Example:
+Suppose you have the following Mongoose schema:
+
+const authorSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  age: { type: Number, required: true },
+});
+
+And in your HTML form, you would define input fields like this:
+
+<form action="/authors" method="POST">
+  <input type="text" name="name" value="<%= author.name %>">
+  <input type="number" name="age" value="<%= author.age %>">
+  <button type="submit">Submit</button>
+</form>
+  
+3. Processing the Form Data:
+
+When you receive the form data in your server route handler, you can easily access the submitted values:
+
+app.post('/authors', (req, res) => {
+  const { name, age } = req.body;
+  const newAuthor = new Author({ name, age });
+  
+  newAuthor.save()
+    .then(() => res.redirect('/authors'))
+    .catch(err => res.status(400).send(err));
+});
+
+
+If the names of the input fields in your HTML form do not match the property names defined in your Mongoose schema, you'll need to
+handle the mapping of the data manually when processing the form submission. Here's how it would look and what you need to consider:
+
+Example Schema
+Let's say you have the following Mongoose schema:
+
+const authorSchema = new mongoose.Schema({
+  fullName: { type: String, required: true }, // Property in schema
+  age: { type: Number, required: true },
+});
+
+HTML Form with Different Input Names
+  
+If your HTML form has input fields with names that don't match the schema, it might look like this:
+
+
+<form action="/authors" method="POST">
+  <input type="text" name="name" value="<%= author.fullName %>"> <!-- Different name -->
+  <input type="number" name="years" value="<%= author.age %>"> <!-- Different name -->
+  <button type="submit">Submit</button>
+</form>
+Handling the Form Submission
+  
+In your route handler, you would need to extract the submitted values and map them to the schema properties manually:
+
+app.post('/authors', (req, res) => {
+  // Extract values from req.body
+  const { name, years } = req.body; // These do not match the schema directly
+
+  // Map to the schema properties
+  const newAuthor = new Author({
+    fullName: name, // Map 'name' to 'fullName'
+    age: years,     // Map 'years' to 'age'
+  });
+
+  newAuthor.save()
+    .then(() => res.redirect('/authors'))
+    .catch(err => res.status(400).send(err));
+});
+  
+
+
+  (or)
+
+const express = require('express');
+const router = express.Router();
+const Author = require('../models/author'); // Import your Author model
+
+router.post('/', async (req, res) => {
+  try {
+    // Map incoming form field names to the schema properties
+    const authorData = {
+      fullName: req.body.name, // Mapping 'name' to 'fullName'
+      age: req.body.years,      // Mapping 'years' to 'age'
+    };
+
+    // Create a new author document using the mapped data
+    const author = new Author(authorData);
+
+    // Save the author to the database
+    await author.save();
+
+    // Redirect or send a response after saving
+    res.redirect('/authors'); // Redirect to the authors page, or handle as needed
+  } catch {
+    res.render('authors/new',{ author:author,
+                              errorMessage:'error creteing author'
+    })
+  }
+});
+
+
+
+// GET route to render the new author form
+router.get('/new', (req, res) => {
+  res.render('authors/new', { author: new Author() }); // Pass an empty author object if needed
+});
+
+new Author() creates an instance of the Author model, giving your template access to a structured but empty object.
+This helps in rendering forms for creating new authors while ensuring that you adhere to the schema defined in your application. 
+It allows you to prepare for potential future use cases, like pre-filling the form for editing existing authors,
+where you would pass an existing author object instead of a new one.
+
+
+
+New Data Submission:
+
+When the user fills out the form and submits it, the values in the form fields represent new data that needs to be processed and saved.
+The initial author object passed to the form during the GET request is empty (or pre-filled for editing) and does not contain this new data.
+
+Separation of Concerns:
+
+The author object created during the GET request is meant solely for rendering the form, not for processing or storing data.
+When the form is submitted, the new data from the request body (req.body) needs to be encapsulated in a new instance of the author object.
+
+Validation and Middleware:
+
+By creating a new author object upon form submission, you can easily perform validation and checks on the new data before saving it to the database
+  
