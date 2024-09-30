@@ -139,4 +139,57 @@ When the form is submitted, the new data from the request body (req.body) needs 
 Validation and Middleware:
 
 By creating a new author object upon form submission, you can easily perform validation and checks on the new data before saving it to the database
+
+
+______________________________________________________________________
+Capturing the Same Author Instance sent in the GET:
+
+
+
+If you want to use the same author instance sent in the GET request after the form submission, you would typically need to maintain the 
+state across requests. Here are a few approaches:
+
+Using Session:
+
+Store the author data in the session when the GET request is made. After form submission, retrieve it from the session in the POST request.
+
+// GET route
+router.get('/new', (req, res) => {
+  const author = new Author(); // Create a new empty author
+  req.session.author = author; // Store it in the session
+  res.render('authors/new', { author });
+});
+
+// POST route
+app.post('/authors', (req, res) => {
+  const authorData = req.session.author; // Retrieve from session
+  const newAuthor = new Author({ fullName: req.body.fullName || authorData.fullName, age: req.body.age || authorData.age });
+  
+  newAuthor.save()
+    .then(() => {
+      req.session.author = null; // Clear session after saving
+      res.redirect('/authors');
+    })
+    .catch(err => res.status(400).send(err));
+});
+
+Using Hidden Inputs:
+
+If the author object has some properties you want to preserve (e.g., in case of validation errors), you can include hidden inputs in your form:
+
+<form action="/authors" method="POST">
+  <input type="hidden" name="existingAuthorId" value="<%= author._id %>"> <!-- Include existing author ID -->
+  <input type="text" name="fullName" value="<%= author.fullName %>">
+  <input type="number" name="age" value="<%= author.age %>">
+  <button type="submit">Create Author</button>
+</form>
+
+In the POST route, you can then check for the existence of existingAuthorId and handle accordingly.
+
+Conclusion:
+
+While you can’t directly capture the same instance from the GET request in the POST request because of the stateless nature of HTTP, 
+you can use sessions or hidden form inputs to maintain the state of the author data across requests.
+
+This allows you to reference the same data in both the GET and POST requests as needed.
   
