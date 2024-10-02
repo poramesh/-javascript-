@@ -1,0 +1,113 @@
+A regular expression (regex) is a sequence of characters that define a search pattern. It's commonly used for searching, matching, and manipulating strings.
+
+
+
+In JavaScript, regular expressions are also objects. These patterns are used with the exec() and test() methods of RegExp, 
+and with the match(), matchAll(), replace(), replaceAll(), search(), and split() methods of String. 
+
+There are two main ways to define regular expressions in JavaScript:
+
+Using the literal syntax: const regex = /pattern/flags;
+const re = /ab+c/;
+Regular expression literals provide compilation of the regular expression when the script is loaded. If the regular 
+expression remains constant, using this can improve performance.
+
+
+Using the RegExp() constructor: const regex = new RegExp('pattern', 'flags');
+const re = new RegExp("ab+c");
+
+Using the constructor function provides runtime compilation of the regular expression. Use the constructor function when you know the regular
+expression pattern will be changing, or you don't know the pattern and are getting it from another source, such as user input.
+
+//
+pattern: A string that specifies the regular expression pattern.
+flags (optional): A string that specifies the behavior of the regular expression (e.g., global search, case-insensitive search). Common flags include:
+g: global match
+i: case-insensitive match
+m: multi-line matching
+
+
+
+
+const word = 'world';
+const regex3 = new RegExp(word, 'i');
+console.log(regex3.test('Hello World')); // true
+
+Escaping Special Characters
+When using new RegExp(), if the pattern includes special characters (like ., *, +), you'll need to escape them. 
+This is because, in a string, special characters need to be represented literally.
+
+const pattern = '\\.com';  // escape special character (backslash)
+const regex4 = new RegExp(pattern);
+console.log(regex4.test('example.com')); // true
+
+
+In contrast, when using literal syntax, special characters are interpreted directly.
+
+const regex5 = /\.com/;
+console.log(regex5.test('example.com')); // true
+
+
+why double backslash charracter in new RegExp?
+
+
+When you want to include a special character in a regular expression (like a dot . which matches any character), you need to escape it.
+To match a literal dot, you write \. in the regex pattern.
+
+However, because you're using a string to create the RegExp, the backslash in the string must also be escaped. Therefore, 
+to write \. in the string, you need to use \\..
+
+This means that new RegExp('\\.com') is interpreted as:
+\\ → \ (a single backslash in the string)
+. → matches a literal dot
+So, \\.com matches the literal string .com.
+
+
+Similarly, if you're writing a regular expression literal and need to match a slash ("/"), you need to escape that (otherwise, it terminates the pattern).
+For instance, to search for the string "/example/" followed by one or more alphabetic characters, you'd use /\/example\/[a-z]+/i—the backslashes 
+before each slash make them literal.
+
+To match a literal backslash, you need to escape the backslash. For instance, to match the string "C:\" where "C" can be any letter, you'd 
+use /[A-Z]:\\/ — the first backslash escapes the one after it, so the expression searches for a single literal backslash.
+
+If using the RegExp constructor with a string literal, remember that the backslash is an escape in string literals, so to use it in the regular
+expression, you need to escape it at the string literal level. /a\*b/ and new RegExp("a\\*b") create the same expression, which searches 
+for "a" followed by a literal "*" followed by "b".
+
+
+Method	Description:
+
+exec()	Executes a search for a match in a string. It returns an array of information or null on a mismatch.
+test()	Tests for a match in a string. It returns true or false.
+match()	Returns an array containing all of the matches, including capturing groups, or null if no match is found.
+matchAll()	Returns an iterator containing all of the matches, including capturing groups.
+search()	Tests for a match in a string. It returns the index of the match, or -1 if the search fails.
+replace()	Executes a search for a match in a string, and replaces the matched substring with a replacement substring.
+replaceAll()	Executes a search for all matches in a string, and replaces the matched substrings with a replacement substring.
+split()	Uses a regular expression or a fixed string to break a string into an array of substrings.
+
+
+Special characters in regular expressions.
+
+Character classes:
+[xyz], [^xyz], ., \d, \D, \w, \W, \s, \S, \t, \r, \n, \v, \f, [\b], \0, \cX, \xhh, \uhhhh, \u{hhhh}, x|y	
+
+Assertions:
+^, $, \b, \B, x(?=y), x(?!y), (?<=y)x, (?<!y)x	
+
+Groups and backreferences:
+(x), (?<Name>x), (?:x), \n, \k<Name>	
+
+Quantifiers:
+x*, x+, x?, x{n}, x{n,}, x{n,m}	
+
+
+
+
+
+
+
+
+
+
+
