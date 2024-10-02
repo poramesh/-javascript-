@@ -1,0 +1,114 @@
+Character classes distinguish kinds of characters such as, for example, distinguishing between letters and digits.
+
+Character classes in regular expressions (regex) are a way to specify a set of characters that you want to match. When you define a character class,
+the regex engine will match any single character that is contained in that class. 
+
+
+Key Points About Character Classes:
+
+Single Character Matching: A character class matches exactly one character from the specified set. For example, [abc] will
+match any one of the characters a, b, or c.
+
+Ranges: You can specify a range of characters inside a character class. For example, [A-Z] matches any uppercase letter from A to Z.
+
+Negation: You can negate a character class by adding a caret (^) at the beginning of the class, which means it will
+match any character not in the class. For example, [^A-Z] will match any character except uppercase letters.
+
+Examples of Character Classes:
+
+Basic Character Classes:
+
+[abc]: Matches any one of the characters a, b, or c.
+[0-9]: Matches any digit from 0 to 9.
+[A-Za-z]: Matches any uppercase or lowercase letter.
+[^abc]: Matches any character except a, b, or c.
+
+Common Character Class Shorthands: Regex provides shorthand character classes for frequently used groups of characters:
+
+\d: Matches any digit (same as [0-9]).
+\D: Matches any non-digit character (same as [^0-9]).
+\w: Matches any word character, which includes letters, digits, and underscores (same as [A-Za-z0-9_]).
+\W: Matches any non-word character (same as [^A-Za-z0-9_]).
+\s: Matches any whitespace character (spaces, tabs, newlines).
+\S: Matches any non-whitespace character.
+
+
+More Complex Examples:
+
+[aeiou]: Matches any single vowel (a, e, i, o, u).
+[a-zA-Z0-9_]: Matches any alphanumeric character (both uppercase and lowercase letters, digits, and underscores). This is equivalent to \w.
+[^\w\s]: Matches any character that is not a word character or a whitespace character.
+
+Example Use Cases:
+
+1. Matching Digits in a String:
+
+const pattern = /[0-9]/;
+console.log(pattern.test("abc123"));  // true (matches '1')
+
+2. Matching Uppercase Letters:
+
+const pattern = /[A-Z]/;
+console.log(pattern.test("hello World"));  // true (matches 'W')
+
+3. Matching Non-Digit Characters:
+
+const pattern = /[^0-9]/;
+console.log(pattern.test("123abc"));  // true (matches 'a')
+
+4. Shorthand for Word Characters:
+
+const pattern = /\w/;
+console.log(pattern.test("hello123!"));  // true (matches 'h')
+
+5. without g:
+
+const str = 'happy 🙂, confused 😕, sad 😢';
+const regex = /[\u{1F600}-\u{1F64F}]/u;
+console.log(str.match(regex));  // Output: ['🙂'] (only the first match)
+
+6. with g:
+
+const chessStory = 'He played the King in a8 and she moved her Queen in c2.';
+const regexpCoordinates = /\w\d/g;
+console.log(chessStory.match(regexpCoordinates)); // Expected output: Array [ 'a8', 'c2']
+
+const moods = 'happy 🙂, confused 😕, sad 😢';
+const regexpEmoticons = /[\u{1F600}-\u{1F64F}]/gu;
+console.log(moods.match(regexpEmoticons));
+// Output: ['🙂', '😕', '😢']
+
+
+
+
+\b: is a word boundary anchor. It doesn't match any specific character, but rather the position between a word character
+(like a letter, digit, or underscore) and a non-word character (like a space, punctuation, or the beginning/end of a string).
+Essentially, it is used to match the boundary between words.
+
+const text = "cat, caterpillar, concatenate, scatter.";
+const regex = /\bcat/g;
+console.log(text.match(regex));  // Output: ['cat', 'cat', 'cat']
+It does not care if there are more characters after "cat" as long as the word boundary is before "cat."
+\bcat matches all instances of "cat" at the beginning of words, including "cat," "caterpillar," and "concatenate."
+
+
+const regex = /\bcat\b/;
+const text1 = "The cat is here.";
+const text2 = "category is here.";
+console.log(text1.match(regex));  // Output: ['cat'] (because 'cat' is a separate word)
+console.log(text2.match(regex));  // Output: null (because 'cat' is part of 'category')
+
+const regexStart = /\bword/;
+const regexEnd = /word\b/;
+console.log("wordplay".match(regexStart));  // Output: ['word']
+console.log("sword".match(regexEnd));      // Output: ['word']
+
+const text = "I love cats, dogs, and birds.";
+const regex = /\bcats?\b/g;  // matches "cat" or "cats" //s? 1 or not
+console.log(text.match(regex));  // Output: ['cats']
+
+const text = "The quick brown fox jumps over the lazy dog.";
+const regex = /\b\w{3}\b/g;  // matches words with exactly 3 letters
+console.log(text.match(regex));  // Output: ['The', 'fox', 'the', 'dog']
+
+
