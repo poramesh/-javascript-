@@ -1,0 +1,438 @@
+Aggregation Pipelines
+
+Aggregation operations allow you to group, sort, perform calculations, analyze data, and much more.
+Aggregation pipelines can have one or more "stages". The order of these stages are important. Each stage acts upon the results of the previous stage.
+
+db.posts.aggregate([
+  // Stage 1: Only find documents that have more than 1 like
+  {
+    $match: { likes: { $gt: 1 } }
+  },
+  // Stage 2: Group documents by category and sum each categories likes
+  {
+    $group: { _id: "$category", totalLikes: { $sum: "$likes" } }
+  }
+])
+
+
+1. group
+
+db.listingsAndReviews.aggregate(
+    [ { $group : { _id : "$property_type" } } ]
+)    
+
+This will return the distinct values from the property_type field.
+The _id field inside $group is used to define the grouping key. In this case, it is grouping by the field "property_type".
+
+
+{
+  "_id": "12345",
+  "name": "Cozy Cottage",
+  "property_type": "House",
+  "price": 120,
+  "bedrooms": 3,
+  "bathrooms": 2,
+  "location": {
+    "address": "123 Maple Street",
+    "city": "San Francisco",
+    "country": "USA"
+  },
+  "reviews": [
+    {
+      "reviewer_name": "John",
+      "rating": 5,
+      "comment": "Amazing place!"
+    },
+    {
+      "reviewer_name": "Jane",
+      "rating": 4,
+      "comment": "Very comfortable, but a bit noisy."
+    }
+  ]
+}
+{
+  "_id": "12346",
+  "name": "Modern Apartment",
+  "property_type": "Apartment",
+  "price": 200,
+  "bedrooms": 2,
+  "bathrooms": 1,
+  "location": {
+    "address": "456 Oak Avenue",
+    "city": "New York",
+    "country": "USA"
+  },
+  "reviews": [...]
+}
+
+
+After running your query, you'd get a result like:
+
+[
+  { "_id": "House" },
+  { "_id": "Apartment" },
+  { "_id": "Villa" }
+]
+
+
+more exmaple:
+
+db.listingsAndReviews.aggregate([
+    { 
+      $group: { 
+        _id: { type: "$property_type", city: "$location.city" } 
+      } 
+    }
+])
+This query groups documents by both property_type and location.city, so the result will look like:
+
+[
+  { "_id": { "type": "House", "city": "San Francisco" } },
+  { "_id": { "type": "Apartment", "city": "New York" } },
+  { "_id": { "type": "Villa", "city": "Los Angeles" } }
+]
+
+
+
+why it is _id and how it is different from the object_id
+
+Let's look at how MongoDB processes this.
+
+Original Data:
+_id	                      name	     property_type	  price
+507f191e810c19729de860ea	Cozy       Cottage	House	  120
+507f191e810c19729de860eb	Modern     Apartment	     	200
+507f191e810c19729de860ec	Luxury     Villa		        350
+507f191e810c19729de860ed	Beachfront House	      	  400
+
+What MongoDB Does:
+It looks at the property_type of each document and groups together documents that have the same property_type:
+
+Group 1: All documents with property_type: "House".
+Group 2: All documents with property_type: "Apartment".
+Group 3: All documents with property_type: "Villa".
+
+So, the result will look like this:
+[
+  { "_id": "House" },
+  { "_id": "Apartment" },
+  { "_id": "Villa" }
+]
+Step 4: What is _id Doing Here?
+
+In this query, _id is not the same as the _id in the original documents.
+
+In the original documents, _id is the unique identifier for each document (like the row number in a table).
+But in the $group stage, _id is used to define the "grouping key"—the value by which you want to group the documents.
+
+In your case, you've chosen to group by property_type, so each group in the result will have _id equal to the value of property_type.
+
+_id: "House" means this group contains all the documents where property_type was "House".
+_id: "Apartment" means this group contains all the documents where property_type was "Apartment".
+_id: "Villa" means this group contains all the documents where property_type was "Villa".
+
+
+__________________________________________________________________________________________
+Aggregation $limit:
+
+
+This aggregation stage limits the number of documents passed to the next stage.
+
+Example
+In this example, we are using the "sample_mflix" database loaded from our sample data in the Intro to Aggregations section.
+
+db.movies.aggregate([ { $limit: 1 } ])
+
+[
+  {
+    _id: ObjectId("573a1390f29313caabcd4135"),
+    plot: 'Three men hammer on an anvil and pass a bottle of beer around.',
+    genres: [ 'Short' ],
+    runtime: 1,
+    cast: [ 'Charles Kayser', 'John Ott' ],
+    num_mflix_comments: 0,
+    title: 'Blacksmith Scene',
+    fullplot: 'A stationary camera looks at a large anvil with a blacksmith behind it and one on either side. The smith in the middle draws a heated metal rod from the fire, places it on the anvil, and all three begin a rhythmic hammering. After several blows, the metal goes back in the fire. One smith pulls out a bottle of beer, and they each take a swig. Then, out comes the glowing metal and the hammering resumes.',
+    countries: [ 'USA' ],
+    released: ISODate("1893-05-09T00:00:00.000Z"),
+    directors: [ 'William K.L. Dickson' ],
+    rated: 'UNRATED',
+    awards: { wins: 1, nominations: 0, text: '1 win.' },
+    lastupdated: '2015-08-26 00:03:50.133000000',
+    year: 1893,
+    imdb: { rating: 6.2, votes: 1189, id: 5 },
+    type: 'movie',
+    tomatoes: {
+      viewer: { rating: 3, numReviews: 184, meter: 32 },
+      lastUpdated: ISODate("2015-06-28T18:34:09.000Z")
+    }
+  }
+]
+
+
+__________________________________________________________
+
+Aggregation $project
+
+
+This aggregation stage passes only the specified fields along to the next aggregation stage.
+This is the same projection that is used with the find() method.
+
+Example
+In this example, we are using the "sample_restaurants" database loaded from our sample data in the Intro to Aggregations section.
+
+db.restaurants.aggregate([
+  {
+    $project: {
+      "name": 1,
+      "cuisine": 1,
+      "address": 1
+    }
+  },
+  {
+    $limit: 5
+  }
+])
+
+o/p:
+
+[
+    {
+      _id: ObjectId("5eb3d668b31de5d588f4292a"),
+      address: {
+        building: '2780',
+        coord: [ -73.98241999999999, 40.579505 ],
+        street: 'Stillwell Avenue',
+        zipcode: '11224'
+      },
+      cuisine: 'American',
+      name: 'Riviera Caterer'
+    },
+    {
+      _id: ObjectId("5eb3d668b31de5d588f4292b"),
+      address: {
+        building: '7114',
+        coord: [ -73.9068506, 40.6199034 ],
+        street: 'Avenue U',
+        zipcode: '11234'
+      },
+      cuisine: 'Delicatessen',
+      name: "Wilken'S Fine Food"
+    },
+    {
+      _id: ObjectId("5eb3d668b31de5d588f4292c"),
+      address: {
+        building: '2206',
+        coord: [ -74.1377286, 40.6119572 ],
+        street: 'Victory Boulevard',
+        zipcode: '10314'
+      },
+      cuisine: 'Jewish/Kosher',
+      name: 'Kosher Island'
+    },
+    {
+      _id: ObjectId("5eb3d668b31de5d588f4292d"),
+      address: {
+        building: '469',
+        coord: [ -73.961704, 40.662942 ],
+        street: 'Flatbush Avenue',
+        zipcode: '11225'
+      },
+      cuisine: 'Hamburgers',
+      name: "Wendy'S"
+    },
+    {
+      _id: ObjectId("5eb3d668b31de5d588f4292e"),
+      address: {
+        building: '1007',
+        coord: [ -73.856077, 40.848447 ],
+        street: 'Morris Park Ave',
+        zipcode: '10462'
+      },
+      cuisine: 'Bakery',
+      name: 'Morris Park Bake Shop'
+    }
+  ]
+
+
+We use a 1 to include a field and 0 to exclude a field.
+
+Note: You cannot use both 0 and 1 in the same object. The only exception is the _id field. You should either specify the fields you would
+like to include or the fields you would like to exclude.
+
+
+_____________________________________________________
+
+
+Aggregation $sort
+
+this aggregation stage groups sorts all documents in the specified sort order.
+Remember that the order of your stages matters. Each stage only acts upon the documents that previous stages provide.
+
+Example
+In this example, we are using the "sample_airbnb" database loaded from our sample data in the Intro to Aggregations section.
+
+db.listingsAndReviews.aggregate([ 
+  { 
+    $sort: { "accommodates": -1 } 
+  },
+  {
+    $project: {
+      "name": 1,
+      "accommodates": 1
+    }
+  },
+  {
+    $limit: 5
+  }
+])
+This will return the documents sorted in descending order by the accommodates field.
+The sort order can be chosen by using 1 or -1. 1 is ascending and -1 is descending.
+
+
+[
+  {
+    _id: '19990097',
+    name: 'House close to station & direct to opera house....',
+    accommodates: 16
+  },
+  { _id: '19587001', name: 'Kaena O Kekai', accommodates: 16 },
+  {
+    _id: '20958766',
+    name: 'Great Complex of the Cellars',
+    accommodates: 16
+  },
+  {
+    _id: '12509339',
+    name: 'Barra da Tijuca beach house',
+    accommodates: 16
+  },
+  {
+    _id: '20455499',
+    name: 'DOWNTOWN VIP MONTREAL ,HIGH END DECOR,GOOD VALUE..',
+    accommodates: 16
+  }
+]
+
+
+____________________________________________________________
+
+Aggregation $match
+
+This aggregation stage behaves like a find. It will filter documents that match the query provided.
+Using $match early in the pipeline can improve performance since it limits the number of documents the next stages must process.
+
+Example:
+
+In this example, we are using the "sample_airbnb" database loaded from our sample data in the Intro to Aggregations section.
+
+db.listingsAndReviews.aggregate([ 
+  { $match : { property_type : "House" } },
+  { $limit: 2 },
+  { $project: {
+    "name": 1,
+    "bedrooms": 1,
+    "price": 1
+  }}
+])
+
+
+o/p:
+
+[
+  {
+    _id: '16253247',
+    name: 'Gorgeous Remodeled Modern Home w/ Beach Across St.',
+    bedrooms: 2,
+    price: 194.00
+  },
+  {
+    _id: '18616850',
+    name: 'The Paddington Cottage | Sydney Eastern Suburbs',
+    bedrooms: 3,
+    price: 350.00
+  }
+]
+
+
+Aggregation $addFields
+
+This aggregation stage adds new fields to documents.
+
+Example
+In this example, we are using the "sample_restaurants" database loaded from our sample data in the Intro to Aggregations section.
+
+db.restaurants.aggregate([
+  {
+    $addFields: {
+      avgGrade: { $avg: "$grades.score" }
+    }
+  },
+  {
+    $project: {
+      "name": 1,
+      "avgGrade": 1
+    }
+  },
+  {
+    $limit: 5
+  }
+])
+This will return the documents along with a new field, avgGrade, which will contain the average of each restaurants
+
+o/p:
+
+[
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4292a"),
+    name: 'Riviera Caterer',
+    avgGrade: 9
+  },
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4292b"),
+    name: "Wilken'S Fine Food",
+    avgGrade: 10
+  },
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4292c"),
+    name: 'Kosher Island',
+    avgGrade: 10.5
+  },
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4292d"),
+    name: "Wendy'S",
+    avgGrade: 13.75
+  },
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4292e"),
+    name: 'Morris Park Bake Shop',
+    avgGrade: 8.2
+  }
+]
+
+The $addFields stage in the MongoDB aggregation pipeline does not modify the original documents in the database. Instead,
+it creates a new output for the aggregation result that includes the additional field (in your case, avgGrade).
+____________________________
+
+
+Aggregation $count
+
+This aggregation stage counts the total amount of documents passed from the previous stage.
+
+Example
+In this example, we are using the "sample_restaurants" database loaded from our sample data in the Intro to Aggregations section.
+
+db.restaurants.aggregate([
+  {
+    $match: { "cuisine": "Chinese" }
+  },
+  {
+    $count: "totalChinese"
+  }
+])
+This will return the number of documents at the $count stage as a field called "totalChinese".
+
+[ { totalChinese: 2418 } ]
+
+The result will be a single document with a field named totalChinese, which will contain the count of the matching documents.
+
