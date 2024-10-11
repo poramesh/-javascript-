@@ -1,0 +1,153 @@
+Decimal	Octal	Hexadecimal	Binary
+1	1	1	0000 0001
+2	2	2	0000 0010
+3	3	3	0000 0011
+4	4	4	0000 0100
+5	5	5	0000 0101
+6	6	6	0000 0110
+7	7	7	0000 0111
+8	10	8	0000 1000
+9	11	9	0000 1001
+10	12	A	0000 1010
+11	13	B	0000 1011
+12	14	C	0000 1100
+13	15	D	0000 1101
+14	16	E	0000 1110
+15	17	F	0000 1111
+16	20	10	0001 0000
+17	21	11	0001 0001
+18	22	12	0001 0010
+19	23	13	0001 0011
+20	24	14	0001 0100
+21	25	15	0001 0101
+22	26	16	0001 0110
+23	27	17	0001 0111
+24	30	18	0001 1000
+25	31	19	0001 1001
+26	32	1A	0001 1010
+27	33	1B	0001 1011
+28	34	1C	0001 1100
+29	35	1D	0001 1101
+30	36	1E	0001 1110
+31	37	1F	0001 1111
+32	40	20	0010 0000
+33	41	21	0010 0001
+34	42	22	0010 0010
+35	43	23	0010 0011
+36	44	24	0010 0100
+37	45	25	0010 0101
+38	46	26	0010 0110
+39	47	27	0010 0111
+40	50	28	0010 1000
+41	51	29	0010 1001
+42	52	2A	0010 1010
+43	53	2B	0010 1011
+44	54	2C	0010 1100
+45	55	2D	0010 1101
+46	56	2E	0010 1110
+47	57	2F	0010 1111
+48	60	30	0011 0000
+49	61	31	0011 0001
+50	62	32	0011 0010
+
+
+
+1. Decimal to Octal
+
+To convert a decimal number to octal:
+
+Divide the decimal number by 8 and record the remainder.
+Continue dividing the quotient by 8 until the quotient is 0.
+The octal number is the remainder read from bottom to top.
+
+Example: Decimal 65 to Octal
+
+65÷8=8 (remainder = 1)
+8÷8=1 (remainder = 0)
+1÷8=0 (remainder = 1)
+
+Read from bottom to top: 101 (octal)
+
+2. Decimal to Hexadecimal
+
+To convert a decimal number to hexadecimal:
+
+Divide the decimal number by 16 and record the remainder.
+Use 0-9 for values 0-9 and A-F for values 10-15.
+Continue dividing the quotient by 16 until the quotient is 0.
+The hexadecimal number is the remainder read from bottom to top.
+
+Example: Decimal 255 to Hexadecimal
+
+255÷16=15 (remainder = 15, which is F)
+15÷16=0 (remainder = 15, which is F)
+
+Read from bottom to top: FF (hexadecimal)
+
+3. Decimal to Binary
+
+To convert a decimal number to binary:
+
+Divide the decimal number by 2 and record the remainder.
+Continue dividing the quotient by 2 until the quotient is 0.
+The binary number is the remainder read from bottom to top.
+
+Example: Decimal 13 to Binary
+13÷2=6 (remainder = 1)
+6÷2=3 (remainder = 0)
+3÷2=1 (remainder = 1)
+1÷2=0 (remainder = 1)
+Read from bottom to top: 1101 (binary)
+
+4. Octal to Decimal
+
+To convert an octal number to decimal:
+
+Multiply each digit by 8 raised to the position index (from right to left, starting at 0).
+
+Sum the results.
+
+Example: Octal 127 to Decimal
+
+1×64+2×8+7×1=64+16+7=87
+
+5. Hexadecimal to Decimal
+
+To convert a hexadecimal number to decimal:
+
+Multiply each digit by 16 raised to the position index (from right to left, starting at 0).
+Sum the results.
+
+Example: Hexadecimal 2F to Decimal
+
+2×16^1 + 𝐹×16^0 
+(where 𝐹=15)
+
+2×16+15×1=32+15=47
+
+6. Binary to Decimal
+To convert a binary number to decimal:
+
+Multiply each digit by 2 raised to the position index (from right to left, starting at 0).
+Sum the results.
+Example: Binary 1101 to Decimal
+
+1×8+1×4+0×2+1×1=8+4+0+1=13
+
+7. Octal to Hexadecimal
+To convert octal to hexadecimal, first convert to decimal, then from decimal to hexadecimal.
+
+8. Hexadecimal to Octal
+To convert hexadecimal to octal, first convert to decimal, then from decimal to octal.
+
+9. Binary to Octal
+To convert binary to octal, group the binary digits into sets of three (from right to left) and convert each group to its octal equivalent.
+
+10. Binary to Hexadecimal
+To convert binary to hexadecimal, group the binary digits into sets of four (from right to left) and convert each group to its hexadecimal equivalent.
+
+11. Octal to Binary
+To convert octal to binary, convert each octal digit directly to a 3-bit binary equivalent.
+
+12. Hexadecimal to Binary
+To convert hexadecimal to binary, convert each hexadecimal digit directly to a 4-bit binary equivalent.
