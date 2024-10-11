@@ -151,3 +151,5 @@ To convert octal to binary, convert each octal digit directly to a 3-bit binary 
 
 12. Hexadecimal to Binary
 To convert hexadecimal to binary, convert each hexadecimal digit directly to a 4-bit binary equivalent.
+
+
