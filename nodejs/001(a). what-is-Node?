@@ -8,7 +8,7 @@ to certain features that are only available in the browser, like the DOM or
 the window object or even the localStorage.
 
 This means that at any point in your code, you can't type in document.querySelector() or alert()
-as these will produce errors (This is what is shown in the below image).
+as these will produce errors.
 
 
 
