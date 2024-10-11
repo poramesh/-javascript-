@@ -1,0 +1,310 @@
+why do they have to make it so complicated? why are there so many diff wys of defining functions ughhhghhghghghgh
+
+
+Functions in JavaScript are declared using the function keyword. A function declaration creates a function that's a Function object having all the 
+properties, methods, and behaviors of Function objects. By default, functions return the value undefined; to return any other value.
+
+so,lets learn what is objects:
+
+In JavaScript, an object is a collection of properties, where each property is defined as a key-value pair. Objects are a fundamental part 
+of JavaScript and allow you to model complex data structures and functionalities. 
+
+1. Object Literal Syntax
+
+The most common way to define an object is using an object literal. An object literal is created by enclosing
+a set of key-value pairs in curly braces {}.
+
+Example:
+
+const person = {
+    name: "Alice",
+    age: 30,
+    isStudent: false
+};
+
+Keys: name, age, and isStudent are the keys (or properties) of the object.
+Values: "Alice", 30, and false are the corresponding values.
+
+2. Properties
+
+Properties are values associated with an object. Each property is defined as a key (a string) and a value (which can be of 
+any data type, including another object or function).
+
+Example:
+
+const car = {
+    make: "Toyota",
+    model: "Camry",
+    year: 2020,
+    start: function() {
+        console.log("Car has started.");
+    }
+};
+
+console.log(car.make); // Output: "Toyota"
+car.start(); // Output: "Car has started."
+
+3. Accessing Properties
+
+You can access the properties of an object using either dot notation or bracket notation.
+
+Dot Notation:
+
+console.log(person.name); // Output: "Alice"
+Bracket Notation (useful for dynamic keys):
+console.log(person["age"]); // Output: 30
+
+4. Creating Objects Using Constructors
+
+Objects can also be created using constructor functions or the class syntax (introduced in ES6).
+
+Constructor Function Example:
+
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+const person1 = new Person("Bob", 25);
+console.log(person1.name); // Output: "Bob"
+
+Class Syntax Example:
+
+class Car {
+    constructor(make, model, year) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+    }
+
+    start() {
+        console.log("Car has started.");
+    }
+}
+
+const car1 = new Car("Honda", "Civic", 2022);
+console.log(car1.model); // Output: "Civic"
+car1.start(); // Output: "Car has started."
+
+5. Object Methods
+
+Objects can contain functions as their properties. These functions are known as methods. Methods can be used to perform actions using the object's data.
+
+
+const calculator = {
+    add: function(a, b) {
+        return a + b;
+    },
+    subtract: function(a, b) {
+        return a - b;
+    }
+};
+
+console.log(calculator.add(5, 3)); // Output: 8
+console.log(calculator.subtract(5, 3)); // Output: 2
+
+6. Prototypes
+
+In JavaScript, every object has a prototype from which it can inherit properties and methods. This allows for shared behavior between objects.
+
+Example of Prototypal Inheritance:
+
+function Animal(name) {
+    this.name = name;
+}
+
+Animal.prototype.speak = function() {
+    console.log(this.name + " makes a noise.");
+};
+
+const dog = new Animal("Dog");
+dog.speak(); // Output: "Dog makes a noise."
+
+Summary
+An object in JavaScript is a collection of properties defined as key-value pairs.
+Objects can be created using object literals, constructor functions, or class syntax.
+You can access properties using dot or bracket notation.
+Objects can contain methods, allowing them to perform actions based on their data.
+JavaScript supports prototypal inheritance, enabling objects to inherit properties and methods from other objects.
+This flexibility and functionality make objects a central feature of JavaScript, allowing for complex data modeling and 
+behavior representation in applications.
+
+
+
+
+COMING BACK TO THE FUCNTION:
+
+
+Input Format
+
+The first line contains a string denoting name.
+The second line contains two space-separated integers, a and b, to be summed.
+
+'use strict';
+process.stdin.on('data', function (data) {
+    let input = String(data).split(new RegExp("[\n ]+"));
+    main(input[0], +(input[1]), +(input[2]));
+});
+​
+function greetings(name) {
+    console.log("Hello, " + name);
+}
+
+function sum(a, b) {
+    return a + b;
+}
+
+function main(name, a, b) {
+    greetings(name);
+    console.log(sum(a, b));
+}
+
+i/p
+pooja
+8 2
+
+o/p
+Hello, pooja
+10
+
+
+_______________________
+The Function Expression
+________________________
+
+A function expression is very similar to (and has almost the same syntax as) a function statement. The main difference between a function expression and a
+function statement is the function name, which can be omitted from a function expression to create an anonymous function. Function expressions
+are often used as Immediately Invoked Function Expressions (IIFEs), which run as soon as they're defined.
+
+The code below demonstrates an unnamed function expression.
+
+Input Format: A single integer denoting x .
+
+'use strict';
+process.stdin.on('data', function (data) {
+    main(+(data));
+});
+/**** Ignore above this line. ****/
+
+function main(input) {
+  
+    var square = function(x) {
+        return x * x;
+    };
+
+    console.log(square(input));
+}
+
+i/p
+4
+
+o/p
+16
+
+
+________________________
+Named function expression
+________________________
+The code below demonstrates a named function expression.
+
+Input Format: Two space-separated integers describing the respective values of fibn  and factn .
+
+'use strict';
+process.stdin.on('data', function (data) {
+    let input = String(data).split(new RegExp("[\n ]+"));
+    main(+(input[0]), +(input[1]));
+});
+/**** Ignore above this line. ****/
+
+function main(factN, fibN) {
+    var math = {
+        // Declare the factorial property
+        factorial: 
+            // Declare the function as the property's value
+            function factorial(n) {
+                if (n > 1) {
+                    return n * factorial(n - 1);
+                }
+                // Returns 1 if n <= 1
+                return 1;
+            }
+    };
+    fib = function fibonacci(n){
+        if (n > 2) {
+            return fibonacci(n - 1) + fibonacci(n - 2);
+        }
+        else if (n < 1) {
+            return 0;
+        }
+        // else, return 1
+        return 1;
+    }
+
+   
+    console.log(math.factorial(factN));
+    console.log(fib(fibN));
+
+}
+
+
+Factorial of a numnber using recursion:
+
+fact(5) -> 5 * fact(4) -> 4 * fact(3) -> 3 * fact(2) -> 2 * fact(1)  (Base Case:fact(1)=1)
+fact(5) -> 5 * fact(4) -> 4 * fact(3) -> 3 * fact(2) <- 2
+fact(5) -> 5 * fact(4) -> 4 * fact(3) <- 6 
+fact(5) -> 5 * fact(4) <- 24 
+fact(5) = 120 
+so factorial of 5 is 120.
+
+
+fibnoccci:
+f(0): 0
+f(1): 1
+F(2): 0+1 =1
+F(3): 1+1=2
+F(4): 1+2=3
+F(5): 2+3=5
+F(6): 3+5=8
+
+               fibonacciRecursive(6)
+              /                     \
+     fibonacciRecursive(5)      fibonacciRecursive(4)
+     /            \               /          \
+fibonacci(4)  fibonacci(3)  fibonacci(3)  fibonacci(2)
+  /      \       /   \           /    \      
+f(3)  f(2)   f(2) f(1)      f(2)  f(1)   
+ /  \     |      |     |         |     |      
+f(2) f(1)  1      1   1         1     1  
+ |   |
+ 1   1
+
+
+EXAPLANATION OF ABOVE CODE:
+
+Object Creation: The math object is defined using an object literal:
+
+var math = {
+    factorial: function factorial(n) {
+        // Function implementation
+    }
+};
+
+In this context, math is an object that contains a property named factorial.
+
+Property as a Function: The factorial property is a function (also known as a method when it's associated with an object). This allows you
+to encapsulate related functionality within a single object:
+
+By defining factorial as a method of the math object, you keep related mathematical operations organized under the math namespace.
+Calling the Method: When you call math.factorial(value), you are:
+
+Accessing the Method: The dot notation (math.factorial) accesses the factorial method within the math object.
+
+Passing the Argument: The value value (in this case, factN passed to the main function) is passed as an argument to the factorial method for computation.
+Benefits of Using Object Methods
+
+Encapsulation: By grouping related functions (like factorial, fibonacci, etc.) into an object, you create a clear and organized structure for your
+code, making it easier to understand and maintain.
+
+Namespace: Using an object as a namespace helps avoid naming collisions. If you had multiple functions with the same name (e.g., multiple factorial functions),
+using an object helps distinguish between them.
+Modularity: It encourages a modular approach to coding, making it easier to expand or modify specific functionalities without affecting the entire codebase.
