@@ -164,6 +164,10 @@ print(someVariable);
 var someVariable = true; 
 print(someVariable);
 
+
+// It is perfectly okay to call the function without passing any arguments, as long as the function is designed to access the variable from 
+the global scope. In your example, print() accesses the global variable someVariable.
+
 o/p
 someVariable(5) is a number
 someVariable(Hello) is a string
