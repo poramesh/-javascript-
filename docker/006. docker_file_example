@@ -1,0 +1,101 @@
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+
+    docker file
+
+# Use the official Python image as the base image
+FROM python:3.9
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the requirements.txt file if you have one (optional)
+# This file should list the dependencies for your Flask app.
+COPY requirements.txt ./
+
+# Install any dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application files into the container
+COPY . .
+
+# Expose the port on which the app will run
+EXPOSE 5000
+
+# Specify the command to run the application
+CMD ["flask", "run", "--host=0.0.0.0"]
+
+
+  /your-flask-app
+│
+├── Dockerfile
+├── requirements.txt
+└── app.py  # This file contains your Flask code
+
+  
+requirements.txt
+  Flask==2.0.1
+
+
+Build the Docker Image:
+
+Navigate to your project directory and run the following command in the terminal:
+docker build -t my-flask-app .
+
+After building the image, you can run the container with port mapping. This command maps port 5000 of the container to port 5000 on your local machine:
+docker run -d -p 5000:5000 my-flask-app
+
+Open your web browser and navigate to http://localhost:5000 to see "Hello World!" displayed.
+
+
+
+
+ANOTHER WAY OF SETTING UP:
+
+# syntax=docker/dockerfile:1
+FROM ubuntu:22.04
+
+# Install app dependencies
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Install Flask
+RUN pip3 install flask==3.0.*
+
+# Copy the application code
+COPY hello.py /
+
+# Set environment variable for Flask app
+ENV FLASK_APP=hello
+
+# Expose the port
+EXPOSE 8000
+
+# Command to run the application
+CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8000"]
+
+
+Base Image:
+Your Dockerfile uses ubuntu:22.04 as the base image, while the previous one used python:3.9.
+The Python base image comes pre-installed with Python and pip, which simplifies the setup process. In contrast,
+the Ubuntu image requires explicit installation of Python and pip.
+
+Installation of Flask:
+In your Dockerfile, you installed Flask using pip after updating the package list and installing Python and pip.
+The previous Dockerfile installs Flask via a requirements.txt file, which is a common practice for managing Python dependencies.
+
+
+
+Both Dockerfiles achieve the same goal of containerizing a Flask application, but they take slightly different approaches in terms of the base image,
+method of installing Flask, and how the application is configured. If you're using Ubuntu as the base image, your Dockerfile is still valid and 
+will work, but using the official Python image can simplify dependency management and reduce the number of installation steps needed.
+
+Here's how you can visualize the differences in context:
+
+Using ubuntu:22.04 requires more manual installation steps for Python and Flask.
+Using python:3.9 provides a more streamlined process since it comes with Python pre-installed, and it’s a common
+practice to handle dependencies via a requirements.txt file.
