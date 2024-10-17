@@ -1,0 +1,44 @@
+Docker vs. Virtual Machines (VMs):
+
+Docker is a virtualization tool that simplifies running applications by packaging them into containers.
+Both Docker and virtual machines (VMs) are virtualization technologies, but they virtualize different layers of the operating system.
+
+Operating System Layers: os is made of kernel and appplication layer
+
+Kernel Layer:
+The kernel communicates with the hardware (e.g., CPU, memory, storage).
+It allocates system resources to applications.
+
+Applications Layer:
+This layer runs on top of the kernel and includes the apps users interact with.
+
+How Docker and VMs Virtualize the OS:
+
+Docker virtualizes only the applications layer of the operating system.
+Containers run on the host system’s kernel.
+Docker doesn't need its own kernel, which makes its images smaller and faster to start.
+
+VMs virtualize the entire operating system, including the kernel and applications layer.
+VMs have their own kernel, which makes them heavier and slower to start compared to Docker containers.
+A VM image can be several gigabytes, while a Docker image is usually much smaller (a few megabytes).
+
+Key Differences Between Docker and Virtual Machines:
+
+Size:
+Docker images are smaller (usually a few megabytes) because they only include the application layer.
+VM images are larger (several gigabytes) since they include the whole OS, including the kernel.
+
+Startup Time:
+Docker containers start quickly (in milliseconds) as they reuse the host's kernel.
+VMs take longer to boot (minutes) since they have to start up their own kernel.
+
+Compatibility:
+VMs allow running any OS on any host OS (e.g., running a Linux VM on a Windows host).
+Docker, on the other hand, can only run containers compatible with the host’s kernel. This means you can't directly run Linux-based Docker containers 
+on a Windows host.
+
+Running Linux-Based Docker Containers on Windows/Mac:
+Docker was initially built for Linux and many popular services have Linux-based containers.
+Docker made it possible to run Linux containers on Windows and Mac using Docker Desktop.
+Docker Desktop uses a hypervisor layer with a lightweight Linux distribution to provide the necessary Linux kernel, allowing Linux-based containers to
+run on Windows/Mac.
