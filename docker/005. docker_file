@@ -1,0 +1,150 @@
+A Dockerfile is a text file that contains a series of instructions on how to build a Docker image. Each instruction in a Dockerfile represents a 
+command that Docker executes to assemble the image. Here’s a breakdown of some commonly used build instructions:
+
+Basic Structure of a Dockerfile
+___________________________
+
+# Specify the base image
+FROM <base-image>
+
+# Set the working directory inside the container
+WORKDIR /path/to/directory (CD)
+
+# Copy files from the host to the container
+COPY <source> <destination>
+
+# Install any dependencies
+RUN <command to install dependencies>
+
+# Expose a port
+EXPOSE <port>
+
+# Specify the command to run when the container starts
+CMD ["executable", "param1", "param2"]
+
+________________________________________
+
+Basic Dockerfile Instructions
+
+
+1. FROM: Specifies the base image to use for the new image.
+FROM ubuntu:latest //The FROM instruction pulls the specified base image from Docker Hub if it's not already available locally.
+
+2. RUN : Executes a command in the shell to install packages or perform other tasks during the image build process.
+RUN apt-get update && apt-get install -y nginx
+
+3. COPY : Copies files or directories from the host filesystem to the image.
+COPY . /app
+
+4.ADD : Similar to COPY, but also supports extracting compressed files and fetching files from URLs.
+ADD myfile.tar.gz /app/
+
+5. CMD : Specifies the default command to run when a container is started from the image. This can be overridden when running the container.
+CMD ["nginx", "-g", "daemon off;"]
+
+6. ENTRYPOINT : Configures a container to run as an executable. It sets the main command that will be run, which cannot be overridden when the container starts.
+ENTRYPOINT ["python", "app.py"]
+
+7. ENV : Sets environment variables within the image.
+ENV APP_ENV=production
+
+8. WORKDIR : Sets the working directory for subsequent instructions. If the directory does not exist, it will be created. its like CD(chanding directory)
+WORKDIR /app
+
+9. EXPOSE : Informs Docker that the container listens on the specified network ports at runtime. This is a documentation feature and does not actually publish the ports.
+EXPOSE 80
+
+10. VOLUME : Creates a mount point with the specified path and marks it as holding externally mounted volumes from native host or other containers.
+VOLUME ["/data"]
+
+
+
+_________________
+Example Dockerfile
+Here’s a simple example of a Dockerfile that sets up a Node.js application:
+
+
+FROM node:14 # Use the official Node.js image as a base
+WORKDIR /app # Set the working directory in the container
+COPY package*.json ./ # Copy package.json and package-lock.json
+RUN npm install # Install dependencies 
+COPY . . # Copy the rest of the application code
+EXPOSE 3000 # Expose port 3000
+CMD ["npm", "start"] # Start the application
+
+Building an Image from a Dockerfile
+To build an image from a Dockerfile, navigate to the directory containing the Dockerfile and run:
+
+
+docker build -t my-node-app .
+This command creates an image named my-node-app based on the instructions in the Dockerfile located in the current directory (.).
+
+____________________________________________________________________________________________________________________
+
+Building the Docker Image:
+
+After writing the Dockerfile, you’ll build the Docker image using the docker build command. This command reads the Dockerfile,
+executes each directive, and packages everything into an image:
+
+
+now lets build a docker image by creating an app and then docker file.
+
+lets start for node js app.
+
+// src/server.js 
+
+const express = require('express');
+const app = express();
+
+app.get('/', (req,res)=>{
+     res.send("Welcome to my awesome app!"); 
+ });
+
+app.listen(3000, function () {
+    console.log("app listening on port 3000");
+});
+
+
+
+//docker file
+
+FROM node:19-alpine
+
+# Copy package.json, wildcard used so both package.json AND package-lock.json are copied
+# slash '/' at the end of app is important, so it created an app directory, otherwise you'll get an error
+COPY package*.json /usr/app/ (COPY package.json/app/)
+
+# Copy app files from src directory
+COPY src /usr/app/ (COPY src /app/)
+
+# Create app directory & set default dir so that next commands executes in /usr/app dir, liked cd-ing into /usr/app to execute npm install
+WORKDIR /usr/app
+
+# Install app dependencies
+RUN npm install
+
+# Start the application
+CMD ["node", "server.js"]
+
+_____________
+now we can build an image out of the docker file:
+
+docker build -t node-app:1.0 .
+
+-t node-app: Tags the image with the name node-app.
+.: The build context, which tells Docker to look for the Dockerfile and all necessary files in the current directory.
+
+after building the image, you can list the available Docker images using the command:
+
+docker images
+
+This will show all Docker images, including the newly created node-app:1.0 image.
+
+Once the image is built, it can be run as a container using:
+
+docker run -d -p 3000:3000 node-app
+
+-p 3000:3000: Maps the container's port 3000 to your local machine’s port 3000.
+-d (detach mode): This flag runs the container in the background, allowing you to continue using the terminal while the container is running.
+-p (port mapping): This flag exposes the container’s internal port (3000 in the Node.js app) to a port on your host machine 
+(also 3000 in this example). Now, you can access the application in the browser via localhost:3000.
