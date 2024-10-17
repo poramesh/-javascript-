@@ -183,13 +183,47 @@ docker run --name my-nginx -d -p 8080:80 nginx
 nginx: The image name.
 
 
+and alos you can restart the container by mentoining hte container name or id
+
 
 
 
 
 ___________________________________________
 
+More on docker registery and repository
 
+In Docker, registry and repository are terms that refer to the storage and management of Docker images. Here's what each term means:
+
+Docker Registry: A Docker registry is a centralized server or service that stores Docker images. It allows users to push 
+(upload) and pull (download) images from the registry.
+
+Examples:
+Docker Hub: The default public registry provided by Docker, where you can find and share images.
+Private Registries: Organizations can set up their own registries to host and manage Docker images privately. Examples include Docker Registry, 
+Amazon Elastic Container Registry (ECR), and Google Container Registry (GCR).
+
+
+Docker Repository: A repository is a collection of related Docker images, usually representing different versions or tags of the
+same application. A repository is hosted within a registry.
+
+For example, the repository for NGINX can be found at docker.io/library/nginx.
+
+Structure: A repository is identified by a name (e.g., nginx) and can have multiple tags to differentiate versions (e.g., nginx:latest, nginx:1.19, etc.).
+Functionality: Users can push multiple images (with different tags) to the same repository and pull specific versions when needed.
+
+
+Repository and Tags:
+
+Repository: nginx
+Tags: nginx:latest, nginx:1.21, nginx:1.19
+
+You can pull an image from the Docker registry using a command like:
+
+docker pull nginx:latest
+
+This command pulls the latest version of the NGINX image from the Docker Hub registry
+__________________________________________________________
 
 
 
@@ -211,8 +245,7 @@ Private Registries are used by companies to store proprietary Docker images. Clo
 all offer private registries, and even Docker Hub allows you to create private repositories.
 
 Repository vs. Registry: A Docker registry (like AWS ECR or Docker Hub) provides the storage service, and inside the registry, you 
-can have multiple repositories. Each repository can contain different versions (tags) of your application image.
-
+  
 3. Creating Docker Images with a Dockerfile
 
 Creating a Dockerfile:
@@ -238,82 +271,4 @@ upload it to the specified repository.
 
 
 
-Detailed Notes on Creating a Dockerfile
-
-1. Base Image:
-
-The Dockerfile starts by specifying the base image using the FROM directive. For your Node.js application, you're using the Node 19 Alpine image:
-
-FROM node:19-alpine
-
-This is a lightweight Linux distribution (Alpine) with Node.js installed. Using a base image with the required tools (in this case, Node.js and npm)
-simplifies building the image, as the necessary environment is already set up.
-
-2.Copying Application Files into the Container:
-
-The Node.js application’s dependencies (e.g., express) need to be installed inside the Docker container. To do this, you'll:
-Copy the package.json file, which lists the application's dependencies, into the container using the COPY directive:
-
-COPY package.json /app
-
-This copies the package.json from the local environment into the /app directory inside the container.
-Next, copy the source code of the application (e.g., server.js and the rest of the application’s files) into the container using another COPY directive:
-
-COPY src /app
-
-This copies the entire src directory into the /app directory inside the container. The trailing slash / ensures Docker creates the directory if it
-doesn’t exist yet.
-
-3. Setting the Working Directory:
-
-To execute commands within a specific directory in the container, set the working directory using the WORKDIR directive:
-
-WORKDIR /app
-
-This is the equivalent of running the cd /app command in a Linux environment. Now, all commands following this line will be executed 
-within the /app directory inside the container.
-
-4. Installing Dependencies:
-
-With the package.json file copied into the container, the next step is to install the dependencies inside the container. This is done using the RUN directive:
-
-RUN npm install
-
-This command runs npm install inside the container, which reads the package.json file and installs the necessary packages (e.g., express)
-into a node_modules folder within the container. It's equivalent to running npm install in a local development environment, but it happens inside the
-isolated environment of the container.
-
-5. Running the Application:
-
-After dependencies are installed, the application needs to be started. For this, the CMD directive is used:
-
-CMD ["node", "server.js"]
-
-This tells Docker to run the application by executing node server.js when the container starts. The application will start listening on the
-defined port (e.g., port 3000) inside the container.
-
-
-Building the Docker Image:
-
-After writing the Dockerfile, you’ll build the Docker image using the docker build command. This command reads the Dockerfile,
-executes each directive, and packages everything into an image:
-
-docker build -t my-node-app .
-
--t my-node-app: Tags the image with the name my-node-app.
-.: The build context, which tells Docker to look for the Dockerfile and all necessary files in the current directory.
-
-after building the image, you can list the available Docker images using the command:
-
-docker images
-This will show all Docker images, including the newly created node-app:1.0 image.
-
-Once the image is built, it can be run as a container using:
-
-docker run -d -p 3000:3000 my-node-app
-
--p 3000:3000: Maps the container's port 3000 to your local machine’s port 3000.
--d (detach mode): This flag runs the container in the background, allowing you to continue using the terminal while the container is running.
--p (port mapping): This flag exposes the container’s internal port (3000 in the Node.js app) to a port on your host machine 
-(also 3000 in this example). Now, you can access the application in the browser via localhost:3000.
 
