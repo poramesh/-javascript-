@@ -1,0 +1,188 @@
+
+Docker Desktop Installation:
+
+Docker Desktop allows you to run Linux-based images on Windows or Mac.
+
+It includes several components:
+
+Docker Engine: The core service that enables containerization.
+Command Line Interface (CLI): Allows you to execute Docker commands.
+Graphical User Interface (GUI): Provides a user-friendly way to manage containers and images.
+
+You can download Docker Desktop from the official Docker website. Make sure to:
+
+Check the system requirements based on your operating system (Windows, Mac with Intel, or Apple Silicon).
+Follow the installation steps to set up Docker Desktop on your machine.
+
+# Check architecture
+echo %PROCESSOR_ARCHITECTURE%
+will display either
+AMD64: Indicates an AMD64 architecture.
+ARM64: Indicates an ARM64 architectur.
+
+i dont rememner what was mine. anyway based on that, you will have to install the docker. 
+
+once installed , you will have to enable few things.
+
+if the virtual machine platform is not enabled, you will have to do it, or else when you access the docker desktop it will display this:
+
+-----
+Docker Desktop - Virtual Machine Platform not enabled
+Virtual Machine Platform is not enabled. Enable it using the following PowerShell script (in an administrative PowerShell) and then restart your computer before using Docker Desktop:
+
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+
+Virtual Machine Platform not enabled
+
+--------
+
+use this command on powershell:
+
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+
+and it restarts automatically to activate the changes.
+
+we can verify the changes using this command:
+
+Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+
+
+FeatureName      : VirtualMachinePlatform
+DisplayName      : Virtual Machine Platform
+Description      : Enables platform support for virtual machines
+RestartRequired  : Possible
+State            : Enabled
+CustomProperties :
+
+
+Additional Considerations
+
+Windows Version: Ensure that you are running Windows 10 version 1903 or later, as the Virtual Machine Platform is supported only on these versions.
+WSL 2: If you plan to use Docker with Windows Subsystem for Linux 2 (WSL 2), make sure that WSL is also enabled and set up correctly. 
+You can enable WSL by running: wsl --install 
+
+
+Since Docker Desktop relies on Windows Subsystem for Linux (WSL) 2, ensure it is also installed and set up correctly. Run this 
+command in the same elevated PowerShell window:
+
+wsl --list --verbose
+
+PS C:\WINDOWS\system32> wsl --list --verbose
+  NAME              STATE           VERSION
+* Ubuntu            Running         2
+  docker-desktop    Running         2
+
+
+This command will show you the installed WSL distributions and their versions. Make sure that you have a distribution set to version 2. 
+If it shows version 1, you can upgrade it with the following command:
+
+wsl --set-version <DistroName> 2
+
+
+To confirm that Docker is working correctly, open a new command prompt or PowerShell window (not necessarily as an administrator) and run:
+
+docker --version
+
+Docker version 27.2.0, build 3ab4256
+
+
+Check WSL Status: If you want to confirm WSL is set up correctly, run the following command:
+
+wsl --status
+
+Default Distribution: Ubuntu
+Default Version: 2
+WSL1 is not supported with your current machine configuration.
+Please enable the "Windows Subsystem for Linux" optional component to use WSL1.
+
+Install a Distribution: If you haven't installed a Linux distribution yet, you can do so by running:
+
+wsl --install -d Ubuntu
+
+
+
+now you can use ubuntu terminal.
+and run this.
+
+sudo apt update
+
+
+
+
+
+
+
+_______________________________________
+why are we doing all this?
+
+
+The Virtual Machine Platform in Windows is a feature that allows the operating system to support virtualization and run virtual machines (VMs) more effectively.
+
+What is Virtual Machine Platform?
+
+The Virtual Machine Platform is a Windows feature that provides the necessary framework to run virtualization technologies on Windows. 
+It is used primarily for running lightweight virtual environments like Windows Subsystem for Linux (WSL) and Docker containers.
+
+Components:
+
+It includes the core components required to create, manage, and run virtual machines. This can involve features like the Hyper
+-V technology, which is used to create and manage virtual machines.
+
+WSL 2:
+
+With the introduction of WSL 2, the Virtual Machine Platform became essential. WSL 2 uses a lightweight virtual machine to run 
+Linux distributions, allowing for improved performance and full system call compatibility, making it easier to run Linux applications on Windows.
+
+Docker Support:
+
+Docker Desktop on Windows also relies on the Virtual Machine Platform. It uses a VM to run containers, allowing users to develop and 
+deploy applications using Docker without needing a full Linux environment.
+
+
+
+_______________________________________________
+
+what is wsl now?
+
+
+WSL, or Windows Subsystem for Linux, is a compatibility layer for running Linux binary executables natively on Windows 10 and
+later versions. 
+
+Key Features of WSL
+
+Run Linux Distributions: 
+WSL allows you to run a variety of Linux distributions directly on Windows, including
+Ubuntu, Debian, and Kali Linux, among others.
+Integration with Windows:
+You can use both Windows and Linux tools side by side. For example, you can access your Windows
+files from within the Linux environment and vice versa.
+No Virtual Machine Overhead:
+Unlike traditional virtual machines, which require separate operating system installations, WSL runs directly on the
+Windows kernel, making it lightweight and faster.
+Command-Line Interface:
+WSL primarily operates through a command-line interface, allowing you to use Linux commands and 
+tools as you would on a native Linux system.
+Support for Linux Applications:
+You can install and run various Linux applications and tools, including programming 
+languages, package managers, and more.
+
+Benefits of Using WSL
+
+Development Environment: WSL is particularly useful for developers who work with cross-platform applications, as it allows for testing and 
+development in a Linux environment without leaving Windows.
+Access to Linux Tools: Developers can use powerful Linux command-line tools and scripts that may not be available on Windows.
+Easier Setup for Development: WSL simplifies the setup of development environments, especially for web development, data science, and DevOps practices.
+No Need for Dual Boot: Instead of setting up a dual-boot system with Linux and Windows, WSL allows you to run both systems simultaneously.
+
+Versions of WSL
+
+WSL 1: The original version, which translates Linux system calls to Windows system calls. It is limited in terms of compatibility 
+and performance compared to WSL 2.
+WSL 2: Introduced a full Linux kernel running in a lightweight virtual machine. It offers better compatibility, improved performance,
+and the ability to run more complex applications.
+
+Getting Started with WSL:
+
+Enable WSL: You need to enable the Windows Subsystem for Linux feature on your Windows machine. This can be done through Windows Settings or PowerShell.
+Install a Linux Distribution: After enabling WSL, you can download and install a Linux distribution from the Microsoft Store.
+Launch the Terminal: Once installed, you can open your chosen Linux distribution and start using it via the terminal.
