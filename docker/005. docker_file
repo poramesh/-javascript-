@@ -148,3 +148,9 @@ docker run -d -p 3000:3000 node-app
 -d (detach mode): This flag runs the container in the background, allowing you to continue using the terminal while the container is running.
 -p (port mapping): This flag exposes the container’s internal port (3000 in the Node.js app) to a port on your host machine 
 (also 3000 in this example). Now, you can access the application in the browser via localhost:3000.
+
+
+
+more example on this:
+
+https://docs.docker.com/build/concepts/dockerfile/#dockerfile-syntax
