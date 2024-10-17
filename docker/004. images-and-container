@@ -1,0 +1,308 @@
+
+Docker Image:
+
+A Docker image is a package that contains everything needed to run an application, including:
+The application code.
+The required environment configuration (OS application layer, tools like Node.js, npm, etc.).
+Optional configurations such as environment variables, directories, or files.
+Think of it as an artifact, similar to a ZIP or JAR file, but with more detailed application environment setup.
+
+Docker Container:
+A container is a running instance of a Docker image.
+When you start a Docker image, it becomes a container, allowing the application to run on the host OS in its pre-configured environment.
+From one Docker image, you can create and run multiple containers.
+
+Managing Images and Containers:
+You can manage Docker images and containers using:
+>The graphical user interface (GUI) in Docker Desktop.
+>The command line interface (CLI) to run commands like:
+   docker images: Lists all locally available images.
+   docker ps: Lists running containers.
+
+we get container from running docker images so where do we get docker images from? we get it from docker registerires.
+
+
+Docker Registries:
+storage and distribution system for images.
+ Docker Registries store Docker images online.
+Official images for services like Redis, MongoDB, and others are available in Docker's public registries, which can be easily downloaded and used.
+Official images are often created by the companies that develop the services or the Docker community.
+You can pull these images from Docker registries to run containers for databases, log collectors, and other services.
+docker hosts the biggest docker registerty called docker hub.
+
+Docker Hub Overview
+Docker Hub is the largest Docker registry, hosting both official and user-contributed images.
+Official Images: These are verified and maintained by Docker in collaboration with technology creators (like Redis or Nginx) and security experts.
+Docker Hub allows users to browse and search for images without requiring registration.
+
+this is default location, from where the images downloading from
+
+Tags and Versions
+Image Tags: Docker images are versioned through tags. For instance, you can find various tags (versions) for images like Redis, Postgres, or Nginx.
+Latest Tag: When no version is specified, Docker pulls the latest tag, which corresponds to the most recent version of the image.
+
+Pulling and Running Images
+docker pull: Used to download images locally from Docker Hub.
+Command:
+docker pull nginx:1.23 // will pull version 1.23 of the Nginx image.
+
+If no version is specified (docker pull nginx), it defaults to the latest version.
+
+Container Creation
+docker run: This command is used to create and run containers from Docker images.
+Example: 
+docker run nginx:1.23 //creates a container from Nginx 1.23 image.
+
+Running the container without specifying a tag will default to the latest version.
+Running containers in detached mode (-d flag) allows the terminal to remain free and prevents logs from blocking it.
+
+Viewing and Managing Containers
+docker ps: Shows the running containers. Use docker ps -a to list all containers, including stopped ones.
+Container ID: Every container has a unique ID and name. Docker generates random names for containers, which you can also specify manually.
+
+Container Logs
+docker logs <container_id>: Retrieves logs from the running container, useful for debugging.
+Port Binding
+Containers often run in an isolated network, so to access them, port binding is necessary.
+  For example, Nginx runs on port 80 inside the container. 
+  To bind it to a port accessible from the host machine, you can use:
+  
+  docker run -d -p 9000:80 nginx (binds container’s port 80 to localhost port 9000).
+
+After this, accessing localhost:9000 in a browser will display the Nginx welcome page.
+
+
+
+more info:
+
+
+docker run: This is the Docker command to run a new container.
+
+-d: This flag stands for "detached mode," which runs the container in the background. Without this flag, the container 
+would run in the foreground, and you would need to keep the terminal open.
+
+-p(publish) 9000:80: This option specifies port binding, allowing you to map a port on your local machine (host) to a port inside the container. Specifically:
+
+9000 is the port on your local machine (the host) where you will access the service.
+80 is the port inside the container that the service (in this case, NGINX) is running on.
+
+So, in this example:
+
+Port 80 inside the container is the default port for NGINX (since NGINX serves web traffic on port 80 by default).
+Port 9000 on your local machine is the port you bind to, meaning when you visit http://localhost:9000 in your web browser,
+it will serve the web content from the container's port 80.
+
+nginx: This is the name of the Docker image you want to run, which in this case is the official NGINX image. 
+NGINX is a popular web server used for serving websites.
+
+What Happens?
+When this command is run, Docker starts an NGINX web server inside a container.
+It binds port 80 inside the container to port 9000 on your local machine.
+You can open your browser and access http://localhost:9000, and it will display the default NGINX web page served from the container.
+
+important:
+
+Without port binding, the container's port is isolated and can't be accessed from your local machine.
+With port binding (whether -p 80:80 or -p host_port:container_port), you expose the service to your local machine, 
+and the service will be available at the bound port on your machine.
+
+By default, the port a container runs on depends on the specific image and how it is configured.
+
+For example:
+
+NGINX: The default port is 80 because that's the standard HTTP port, and the NGINX image is configured to
+listen on port 80 by default.
+MySQL: The default port is 3306 because it's the standard MySQL database port.
+MongoDB: The default port is 27017 for MongoDB containers.
+
+Each image has its own default port based on the application or service it runs. If you don't explicitly expose or bind a
+port using -p, the service inside the container will still run on its default port, but it won't be accessible
+from the host unless the port is mapped.
+
+
+
+Different Applications, Same Internal Port:
+
+It’s common to have multiple instances of the same service running (e.g., multiple NGINX web servers), each using port
+80 internally for consistency (since port 80 is the default for HTTP). They can each serve different tasks or be part of
+a scaling architecture. What matters is how the host ports are configured to provide access from outside.
+
+In summary, containers can use the same internal port (e.g., 80) without issues because each container is isolated. When you expose
+the container’s port to the host, you map it to different host ports to avoid conflicts.
+
+This means:
+
+You access Container A via http://localhost:8080
+You access Container B via http://localhost:9000
+
+
+
+Starting and Stopping Containers
+
+docker stop <container_id>: Stops a running container.
+docker start <container_id>: Starts a previously stopped container.
+
+Multiple Containers with Different Versions
+Docker makes it easy to run multiple versions of the same service simultaneously. For example, by pulling different Redis versions and creating
+multiple containers, 
+you can run different Redis versions side by side.
+
+Detached Mode (-d)
+Running containers in detached mode allows them to run in the background without blocking the terminal, making it convenient for managing services.
+
+Docker Containers vs. Images
+Images: A Docker image is a snapshot containing the application and its environment.
+Containers: Containers are running instances of images.
+Every time you run a new container, Docker creates a new container ID, even if the image is the same.
+
+Common Commands
+docker pull <image_name>[ ]: Pulls an image from Docker Hub.
+docker run <image_name>[ ]: Runs a container from the specified image.
+docker ps: Lists running containers.
+docker ps -a: Lists all containers (running or stopped).
+docker stop <container_id>: Stops a running container.
+docker start <container_id>: Starts a stopped container.
+docker logs <container_id>: Fetches logs from the container.
+docker run -d -p <host_port>:<container_port> <image_name>: Runs a container with port binding.
+
+________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. Using Container ID and Name:
+
+Every Docker container is assigned a unique auto-generated ID, but this can be hard to remember.
+Instead of using the ID, you can assign a meaningful name to the container with the --name flag when creating it. This makes managing containers 
+more intuitive (e.g., docker stop webapp instead of docker stop <ID>).
+You can stop containers using either the container ID or the name, like:
+
+docker stop <container_id> or docker stop <container_name>.
+
+2. Docker Registries
+
+Public vs. Private Registries:
+Public Registries (e.g., Docker Hub) are open to everyone and allow for sharing images globally.
+Private Registries are used by companies to store proprietary Docker images. Cloud providers like AWS (ECR), Google Cloud, and Azure 
+all offer private registries, and even Docker Hub allows you to create private repositories.
+
+Repository vs. Registry: A Docker registry (like AWS ECR or Docker Hub) provides the storage service, and inside the registry, you 
+can have multiple repositories. Each repository can contain different versions (tags) of your application image.
+
+3. Creating Docker Images with a Dockerfile
+
+Creating a Dockerfile:
+
+The Dockerfile is a set of instructions to create a Docker image. In this case, you’re packaging a simple Node.js application.
+The Dockerfile usually begins by specifying a base image, which is the foundation of your custom image. For example, 
+you might use the node:19-alpine image, which includes a lightweight Node.js runtime on Alpine Linux.
+The directive FROM node:19-alpine is used to define this base image.
+
+Dependencies:
+
+Your Node.js app needs dependencies (like the express package), which you’ll install as part of the Docker build process.
+The Dockerfile will include steps to:
+Copy the package.json file to the container.
+Run npm install to install the dependencies inside the container.
+Copy the application source code into the container.
+Define how to start the application (e.g., running node src/server.js).
+
+4. Registry and Repository
+Pushing Images to Docker Hub or Private Registry:
+After building your image, you can push it to Docker Hub or any other registry by tagging it and then using docker push to
+upload it to the specified repository.
+
+
+
+Detailed Notes on Creating a Dockerfile
+
+1. Base Image:
+
+The Dockerfile starts by specifying the base image using the FROM directive. For your Node.js application, you're using the Node 19 Alpine image:
+
+FROM node:19-alpine
+
+This is a lightweight Linux distribution (Alpine) with Node.js installed. Using a base image with the required tools (in this case, Node.js and npm)
+simplifies building the image, as the necessary environment is already set up.
+
+2.Copying Application Files into the Container:
+
+The Node.js application’s dependencies (e.g., express) need to be installed inside the Docker container. To do this, you'll:
+Copy the package.json file, which lists the application's dependencies, into the container using the COPY directive:
+
+COPY package.json /app
+
+This copies the package.json from the local environment into the /app directory inside the container.
+Next, copy the source code of the application (e.g., server.js and the rest of the application’s files) into the container using another COPY directive:
+
+COPY src /app
+
+This copies the entire src directory into the /app directory inside the container. The trailing slash / ensures Docker creates the directory if it
+doesn’t exist yet.
+
+3. Setting the Working Directory:
+
+To execute commands within a specific directory in the container, set the working directory using the WORKDIR directive:
+
+WORKDIR /app
+
+This is the equivalent of running the cd /app command in a Linux environment. Now, all commands following this line will be executed 
+within the /app directory inside the container.
+
+4. Installing Dependencies:
+
+With the package.json file copied into the container, the next step is to install the dependencies inside the container. This is done using the RUN directive:
+
+RUN npm install
+
+This command runs npm install inside the container, which reads the package.json file and installs the necessary packages (e.g., express)
+into a node_modules folder within the container. It's equivalent to running npm install in a local development environment, but it happens inside the
+isolated environment of the container.
+
+5. Running the Application:
+
+After dependencies are installed, the application needs to be started. For this, the CMD directive is used:
+
+CMD ["node", "server.js"]
+
+This tells Docker to run the application by executing node server.js when the container starts. The application will start listening on the
+defined port (e.g., port 3000) inside the container.
+
+
+Building the Docker Image:
+
+After writing the Dockerfile, you’ll build the Docker image using the docker build command. This command reads the Dockerfile,
+executes each directive, and packages everything into an image:
+
+docker build -t my-node-app .
+
+-t my-node-app: Tags the image with the name my-node-app.
+.: The build context, which tells Docker to look for the Dockerfile and all necessary files in the current directory.
+
+after building the image, you can list the available Docker images using the command:
+
+docker images
+This will show all Docker images, including the newly created node-app:1.0 image.
+
+Once the image is built, it can be run as a container using:
+
+docker run -d -p 3000:3000 my-node-app
+
+-p 3000:3000: Maps the container's port 3000 to your local machine’s port 3000.
+-d (detach mode): This flag runs the container in the background, allowing you to continue using the terminal while the container is running.
+-p (port mapping): This flag exposes the container’s internal port (3000 in the Node.js app) to a port on your host machine 
+(also 3000 in this example). Now, you can access the application in the browser via localhost:3000.
+
