@@ -1,0 +1,131 @@
+
+Let's break down the code you shared step-by-step to understand its meaning:
+
+1. !targetElements.length
+
+In JavaScript, targetElements.length gives the number of elements in the targetElements array.
+The ! (logical NOT operator) negates the value of targetElements.length.
+
+If targetElements.length is 0 (i.e., the array is empty), !targetElements.length will evaluate to true.
+
+If targetElements.length is greater than 0 (i.e., the array has elements), !targetElements.length
+will evaluate to false.
+
+
+This means the line:
+
+if (!targetElements.length) return;
+
+is checking whether the targetElements array is empty. If it is empty, the function will stop executing and
+return early, meaning it will not attempt to apply any animations because there
+are no target elements to animate.
+
+2. ScrollReveal({ reset: false })
+
+This line initializes the ScrollReveal library with some global settings. Specifically, it sets reset: false.
+
+The reset option in ScrollReveal controls whether the animation resets every time the element comes into view. When reset: true,
+the animation will replay every time the user scrolls the element into view. When reset: false, the animation will only play
+once — the first time the element comes into view, and it won’t repeat even if you scroll the element out of view and back in.
+
+In this case, reset: false means that the animations will only play once, which is common behavior for these types of reveal animations.
+
+3. Object.assign({}, defaultProps, animation)
+
+This line uses the Object.assign() method to merge multiple objects into one.
+
+Object.assign({}, defaultProps, animation) creates a new object by merging the properties of defaultProps and animation.
+
+The first parameter, {}, is an empty object. This tells JavaScript to copy the properties of defaultProps and animation into a
+new object instead of modifying the original objects.
+
+defaultProps contains the default animation properties like distance, duration, easing, etc.
+
+animation contains any custom animation properties for each specific element.
+
+By using Object.assign({}, defaultProps, animation), the function combines the default animation settings (from defaultProps) with the specific animation
+settings (from animation). The custom properties in animation will overwrite any conflicting properties from defaultProps.
+
+Example:
+
+const defaultProps = {
+  duration: 1000,
+  distance: "30px",
+  easing: "ease-in-out"
+};
+
+const animation = {
+  distance: "50px",
+  delay: 300
+};
+
+const finalAnimation = Object.assign({}, defaultProps, animation);
+console.log(finalAnimation);
+
+This would result in the following merged object:
+
+{
+  "duration": 1000,
+  "distance": "50px", // 'animation.distance' overrides 'defaultProps.distance'
+  "easing": "ease-in-out",
+  "delay": 300
+}
+
+In this way, Object.assign() ensures that any specific properties (like distance or delay) that are
+passed in animation will override the defaults, while the other default settings (like easing and duration) 
+will still be applied if they are not overridden.
+
+
+
+MORE ON Object.assign() 
+
+this method in JavaScript is used to copy the values of all enumerable own properties from one or more source objects 
+to a target object. It returns the target object with the merged properties.
+
+
+Object.assign(target, ...sources)
+
+target: The object to which properties will be copied. It will receive the properties of the source objects.
+sources: One or more source objects whose properties will be copied to the target object.
+
+
+Key Points:
+
+Shallow Copy: Object.assign() only performs a shallow copy of the properties. If a property is an object or array, 
+the reference to that object is copied, not the object itself.
+
+Property Overwriting: If multiple source objects have properties with the same name, properties
+from later objects overwrite properties from earlier objects.
+
+Immutability: The target object is mutated, but the source objects are not.
+
+example:
+
+1.
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+
+const result = Object.assign(target, source);
+console.log(result);
+// Output: { a: 1, b: 4, c: 5 }
+
+2.
+
+const target = { a: 1 };
+const source1 = { b: 2 };
+const source2 = { c: 3 };
+
+Object.assign(target, source1, source2);
+console.log(target);
+// Output: { a: 1, b: 2, c: 3 }
+
+
+3.
+
+const target = { a: 1, b: 2 };
+const source1 = { b: 4, c: 5 };
+const source2 = { c: 6, d: 7 };
+
+Object.assign(target, source1, source2);
+console.log(target);
+// Output: { a: 1, b: 4, c: 6, d: 7 }
