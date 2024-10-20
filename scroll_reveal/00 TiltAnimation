@@ -1,0 +1,92 @@
+The initTiltAnimation function is responsible for adding a "tilt" animation to elements on a webpage using the VanillaTilt library.
+
+Let's break down how it works step-by-step:
+
+Importing VanillaTilt:
+
+import VanillaTilt from "vanilla-tilt";
+
+VanillaTilt is a lightweight JavaScript library that adds tilt effects to HTML elements. 
+The library is being imported here so that it can be used to apply tilt animations.
+
+initTiltAnimation Function:
+
+export default function initTiltAnimation() {
+  const elements = document.querySelectorAll(".js-tilt");
+  VanillaTilt.init(elements);
+}
+
+This function is exported as the default export so it can be imported and called from other 
+parts of the project, such as in a main script like script.js.
+
+Selecting Elements:
+
+const elements = document.querySelectorAll(".js-tilt");
+
+document.querySelectorAll(".js-tilt") is used to select all the DOM elements with the class .js-tilt.
+elements now contains a NodeList of all elements in the DOM that have the class js-tilt.
+
+For example, if you have HTML like this:
+
+<div class="js-tilt">Element 1</div>
+<div class="js-tilt">Element 2</div>
+
+Both div elements will be selected.
+
+
+Initializing VanillaTilt:
+
+VanillaTilt.init(elements);
+
+This line applies the VanillaTilt animation to all selected elements.
+
+VanillaTilt.init() is a method provided by the VanillaTilt library, and it can accept a single DOM element,
+an array of elements, or a NodeList (which is what querySelectorAll returns).
+
+Once initialized, the tilt effect is applied to each element that was selected.
+
+What Does VanillaTilt Do?
+
+VanillaTilt applies a 3D tilt effect to HTML elements based on mouse movements. When you hover over an element with 
+the tilt effect, it moves and tilts dynamically, giving the illusion of depth.
+
+You can control various parameters of the tilt effect, such as how sensitive the tilt is or whether
+it has glare or scaling effects, by passing an options object to VanillaTilt.init().
+
+Example:
+Here's how the effect would look if applied to some elements in your HTML.
+
+<div class="js-tilt" style="width: 200px; height: 200px; background-color: lightblue;">
+  Hover over me!
+</div>
+<div class="js-tilt" style="width: 200px; height: 200px; background-color: lightgreen;">
+  Hover over me too!
+</div>
+
+JavaScript (Using initTiltAnimation):
+import VanillaTilt from "vanilla-tilt";
+
+export default function initTiltAnimation() {
+  const elements = document.querySelectorAll(".js-tilt");
+  VanillaTilt.init(elements, {
+    max: 25,  // Max tilt rotation in degrees
+    speed: 400,  // Speed of the entering/exiting transition
+    glare: true,  // Adds a "glare" effect
+    "max-glare": 0.5,  // Maximum "glare" opacity
+  });
+}
+
+How It Works:
+Once you call initTiltAnimation(), it selects all elements with the class .js-tilt and applies the tilt effect using VanillaTilt.
+
+As you hover over each element, the tilt effect is dynamically applied, making the element appear to rotate
+slightly based on the mouse position. The options (e.g., max: 25, speed: 400, glare: true) allow you to fine-tune how the tilt behaves.
+
+This code is typically called in a main script (e.g., script.js) that initializes all interactions when the page loads.
+
+Final Example of How It Fits with script.js:
+
+import initTiltAnimation from './scripts/tiltAnimation';
+
+initTiltAnimation(); // Initializes the tilt effect on page load
+This ensures that your elements with the class .js-tilt will have the tilt effect when the page is loaded.
