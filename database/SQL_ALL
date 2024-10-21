@@ -1,0 +1,169 @@
+SELECT * FROM table_name;  //selects all the data from the table...
+
+SELECT column1, column2 FROM table_name;   //selects column_name1 and column_name2 columns data from the table...
+
+SELECT DISTINCT column1, column2, ... FROM table_name;    //The SELECT DISTINCT statement is used to return only distinct (different) values.
+It returns the distinct values from the column1, column2 will not be distinct
+
+SELECT COUNT(DISTINCT Country) FROM Customers;     //Gets the count of total number of different countries
+
+SELECT Count(*) AS DistinctCountries FROM (SELECT DISTINCT Country FROM Customers);   //gets the count of total number of different countries
+
+SELECT column1, column2, ... FROM table_name WHERE condition;     //The WHERE clause is used to filter records. It is used to extract only those records that fulfill a specified condition.
+
+SELECT * FROM Customers WHERE Country='Mexico';   // Selects only those countries which has Mexico value.
+
+SELECT * FROM Products WHERE Price <> 18;  //Selects those values from price which doesn't contain 18 as its value. its is not qual to symble and its also equivalent to !=
+
+SELECT * FROM Products WHERE Price BETWEEN 50 AND 60;     //Between a certain range
+
+SELECT * FROM Customers WHERE City LIKE 's%';  //Searches for a pattern which starts with s with following 0 or more characters
+
+SELECT * FROM Customers WHERE City IN ('Paris','London');    //To specify multiple possible values for a column
+
+SELECT * FROM Customers WHERE City='Paris' OR City ='London';      //To specify multiple possible values for a column
+
+SELECT column1, column2, ... FROM table_name WHERE (condition1 AND condition2) OR  condition3 ...;     //The where clause can be combined with AND, OR, NOT operators.
+
+SELECT * FROM Customers WHERE Country='Germany' AND City='Berlin';    //selects all fields from "Customers" where country is "Germany" AND city is "Berlin"
+
+SELECT * FROM Customers WHERE City='Berlin' OR City='München';      // selects all fields from "Customers" where city is "Berlin" OR "München":
+
+SELECT * FROM Customers WHERE NOT Country='Germany';   //selects all fields from "Customers" where country is NOT "Germany"
+
+SELECT * FROM Customers WHERE Country='Germany' AND (City='Berlin' OR City='München');  //selects all fields from "Customers" where country is "Germany" AND city must be "Berlin" OR "München"
+(use parenthesis to form complex expressions):
+  
+SELECT * FROM Customers WHERE NOT Country='Germany' AND NOT Country='USA';    //selects all fields from "Customers" where country is NOT "Germany" and NOT "USA"
+
+SELECT column1, column2, ... FROM table_name ORDER BY column1, column2, ... ASC|DESC;     //The order by keyword is used to sort the result-set in ascending or descending order.
+
+SELECT * FROM Customers ORDER BY Country, CustomerName;      //selects all customers from the "Customers" table, sorted by the "Country" and the "CustomerName" column. 
+This means that it orders by Country, but if some rows have the same Country, it orders them by CustomerName:
+
+INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...);   //The Insert into statement is used to insert new records in a table
+and specify both the column name and values.
+  
+INSERT INTO table_name VALUES (value1, value2, value3, ...);     //If you are adding values for all the columns of the table, you do not need to specify
+the column names in the SQL query. However, make sure the order of the values is in the same order as the columns in the table.
+  
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country) VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway'); 
+  //SQL statement inserts a new record in the "Customers" table
+
+SELECT column_names FROM table_name WHERE column_name IS NULL;  //A field with a NULL value is a field with no value.
+  
+SELECT CustomerName, ContactName, Address FROM Customers WHERE Address IS NOT NULL;  //selects the address that contains values. The is not null operator 
+is used to test for non-empty values (NOT NULL values).
+
+UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;   //The update statement is used to modify the existing records in a table.
+
+UPDATE Customers SET ContactName = 'Alfred Schmidt', City= 'Frankfurt' WHERE CustomerID = 1;     //The following SQL statement updates the first customer (CustomerID = 1) with a new 
+contact person and a new city.
+
+UPDATE Customers SET ContactName='Juan' WHERE Country='Mexico';    //statement will update the ContactName to "Juan" for all records where country is "Mexico"
+
+UPDATE Customers SET ContactName='Juan';  //Be careful when updating records. If you omit the where clause, ALL records will be updated!
+
+DELETE FROM table_name WHERE condition;     //The Delete statement is used to delete existing records in a table.
+
+DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';   //The following SQL statement deletes the customer "Alfreds Futterkiste" from the "Customers" table:
+
+DELETE FROM Customers;      //It is possible to delete all rows in a table without deleting the table. This means that the table structure, attributes, and indexes will be intact
+
+SELECT * FROM Customers LIMIT 3;  //fetches first three row.
+
+SELECT MIN(column_name) FROM table_name WHERE condition;   //The min() function returns the smallest value of the selected column.
+
+SELECT MIN(Price) AS SmallestPrice FROM Products;  // Selects the minimum value
+
+SELECT COUNT(column_name) FROM table_name WHERE condition;  //Selects the count of the column values
+
+SELECT AVG(column_name) FROM table_name WHERE condition;    //The avg() function returns the average value of a numeric column.
+
+SELECT SUM(column_name) FROM table_name WHERE condition;     //The sum() function returns the total sum of a numeric column.
+
+SELECT column1, column2, ... FROM table_name WHERE column LIKE pattern;      //The like operator is used in a where clause to search for a specified pattern 
+in a column.The percent sign (%) represents zero, one, or multiple characters and The underscore sign (_) represents one, single character
+WHERE CustomerName LIKE 'a%' Finds any values that start with "a"
+WHERE CustomerName LIKE '%a' Finds any values that end with "a"
+WHERE CustomerName LIKE '%or%' Finds any values that have "or" in any position
+WHERE CustomerName LIKE '_r%' Finds any values that have "r" in the second position
+WHERE CustomerName LIKE 'a_%' Finds any values that start with "a" and are at least 2 characters in length
+WHERE CustomerName LIKE 'a__%' Finds any values that start with "a" and are at least 3 characters in length
+WHERE ContactName LIKE 'a%o' Finds any values that start with "a" and ends with "o"
+WHERE CustomerName NOT LIKE 'a%' Finds all customers with a CustomerName that does NOT start with "a"
+
+:Wildcard Characters in MS Access
+*Represents zero or more characters bl* finds bl, black, blue, and blob
+?Represents a single character h?t finds hot, hat, and hit
+[]Represents any single character within the brackets h[oa]t finds hot and hat, but not hit
+!Represents any character not in the brackets h[!oa]t finds hit, but not hot and hat
+-Represents any single character within the specified range c[a-b]t finds cat and cbt
+#Represents any single numeric character2#5 finds 205, 215, 225, 235, 245, 255, 265, 275, 285, and 295Wildcard 
+
+:Characters in SQL Server
+%Represents zero or more characters bl% finds bl, black, blue, and blob
+_Represents a single character h_t finds hot, hat, and hit
+[]Represents any single character within the bracket sh[oa]t finds hot and hat, but not hit
+^Represents any character not in the brackets h[^oa]t finds hit, but not hot and hat
+-Represents any single character within the specified range c[a-b]t finds cat and cbt
+  
+
+SELECT column_name(s) FROM table_name WHERE column_name IN (value1, value2, ...);  //The in operator allows you to specify multiple values in
+ 
+
+SELECT column_name(s) FROM table_name WHERE column_name IN (SELECT STATEMENT);
+
+SELECT * FROM Customers WHERE Country IN ('Germany', 'France', 'UK');  //The following SQL statement selects all customers that are located in "Germany", "France" or "UK":
+
+SELECT * FROM Customers WHERE Country NOT IN ('Germany', 'France', 'UK');    //The following SQL statement selects all customers that are NOT 
+located in "Germany", "France" or "UK":Monday, March 7th Pooja Ramesh  4:11 PM
+
+SELECT * FROM Customers WHERE Country IN (SELECT Country FROM Suppliers);  //The following SQL statement selects all customers that
+are from the same countries as the suppliers:
+
+SELECT column_name(s) FROM table_name WHERE column_name BETWEEN value1 AND value2;  //The between operator is inclusive: begin and end values are included. selects values
+within a given range. The values can be numbers, text, or dates
+
+SELECT * FROM Products WHERE Price BETWEEN 10 AND 20;  //The following SQL statement selects all products with a price between 10 and 20:
+
+SELECT * FROM Products WHERE Price NOT BETWEEN 10 AND 20;   //To display the products outside the range of the previous example, use not between;
+
+SELECT * FROM Products WHERE Price BETWEEN 10 AND 20 AND CategoryID NOT IN (1,2,3);  //The following SQL statement selects all products with a price
+between 10 and 20. In addition; do not show products with a CategoryID of 1,2, or 3:
+
+SELECT * FROM Products WHERE ProductName BETWEEN 'Carnarvon Tigers' AND 'Mozzarella di Giovanni' ORDER BY ProductName;  //The following SQL statement 
+selects all products with a ProductName between Carnarvon Tigers and Mozzarella di Giovanni:
+
+  //The BETWEEN operator works based on the natural (lexicographical) order of strings, which SQL handles by comparing the characters in the 
+  strings according to their Unicode values. You don’t need to explicitly specify alphabetical ordering when using BETWEEN because SQL
+  inherently understands how to compare strings in this way. The results are then sorted in the order you specify with the ORDER BY clause.
+  
+SELECT * FROM Orders WHERE OrderDate BETWEEN '1996-07-01' AND '1996-07-31'; //The following SQL statement selects all orders with 
+  an OrderDate between '01-July-1996' and '31-July-1996';
+
+SELECT column_name AS alias_name FROM table_name; //SQL aliases are used to give a table, column in a table, a temporary name. 
+  Aliases are often used to make column names more readable. An alias only exists for the duration of that query. 
+  An alias is created with the AS keyword.  //SQL aliases are used to give a table,
+
+SELECT column_name(s) FROM table_name AS alias_name;
+  
+SELECT CustomerID AS ID, CustomerName AS Customer FROM Customers; //The following SQL statement creates two aliases, one for the 
+CustomerID column and one for the CustomerName column:
+
+SELECT CustomerName AS Customer, ContactName AS [Contact Person] FROM Customers;   //The following SQL statement creates two aliases, one for the CustomerName column 
+and one for the ContactName column. Note: It requires double quotation marks or square brackets if the alias name contains spaces:
+
+SELECT CustomerName, Address + ', ' + PostalCode + ' ' + City + ', ' + Country AS Address  //The following SQL statement creates an alias named "Address"
+that combine four columns (Address, PostalCode, City and Country):
+
+SELECT CustomerName, CONCAT(Address,', ',PostalCode,', ',City,', ',Country) AS Address FROM Customers;  //Note: To get the SQL statement 
+above to work in MySQL use the following:
+
+SELECT o.OrderID, o.OrderDate, c.CustomerName FROM Customers AS c, Orders AS o WHERE c.CustomerName='Around the Horn' AND c.CustomerID=o.CustomerID;  
+//The following SQL statement selects all the orders from the customer with CustomerID=4 (Around the Horn). We use the "Customers" and "Orders" tables,
+and give them the table aliases of "c" and "o" respectively (Here we use aliases to make the SQL shorter):
+
+SELECT Orders.OrderID, Orders.OrderDate, Customers.CustomerName FROM Customers, Orders WHERE Customers.CustomerName='Around the Horn' AND Customers.CustomerID=Orders.CustomerID;  
+//The following SQL statement is the same as above, but without aliases:
+
