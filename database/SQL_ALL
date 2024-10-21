@@ -704,3 +704,119 @@ Result: This creates a new table named EmptyEmployees with the same schema as th
 
 
 INSERT INTO
+
+The INSERT INTO SELECT statement allows you to take existing data from one table (the source table) and insert it into another table (the target table).
+
+The INSERT INTO SELECT statement adds new records to the target table but does not affect the existing records.
+It merely appends the new data to the end of the table.
+
+Syntax
+
+INSERT INTO target_table (column1, column2, ...)
+SELECT column1, column2, ...
+FROM source_table
+WHERE condition;
+
+
+Example
+
+Let’s consider two tables: Employees and ArchivedEmployees. We want to move employees who have left the 
+company from the Employees table to the ArchivedEmployees table.
+
+EmployeeID	EmployeeName	Department	Status
+1	Alice Johnson	HR	Active
+2	Bob Smith	IT	Inactive
+3	Charlie Brown	Finance	Active
+Structure of ArchivedEmployees Table
+EmployeeID	EmployeeName	Department	Status
+4	David Wilson	IT	Inactive
+
+INSERT INTO ArchivedEmployees (EmployeeID, EmployeeName, Department, Status)
+SELECT EmployeeID, EmployeeName, Department, Status
+FROM Employees
+WHERE Status = 'Inactive';
+
+Result
+After executing the above SQL statement, the ArchivedEmployees table will be updated as follows:
+
+EmployeeID	EmployeeName	Department	Status
+4	David Wilson	IT	Inactive
+2	Bob Smith	IT	Inactive
+
+
+Copy "Suppliers" into "Customers" (the columns that are not filled with data, will contain NULL):
+
+INSERT INTO Customers (CustomerName, City, Country)
+SELECT SupplierName, City, Country FROM Suppliers;
+
+
+
+The SQL CASE Expression
+
+
+The CASE expression goes through conditions and returns a value when the first condition is met (like an if-then-else statement). So,
+once a condition is true, it will stop reading and return the result. If no conditions are true, it returns the value in the ELSE clause.
+
+If there is no ELSE part and no conditions are true, it returns NULL.
+
+CASE Syntax
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    WHEN conditionN THEN resultN
+    ELSE result
+END;
+
+
+SELECT OrderID, Quantity,
+CASE
+    WHEN Quantity > 30 THEN 'The quantity is greater than 30'
+    WHEN Quantity = 30 THEN 'The quantity is 30'
+    ELSE 'The quantity is under 30'
+END AS QuantityText
+FROM OrderDetails;
+
+SELECT CustomerName, City, Country
+FROM Customers
+ORDER BY
+(CASE
+    WHEN City IS NULL THEN Country
+    ELSE City
+END);
+
+
+SQL Null Handling Functions: IFNULL(), ISNULL(), COALESCE(), and NVL()
+
+These functions are used in SQL to handle NULL values and return alternative values when expressions are NULL. Here's a brief overview with an example using a "Products" table.
+
+Example Products Table
+P_Id	ProductName	UnitPrice	UnitsInStock	UnitsOnOrder
+1	Jarlsberg	10.45	16	15
+2	Mascarpone	32.56	23	NULL
+3	Gorgonzola	15.67	9	20
+
+
+When calculating the total value of stock (using the formula UnitPrice * (UnitsInStock + UnitsOnOrder)), a NULL value in the "UnitsOnOrder" column will result in a NULL total.
+
+Solutions
+MySQL: Using IFNULL():
+
+In the expression IFNULL(UnitsOnOrder, 0), the 0 serves as the alternative value that will be returned if UnitsOnOrder is NULL
+
+SELECT ProductName, UnitPrice * (UnitsInStock + IFNULL(UnitsOnOrder, 0)) AS TotalValue
+FROM Products;
+
+Using COALESCE():
+
+SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0)) AS TotalValue
+FROM Products;
+
+SQL Server: Using ISNULL():
+
+
+SELECT ProductName, UnitPrice * (UnitsInStock + ISNULL(UnitsOnOrder, 0)) AS TotalValue
+FROM Products;
+
+Using COALESCE():
+SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0)) AS TotalValue
+FROM Products;
