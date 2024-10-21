@@ -167,3 +167,540 @@ and give them the table aliases of "c" and "o" respectively (Here we use aliases
 SELECT Orders.OrderID, Orders.OrderDate, Customers.CustomerName FROM Customers, Orders WHERE Customers.CustomerName='Around the Horn' AND Customers.CustomerID=Orders.CustomerID;  
 //The following SQL statement is the same as above, but without aliases:
 
+SQL JOINS:
+
+Here are the different types of the JOINs in SQL:
+
+(INNER) JOIN: Returns records that have matching values in both tables
+LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
+
+INNER JOIN:
+
+SELECT column_name(s)
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name;
+
+
+OrderID	CustomerID	OrderDate
+10308	2	1996-09-18
+10309	37	1996-09-19
+10310	77	1996-09-20
+Then, look at a selection from the "Customers" table:
+
+CustomerID	CustomerName	ContactName	Country
+1	Alfreds Futterkiste	Maria Anders	Germany
+2	Ana Trujillo Emparedados y helados	Ana Trujillo	Mexico
+3	Antonio Moreno Taquería	Antonio Moreno	Mexico
+
+SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
+
+will produce this output:
+
+OrderID	CustomerName	OrderDate
+10308	Ana Trujillo Emparedados y helados	1996-09-18
+
+
+LEFT JOIN:
+
+SELECT column_name(s)
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name;
+
+
+Customers Table:
+CustomerID	CustomerName
+1	Alice
+2	Bob
+3	Charlie
+4	Diana
+
+Orders Table:
+OrderID	CustomerID	OrderDate
+101	1	2023-09-01
+102	2	2023-09-03
+103	2	2023-09-04
+
+Left Join Query:
+
+You want to find all customers and any orders they have placed. Even if a customer has not placed any orders, 
+you still want their name to show up in the result.
+
+SELECT Customers.CustomerName, Orders.OrderID, Orders.OrderDate
+FROM Customers
+LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+
+Result of the LEFT JOIN:
+
+CustomerName	OrderID	OrderDate
+Alice	101	2023-09-01
+Bob	102	2023-09-03
+Bob	103	2023-09-04
+Charlie	NULL	NULL
+Diana	NULL	NULL
+
+
+RIGHT JOIN:
+
+SELECT column_name(s)
+FROM table1
+RIGHT JOIN table2
+ON table1.column_name = table2.column_name;
+
+SELECT Customers.CustomerName, Orders.OrderID, Orders.OrderDate
+FROM Customers
+RIGHT JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+
+
+Result of the RIGHT JOIN:
+
+CustomerName	OrderID	OrderDate
+Alice	101	2023-09-01
+Bob	102	2023-09-03
+NULL	103	2023-09-05
+
+
+OUTER JOIN:
+
+SELECT column_name(s)
+FROM table1
+FULL OUTER JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+
+
+
+SELECT c.CustomerName, o.OrderID, o.OrderDate
+FROM Customers AS c
+FULL OUTER JOIN Orders AS o ON c.CustomerID = o.CustomerID;
+
+
+CustomerName	OrderID	OrderDate
+Alice	101	2023-09-01
+Bob	102	2023-09-03
+Charlie	NULL	NULL
+NULL	103	2023-09-05
+
+
+Note:
+Some database systems, like MySQL, do not support FULL OUTER JOIN directly. In those cases, you can achieve the same result
+by combining a LEFT JOIN and a RIGHT JOIN with a UNION.
+
+Here's how you can do it in MySQL:
+
+SELECT c.CustomerName, o.OrderID, o.OrderDate
+FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID
+UNION
+SELECT c.CustomerName, o.OrderID, o.OrderDate
+FROM Customers AS c
+RIGHT JOIN Orders AS o ON c.CustomerID = o.CustomerID;
+This will give you the same result as a FULL OUTER JOIN.
+
+
+SQL Self Join
+
+A self join is a regular join, but the table is joined with itself.
+
+Self Join Syntax
+SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+
+CustomerID	CustomerName	City
+1	Alice	New York
+2	Bob	Los Angeles
+3	Charlie	New York
+4	Diana	Chicago
+5	Edward	Los Angeles
+6	Frank	San Francisco
+
+
+SELECT A.CustomerName AS CustomerName1, 
+       B.CustomerName AS CustomerName2, 
+       A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID //This condition ensures that we only consider pairs of customers that are different. It prevents a customer from being paired with themselves.
+AND A.City = B.City
+ORDER BY A.City;
+
+Final Result:
+CustomerName1	CustomerName2	City
+Alice	Charlie	New York
+Bob	Edward	Los Angeles
+Charlie Alice New York
+Edward Bob Los Anglese
+
+if we use A.customerID < B.CustomerID then we can avoid the dupliactes
+
+
+
+UNION
+
+The UNION operator is used to combine the result-set of two or more SELECT statements.
+
+Every SELECT statement within UNION must have the same number of columns
+The columns must also have similar data types
+The columns in every SELECT statement must also be in the same order
+
+UNION Syntax:
+
+SELECT column_name(s) FROM table1
+UNION
+SELECT column_name(s) FROM table2;
+
+To allow duplicate values, use UNION ALL:
+
+SELECT column_name(s) FROM table1
+UNION ALL
+SELECT column_name(s) FROM table2;
+
+
+Customers Table:
+CustomerID	CustomerName	City	Country
+1	Alfreds Futterkiste	Berlin	Germany
+2	Ana Trujillo Emparedados	Mexico City	Mexico
+3	Antonio Moreno Taquería	Frankfurt	Germany
+4	Maria Anders	Hamburg	Germany
+5	Edward	Madrid	Spain
+
+Suppliers Table:
+SupplierID	SupplierName	City	Country
+1	Acme Corp	Berlin	Germany
+2	Best Supplies	Munich	Germany
+3	Super Goods	Los Angeles	USA
+4	Global Products	Frankfurt	Germany
+5	International Trade	Toronto	Canada
+
+
+
+SELECT City, Country 
+FROM Customers 
+WHERE Country = 'Germany'
+UNION ALL
+SELECT City, Country 
+FROM Suppliers 
+WHERE Country = 'Germany'
+ORDER BY City;
+
+City	Country
+Berlin	Germany
+Berlin	Germany
+Frankfurt	Germany
+Frankfurt	Germany
+Hamburg	Germany
+Munich	Germany
+
+
+if UNION
+
+City	Country
+Berlin	Germany
+Frankfurt	Germany
+Hamburg	Germany
+Munich	Germany
+
+The SQL GROUP BY Statement
+
+The GROUP BY statement groups rows that have the same values into summary rows, like "find the number of customers in each country".
+The GROUP BY statement is often used with aggregate functions (COUNT(), MAX(), MIN(), SUM(), AVG()) to group the result-set by one or more columns.
+
+SYntax:
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+ORDER BY column_name(s);
+
+Sales Table:
+SaleID	ProductName	Quantity	Price	SaleDate
+1	Apple	10	1.00	2024-10-01
+2	Banana	5	0.50	2024-10-01
+3	Apple	15	1.00	2024-10-02
+4	Orange	8	0.75	2024-10-02
+5	Banana	7	0.50	2024-10-03
+6	Apple	20	1.00	2024-10-03
+
+
+SELECT ProductName, SUM(Quantity) AS TotalQuantity
+FROM Sales
+GROUP BY ProductName
+ORDER BY TotalQuantity DESC;
+
+result:
+
+ProductName	TotalQuantity
+Apple	45
+Banana	12
+Orange	8
+
+
+SELECT Shippers.ShipperName,COUNT(Orders.OrderID) AS NumberOfOrders FROM Orders
+LEFT JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID
+GROUP BY ShipperName;
+
+Result:
+
+ShipperName	NumberOfOrders
+Federal Shipping 	68 
+Speedy Express 	54 
+
+more example:
+
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country;
+
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country
+ORDER BY COUNT(CustomerID) DESC;
+United Package 	74 
+
+
+The HAVING clause was added to SQL because the WHERE keyword cannot be used with aggregate functions.
+
+HAVING Syntax
+
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+HAVING condition
+ORDER BY column_name(s);
+
+
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country
+HAVING COUNT(CustomerID) > 5;
+
+Number of Records: 5
+Expr1000	Country
+9 	Brazil 
+11 	France 
+11 	Germany 
+7 	UK 
+13 	USA 
+
+
+
+
+The SQL EXISTS Operator
+
+
+The EXISTS operator is used to test for the existence of any record in a subquery.
+The EXISTS operator returns TRUE if the subquery returns one or more records.
+
+EXISTS Syntax:
+
+SELECT column_name(s)
+FROM table_name
+WHERE EXISTS
+(SELECT column_name FROM table_name WHERE condition);
+HAVING COUNT(Orders.OrderID) > 25;
+
+example:
+
+SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (
+    SELECT ProductName 
+    FROM Products 
+    WHERE Products.SupplierID = Suppliers.SupplierID 
+    AND Price = 22
+);
+
+
+FROM Suppliers: The query starts by selecting from the Suppliers table.
+
+EXISTS Clause: For each supplier in the Suppliers table, the EXISTS subquery is executed. This subquery checks if 
+there are any products associated with the current supplier that have a price of 22.
+
+Subquery Execution:
+
+For Supplier A (SupplierID = 1):
+The subquery checks the Products table. It finds one product (Product 2) that matches (Price = 22).
+EXISTS returns TRUE, so Supplier A is included in the final result.
+
+________________________________________
+
+Complete Order of Execution in SQL Queries
+FROM Clause:
+JOINs:
+WHERE Clause:
+GROUP BY Clause:
+HAVING Clause:
+SELECT Clause: 
+DISTINCT:
+ORDER BY Clause:
+LIMIT / OFFSET Clause:
+
+
+Subqueries: If there are subqueries (like the EXISTS clause in your earlier examples), those are executed as
+needed during the evaluation of the outer query. The result of the subquery affects how the
+outer query processes its data.
+
+Set Operations: If you are using operations like UNION, INTERSECT, or EXCEPT, these are processed after the 
+individual queries are executed and their results are combined.
+
+_________________________________________________
+
+
+The SQL ANY and ALL Operators
+
+The ANY and ALL operators allow you to perform a comparison between a single column value and a range of other values.
+
+The ANY operator:
+returns a boolean value as a result
+returns TRUE if ANY of the subquery values meet the condition
+
+ANY means that the condition will be true if the operation is true for any of the values in the range.
+
+ANY Syntax:
+
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator ANY
+  (SELECT column_name
+  FROM table_name
+  WHERE condition);
+
+Note: The operator must be a standard comparison operator (=, <>, !=, >, >=, <, or <=).
+
+
+Products Table:
+
+ProductID	ProductName	Price
+1	Product A	15
+2	Product B	25
+3	Product C	35
+4	Product D	45
+
+Sales Table:
+
+SaleID	ProductID	SalePrice
+101	1	10
+102	2	20
+103	3	30
+104	4	50
+
+Using ANY:
+
+Let's find products that are more expensive than any of the sale prices from the Sales table.
+
+SQL Query with ANY
+
+SELECT ProductName
+FROM Products
+WHERE Price > ANY (SELECT SalePrice FROM Sales);
+
+ProductName
+Product A
+Product B
+Product C
+Product D
+Using ALL
+
+Now, let's find products whose prices are greater than all the sale prices from the Sales table.
+
+SQL Query with ALL
+
+SELECT ProductName
+FROM Products
+WHERE Price > ALL (SELECT SalePrice FROM Sales);
+
+Final Result for ALL
+ProductName
+Empty
+
+
+
+
+SELECT INTO
+
+
+Employees Table:
+
+EmployeeID	EmployeeName	Department	Salary
+1	Alice Johnson	HR	60000
+2	Bob Smith	IT	75000
+3	Charlie Brown	Finance	70000
+4	David Wilson	IT	72000
+5	Eva Green	HR	65000
+
+Creating a New Table
+
+1. Copy All Columns Into a New Table
+To create a backup of the entire Employees table:
+
+SELECT *
+INTO EmployeesBackup
+FROM Employees;
+
+Result: This creates a new table named EmployeesBackup with the same structure and data as the Employees table.
+
+
+
+2. Copy Specific Columns Into a New Table
+If you only want to copy the EmployeeName and Salary columns into a new table:
+
+SELECT EmployeeName, Salary
+INTO EmployeeSalaries
+FROM Employees;
+
+Result: This creates a new table named EmployeeSalaries containing:
+
+EmployeeName	Salary
+Alice Johnson	60000
+Bob Smith	75000
+Charlie Brown	70000
+David Wilson	72000
+Eva Green	65000
+
+
+3. Copy Rows Based on a Condition
+
+If you want to copy only the employees from the IT department into a new table:
+
+SELECT *
+INTO ITEmployees
+FROM Employees
+WHERE Department = 'IT';
+Result: This creates a new table named ITEmployees with the following data:
+
+EmployeeID	EmployeeName	Department	Salary
+2	Bob Smith	IT	75000
+4	David Wilson	IT	72000
+4. Using IN Clause to Create a Table in Another Database
+
+
+OHHHH!
+
+If you have a separate database called BackupDB, you can copy the entire Employees table into this new database:
+
+SELECT *
+INTO EmployeesBackup IN 'BackupDB'
+FROM Employees;
+
+Result: This creates a new table named EmployeesBackup in the BackupDB database with all the data from the Employees table.
+
+Tip: Create an Empty Table Using the Schema of Another
+
+If you want to create an empty table based on the Employees table structure, you can do so like this:
+
+
+SELECT *
+INTO EmptyEmployees
+FROM Employees
+WHERE 1 = 0;
+Result: This creates a new table named EmptyEmployees with the same schema as the Employees table but with no data. 1 is never = 0 so no data will be added.
+
+
+
+INSERT INTO
