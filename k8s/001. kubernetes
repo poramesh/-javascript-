@@ -1,0 +1,885 @@
+Kubernetes is an open-source container orchestration framework developed by Google. It manages containerized applications across
+multiple environments (physical, virtual, cloud, or hybrid), handling hundreds or thousands of containers efficiently.
+
+
+
+Key Problems Kubernetes Solves:
+
+High Availability: Ensures applications have no downtime, making them continuously accessible.
+Scalability: Allows applications to scale up or down depending on the load, offering flexibility.
+Disaster Recovery: Provides mechanisms to back up data and restore it to its latest state in case of system failures.
+
+
+
+Kubernetes Architecture
+Kubernetes Cluster: Made up of at least one Master Node and multiple Worker Nodes.
+
+1. Master Node
+
+API Server: The entry point to the cluster; handles communication between Kubernetes components 
+and clients (CLI, scripts, etc.).
+
+Controller Manager: Oversees the cluster, ensuring containers are running, restarting failed
+containers, etc.
+
+Scheduler: Schedules containers on different worker nodes based on available resources and load.
+
+etcd: A key-value store holding the cluster’s current state, including configuration and status
+data for each node and container.It’s critical for backup and recovery.
+
+
+2. Worker Node
+
+Kubelet: A Kubernetes process that manages the containers running on each worker node and ensures 
+communication with the master node.
+
+Containers: Applications deployed on the worker nodes in containers. Workload distribution determines 
+the number of containers per node.
+
+
+3. Virtual Network
+
+A virtual network connects all nodes within a Kubernetes cluster, allowing communication between nodes 
+as if they were part of a single system.
+
+
+
+
+Key Kubernetes Features
+
+Pods:
+
+The smallest deployable unit in Kubernetes, a pod abstracts the container runtime 
+(e.g., Docker).
+Typically runs a single application container but can run multiple containers if necessary
+(e.g., main container + helper container).
+
+
+Services:
+
+Provides a stable endpoint (IP address) for communication between pods, even if the underlying pod IPs change due to restarts or failures.
+External Services: Allow communication from outside the cluster, useful for making applications accessible to users.
+Internal Services: Restrict communication within the cluster, ideal for backend services like databases.
+
+
+
+
+Kubernetes Benefits
+
+
+Efficient Container Management: Handles large-scale containerized applications, including load distribution and failover management.
+Automated Rollouts & Rollbacks: Ensures smooth updates to applications and can roll back changes if needed.
+Self-Healing: Automatically restarts failed containers and reschedules them as necessary.
+
+
+Use Case Example: Web Application and Database Setup
+
+Pods: One for the application and another for the database.
+Services:
+Internal service for the database (ensures security and no exposure to external requests).
+External service for the web application (makes it accessible via browser).
+Communication: Services allow stable communication between the application and database pods using internal IPs.
+
+
+
+
+
+KUBERNETES ARCHITECTURE:
+
+1. Kubernetes Components Overview
+
+Ingress
+
+Purpose: Ingress is a component that manages external access to services within a Kubernetes cluster. It
+provides routing rules to expose services to external traffic, often via HTTP/HTTPS.
+
+Flow: Instead of traffic going directly to a service, requests first hit the ingress controller, which then 
+forwards the requests to the appropriate service. It offers more advanced features, 
+such as:
+Load balancing,
+SSL termination,
+Path-based routing.
+
+
+2. Service
+
+Purpose: Services in Kubernetes provide a stable network endpoint for accessing a set of pods. They decouple
+the internal pod network from external clients by using a persistent DNS name or IP address that remains static
+even as the pods themselves are created or destroyed.
+
+Communication: Pods use services to communicate with each other. For example, a service for MongoDB could be named
+mongodb-service, and other pods would communicate with the database through this service endpoint,
+instead of direct pod-to-pod communication.
+
+
+3. ConfigMap
+
+Purpose: ConfigMap is a Kubernetes resource designed to provide external configuration to applications running in pods.
+It helps store non-sensitive configuration data (like service URLs, endpoints, etc.) separately from container images.
+
+Advantages:
+
+Dynamic Updates: ConfigMaps allow you to change environment configurations (such as database endpoints) without having to 
+rebuild and redeploy application containers. You just update the ConfigMap, and the changes are applied automatically.
+Use Cases: Store URLs, application settings, environment variables, etc.
+
+
+4. Secret
+
+
+Purpose: Secrets are similar to ConfigMaps but specifically designed to handle sensitive data (like passwords, certificates, tokens).
+They store data in an encoded form (Base64), but it is important to note that Base64 encoding is not a security mechanism.
+
+Security: Secrets should be encrypted using third-party tools (like cloud provider-specific encryption services or
+other tools) since Kubernetes does not encrypt them out of the box.
+
+Use Cases: Store passwords, OAuth tokens, SSH keys, or other credentials in a secure way.
+
+
+5. Volumes
+
+Purpose: Volumes in Kubernetes are used for data persistence. By default, if a pod or container restarts, any data stored
+within it is lost. Volumes allow data to persist beyond the pod's lifecycle.
+
+Types of Volumes:
+
+Local Volume: The volume resides on the same physical node (server) where the pod is running. If the pod restarts but 
+stays on the same node, data persists.
+
+Remote Volume: Volumes can also be backed by external storage, like cloud storage services (AWS EBS, Azure Disk, etc.) or
+on-premise NAS/SAN solutions.
+
+Use Cases: Storing database data, log files, or any long-term persistent storage required for the application.
+
+
+6. Deployment
+
+
+Purpose: Deployment is a Kubernetes resource used to manage pod lifecycles. It’s an abstraction over individual 
+pods and ensures that the desired number of pod replicas are running at any given time.
+
+Features:
+
+Scaling: Allows you to scale up/down the number of pod replicas with a simple configuration change.
+Rollout & Rollback: Deployments manage rolling updates to applications and allow rollback to a previous stable version if an update fails.
+Self-Healing: If a pod crashes, the deployment will automatically start a new pod to maintain the desired state.
+
+
+7. Load Balancing via Service
+
+Purpose: The service acts not only as a stable network endpoint but also as a load balancer, distributing
+requests across multiple pods.
+
+Mechanism: Kubernetes services have built-in load balancing mechanisms that forward requests to the least busy pod.
+
+Benefit: This ensures that even if a pod crashes, the service forwards incoming traffic to other running replicas,
+ensuring no downtime for users.
+
+
+8. StatefulSet
+
+Purpose: StatefulSet is similar to Deployment but is used for managing stateful applications (e.g., databases) that
+require persistent storage and strict identity (stable network identifiers, stable storage).
+
+Key Difference from Deployment:
+
+State Management: Pods managed by StatefulSet have unique identities and persistent storage that follow the pod even during
+scaling, restarts, or upgrades.
+Use Case: Databases (like MySQL, MongoDB) where the state needs to be persisted and shared storage must be handled carefully.
+
+
+Why Not Use Deployments for Databases?
+
+Databases are stateful applications: Each replica of a database needs access to the same persistent storage, which needs to be 
+synchronized across replicas. Deployments don't handle this well.
+Concurrency and Consistency: Databases require careful management of concurrent access to data. StatefulSets manage this synchronization
+and ensure consistency across replicas.
+
+9. Data Persistence Challenges
+
+Kubernetes and Storage: Kubernetes does not manage the actual data storage. Instead, it provides the framework for attaching
+storage (like volumes) to pods, but the administrator is responsible for managing backups,
+replication, and ensuring data persistence.
+
+Managing Storage: Depending on the setup, storage could be local (on the same server) or remote (cloud or external storage). 
+Kubernetes can mount these storage solutions to ensure data is retained even if pods are recreated.
+
+
+10. High Availability with Replication
+
+
+Replication for High Availability: In Kubernetes, the concept of replication ensures that your application remains highly available,
+
+even if a pod crashes or a node goes down.
+
+Replication for Stateless Applications: Applications like web servers, which do not rely on persistent storage,
+can easily be scaled using Deployments.
+
+Replication for Stateful Applications: Stateful applications like databases require StatefulSets to manage synchronization of shared data.
+
+
+11. Load Balancing and Failover
+
+Service as a Load Balancer: Kubernetes services act as load balancers, directing traffic to the least busy pods, ensuring 
+optimal resource usage.
+
+Failover: If one pod fails or a node crashes, the service forwards incoming traffic to other pods, ensuring no downtime.
+
+
+12. Database and Stateful Applications
+
+StatefulSet for Databases: Kubernetes cannot manage the state of databases well with Deployments because databases are
+stateful and rely on persistent storage.
+
+Challenges: Deploying databases using StatefulSets can be more complex due to the need for synchronization and 
+careful handling of read/write operations. Many Kubernetes setups prefer hosting databases outside the 
+cluster to avoid these complexities.
+
+
+13. Distributed System Setup
+
+
+Multi-Node Setup: In a robust Kubernetes environment, applications and databases are replicated across multiple nodes (servers) 
+to ensure high availability and fault tolerance.
+
+Example: Two replicas of the application pod and two replicas of the database pod.
+
+Node Failure: If one node goes down, the other node(s) with replicas can continue handling traffic without downtime.
+
+
+Conclusion
+Kubernetes provides a powerful set of tools to manage the lifecycle of applications in distributed systems. 
+By using components such as Services, ConfigMaps, Secrets, Volumes, Deployments, StatefulSets, and Ingress,
+it offers high availability, scalability, and resilience for both stateless and stateful applications. However,
+it’s important to understand that while Kubernetes orchestrates containerized applications, the responsibility for 
+managing persistent data, securing sensitive information, and scaling databases remains with the user or administrator.
+
+
+
+Kubernetes Core Components Overview:
+
+Pods and Services:
+
+Pods: The smallest, most basic deployable objects in Kubernetes. They encapsulate containers and are ephemeral.
+Services: Used for communication between different pods within the Kubernetes cluster. usually by exposing a stable network endpoint.
+
+Ingress Component:
+
+Ingress: Routes external HTTP and HTTPS traffic into the cluster, providing load balancing and SSL termination.
+
+Configuration:
+
+ConfigMaps: External configuration used to manage application configuration separate from the pod itself.
+Secrets: Used for storing sensitive information, such as passwords, in an encrypted format.
+
+Data Persistence:
+
+Volumes: Used to persist data across pod restarts. Volumes can come from many sources, including local disk, network storage, etc.
+
+Pod Blueprints and Replication Mechanisms:
+
+Deployments: Used to create and manage pod replicas, ensuring high availability by automatically restarting failed pods.
+StatefulSets: Specifically for managing stateful applications like databases. They ensure pod identity and storage persistence 
+during restarts or rescheduling.
+_______________________________________________
+
+Kubernetes Backup Solution:
+
+K10 by Kasten: A data management platform designed for Kubernetes. It simplifies backup, restore, and disaster recovery tasks for 
+Kubernetes clusters. It has a user-friendly interface and provides a free offering for up to 10 nodes.
+
+
+
+Interacting with Kubernetes:
+
+1. API Server:
+
+The API server is the main entry point for any configuration in a Kubernetes cluster. All components communicate with it 
+via a UI, an API (like a script or curl command), or a command-line tool like kubectl.
+
+2. Declarative Configuration (YAML/JSON):
+
+Kubernetes uses declarative configuration files in YAML or JSON format.
+Example: A deployment file that specifies the number of replicas of a pod and the container image that should be used.
+
+Kubernetes tries to match the desired state (as declared in the configuration file) with the current state of the system.
+If there’s a difference, Kubernetes takes action to reconcile them (e.g., restart a failed pod).
+
+Controller Manager: Ensures that the actual state matches the desired state defined in the configuration files. If the desired
+state is 2 pods and one pod fails, the controller manager will automatically create a replacement.
+
+
+Key Attributes in YAML Files:
+
+kind: Specifies the component being created (e.g., Deployment, Service).
+apiVersion: Defines the version of the Kubernetes API used.
+metadata: Includes the name and labels for the resource.
+spec: Contains specific settings for the resource, such as the number of replicas for a deployment or container image and ports.
+
+Configuration Files Breakdown
+
+1. Parts of a Kubernetes Configuration File:
+Metadata: Contains general information about the component, like its name.(e.g., pod, service).
+Specification: Where all the configuration for the component resides (e.g., number of pod replicas, container image, ports).
+Status: Automatically generated by Kubernetes. It continuously updates the current state of the component.
+
+2. Self-Healing Mechanism:
+Kubernetes uses the status and compares it to the desired state defined in the specification. If there's a mismatch,
+Kubernetes fixes it. For example, if the desired state is two replicas and only one is running, Kubernetes will restart the second pod.
+
+
+
+
+Data Storage for Configuration Files
+
+
+It is a best practice to store Kubernetes configuration files alongside the application's code or in a separate Git repository. 
+This approach integrates with the infrastructure-as-code concept.
+
+
+MiniKube and kubectl Setup:
+
+MiniKube:
+
+MiniKube is a tool that lets you run a single-node Kubernetes cluster on your local machine for testing and development.
+It includes both master and worker processes running on a single node (your local machine).
+
+kubectl:
+
+kubectl is a command-line tool used to interact with a Kubernetes cluster, allowing you to create, delete, and manage Kubernetes resources.
+Communication with Kubernetes happens via the API server, which kubectl talks to in order to manage components like pods, services, and more.
+
+kubectl get nodes: Lists all nodes in the cluster.
+kubectl apply -f [config.yaml]: Creates or updates resources from the provided YAML configuration file.
+
+
+Additional Notes:
+
+Status Data: Kubernetes gets status data from etcd, which stores the current state of all components in the cluster.
+YAML Format: Kubernetes configuration files use YAML, which is easy to read but strict with indentation. Misaligned indentation can cause the
+configuration file to be invalid.
+Infrastructure as Code (IaC): It’s common to store configuration files in a Git repository alongside application code, allowing for
+better version control and easier deployment management.
+
+These notes outline the main components, practices, and tools to get started with Kubernetes, from setting up the cluster locally with MiniKube
+to managing it with kubectl. The self-healing properties of Kubernetes and its configuration in YAML form are crucial for creating reliable 
+and scalable applications.
+
+
+
+
+Setting up MiniKube:
+
+Installation: MiniKube can be installed via package managers (like Homebrew for macOS) or manually.
+
+Starting a Cluster: Run minikube start to create a local Kubernetes cluster. It requires a virtual machine or container runtime,
+with Docker being the preferred driver.
+
+Docker as the Driver: MiniKube can run as a Docker container on your machine. Inside MiniKube, containers are managed by Docker
+installed within the MiniKube environment.
+
+Checking Cluster Status: Use minikube status to verify the cluster’s status after it's started.
+
+
+Kubernetes Application Deployment Example:
+
+Sample Application Setup: You can deploy a realistic application setup consisting of a MongoDB database and a web application.
+
+ConfigMaps and Secrets:
+ConfigMap: Stores the MongoDB database endpoint.
+Secret: Stores the MongoDB username and password.
+
+Steps to Create Kubernetes Resources:
+
+Create ConfigMap: Store external configuration details (e.g., database endpoint) using a YAML file (e.g., config.yml).
+
+Create Secrets: Store sensitive data (e.g., username and password) in another YAML file.
+
+Deploy MongoDB: Define a deployment and service for MongoDB in a configuration file.
+
+Deploy Web Application: Define a deployment and service for the web app, linking it to MongoDB and ensuring it’s accessible externally
+through an ingress or service.
+
+
+
+
+
+
+Here’s a detailed breakdown of the concepts and the YAML configuration for deploying MongoDB and a sample web application
+on Kubernetes, using Minikube and kubectl.
+
+1. Minikube and kubectl Setup
+
+Minikube provides a local Kubernetes cluster. It runs Kubernetes components as a virtual machine or container
+on your machine. To interact with this cluster, kubectl (Kubernetes Command Line Interface) is used.
+Minikube's purpose is to start and manage the Kubernetes cluster, whereas kubectl handles interaction
+with the cluster, like deploying applications and managing services.
+
+
+
+
+2. Installing Minikube and kubectl
+
+Minikube Installation: It can be installed on different OSes like macOS, Linux, and Windows. 
+On macOS, Minikube can be installed with a command like:
+
+brew install minikube
+
+Start Minikube: To start a Minikube cluster, use:
+
+minikube start
+
+Minikube runs on a driver (Docker or a VM). If Docker is already installed on your machine, you can use it as a driver.
+
+minikube start --driver=docker
+
+kubectl Installation: When Minikube is installed, kubectl is installed as a dependency.
+
+kubectl get nodes
+
+This command will list the nodes in the cluster, showing the control plane node.
+
+
+
+
+3. Deploying a MongoDB Application on Kubernetes
+
+To deploy MongoDB, you'll need several Kubernetes components:
+
+ConfigMap: Store external configuration such as MongoDB URL.
+Secret: Store sensitive data like username and password.
+Deployment: Define and manage the MongoDB pods.
+Service: Expose MongoDB for other components to access.
+
+3.1 ConfigMap for MongoDB URL
+
+The ConfigMap holds external configuration data that can be injected into the pods. Here's how to define a ConfigMap for MongoDB:
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-config
+data:
+  url: "mongodb://mongodb-service:27017"
+
+Key-Value Pairs: The url key holds the MongoDB connection string. The value mongodb-service 
+refers to the Service for MongoDB (defined later).
+The ConfigMap will be referenced in the MongoDB deployment to provide the database URL.
+
+3.2 Secret for MongoDB Credentials
+
+Sensitive data like usernames and passwords are stored in Secrets. Here’s an example:
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-secret
+type: Opaque
+data:
+  username: dXNlcg==  # base64-encoded 'user'
+  password: cGFzc3dvcmQ=  # base64-encoded 'password'
+
+Encoding Values: The values must be base64-encoded. You can generate them like this:
+
+echo -n 'user' | base64
+echo -n 'password' | base64
+
+3.3 MongoDB Deployment and Service
+
+The Deployment ensures MongoDB is running as a pod, and Service exposes the pod to other components.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:5.0
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+  - port: 27017
+    targetPort: 27017
+  type: ClusterIP
+
+
+
+Deployment Breakdown:
+
+replicas: 1: Only one MongoDB pod is running.
+image: mongo:5.0: Using MongoDB 5.0 Docker image.
+containerPort: 27017: MongoDB runs on port 27017 inside the container.
+Environment variables (like MONGO_INITDB_ROOT_USERNAME) are pulled from the Secret.
+
+Service Breakdown:
+
+selector: app: mongodb: The service routes traffic to pods labeled with app: mongodb.
+port: The port where the service listens for connections.
+targetPort: The port on the pod (container) where traffic is forwarded.
+
+
+
+4. Deploying a Web Application
+
+Similar to MongoDB, the web application will also have a Deployment and Service. This app connects
+to MongoDB using the ConfigMap and Secret.
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: your-docker-hub-image
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGODB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: mongodb-config
+              key: url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+spec:
+  selector:
+    app: webapp
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: NodePort
+
+Environment Variables: The web app connects to MongoDB using the URL from the ConfigMap.
+Service: NodePort allows external access to the web application, exposing it on port 8080.
+
+
+
+5. Interacting with the Kubernetes Cluster
+
+Deploy the components using:
+
+kubectl apply -f configmap.yaml
+kubectl apply -f secret.yaml
+kubectl apply -f mongodb-deployment.yaml
+kubectl apply -f webapp-deployment.yaml
+
+Check the status of the deployments:
+kubectl get pods
+kubectl get services
+
+Access the web app through the NodePort service by navigating to the IP of the node and the assigned port.
+This process sets up a simple Kubernetes deployment of a MongoDB database and a web.
+
+
+This process sets up a simple Kubernetes deployment of a MongoDB database and a web application. The key tools, Minikube and kubectl, 
+help you manage and interact with your cluster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kubernetes Web Application and MongoDB Deployment Guide
+
+In this guide, we will deploy a Node.js web application alongside a MongoDB database in a Kubernetes cluster.
+We will configure deployment manifests for both applications and use ConfigMaps and Secrets to store environment
+variables such as database credentials and connection information. The service configuration will expose 
+the web app externally via a NodePort.
+
+Steps Involved:
+
+Prepare the Kubernetes Deployment and Service for the Web Application.
+Configure MongoDB Database Deployment and Service.
+Use ConfigMaps and Secrets for secure configuration.
+Expose the Web Application via a NodePort service.
+Check Kubernetes resources and troubleshoot using kubectl commands.
+
+
+1. Web Application Deployment (webapp.yaml)
+The web application deployment file defines how the web app will be deployed inside the cluster. It pulls a Node.js
+app image from Docker Hub and listens on port 3000.
+
+Deployment Configuration:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: <dockerhub_username>/webapp:v1.0   # Replace with your Docker Hub image name
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: password
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: database-url
+
+replicas: Number of pod instances for the web app.
+containerPort: The web application listens on port 3000.
+env: Environment variables passed from ConfigMap and Secrets.
+
+Web App Service:
+The service exposes the web application internally in the Kubernetes cluster.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+  labels:
+    app: webapp
+spec:
+  selector:
+    app: webapp
+  ports:
+    - port: 3000       # Cluster IP port
+      targetPort: 3000 # Web app container port
+      nodePort: 30100  # Port accessible externally
+  type: NodePort       # Makes service accessible externally
+
+
+2. MongoDB Deployment (mongo.yaml)
+This deployment file creates a MongoDB instance, ensuring that the username and password are securely passed via Kubernetes Secrets.
+
+MongoDB Deployment Configuration:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:4.2
+        ports:
+        - containerPort: 27017  # MongoDB default port
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: password
+
+
+MongoDB Service:
+
+The service allows internal communication with the MongoDB pod.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  labels:
+    app: mongodb
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - port: 27017       # Cluster IP port for MongoDB
+      targetPort: 27017 # MongoDB container port
+  type: ClusterIP       # Makes it internal-only for other pods to access
+
+
+3. ConfigMaps and Secrets
+
+
+Secrets (db-secrets.yaml):
+A Secret object is used to securely store the database username and password.
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secrets
+type: Opaque
+data:
+  username: <base64_encoded_username>
+  password: <base64_encoded_password>
+
+Replace <base64_encoded_username> and <base64_encoded_password> with your Base64-encoded credentials.
+
+ConfigMap (db-config.yaml):
+
+A ConfigMap stores non-sensitive configuration data such as the database URL.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+data:
+  database-url: mongodb://mongodb-service:27017/mydb
+
+
+
+4. Exposing the Web Application with NodePort
+
+To make the web application accessible externally, we will set the service type as NodePort. The service
+will expose the web app on port 30100 (NodePort) of the Kubernetes node.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+spec:
+  selector:
+    app: webapp
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30100
+  type: NodePort
+
+NodePort: The web application will be accessible on NodeIP:NodePort (e.g., http://<minikube_ip>:30100).
+
+
+
+5. Deploying Components to Kubernetes
+
+5.1 Apply ConfigMap and Secrets
+First, create the external configuration before deploying MongoDB and the web application:
+
+kubectl apply -f db-config.yaml
+kubectl apply -f db-secrets.yaml
+
+5.2 Deploy MongoDB
+
+Deploy the MongoDB database using:
+
+kubectl apply -f mongo.yaml
+
+5.3 Deploy the Web Application
+Finally, deploy the web application using:
+
+kubectl apply -f webapp.yaml
+
+
+6. Checking Resources and Logs
+
+6.1 List All Resources
+You can check all running components in your cluster:
+
+kubectl get all
+
+6.2 View Logs
+To view the logs of the web app pod:
+
+kubectl logs <webapp-pod-name>
+
+For MongoDB logs:
+
+kubectl logs <mongodb-pod-name>
+
+
+6.3 Access the Application
+To access the web application, first get the IP address of your Minikube node:
+
+minikube ip
+
+Then, open your browser and go to http://<minikube_ip>:30100.
+
+This detailed document includes everything you need to deploy a web application and its database in a Kubernetes cluster. It covers
+deployment, services, configuration with ConfigMap and Secrets, and exposing your app externally.
+
+
+
+
+
