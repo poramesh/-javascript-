@@ -1,0 +1,61 @@
+basic Mandatory Linux/Unix Commands for QA's / SDET's for any Project where Shell Scripting is involved :- 
+
+Navigating to the Directories :- 
+
+▪️cd <directory> ➡️ Change directory.
+▪️ls ➡️ List files and directories.
+▪️ls -l ➡️ List files with details.
+▪️cd .. ➡️ Move to parent directory 
+▪️pwd ➡️ Print working directory.
+
+File Operations :- 
+
+▪️touch <filename> ➡️ Create an empty file.
+▪️cp <source> <destination> ➡️ Copy files.
+▪️mv <source> <destination> ➡️ Move or rename files.
+▪️rm <filename> ➡️ Remove files.
+▪️rm -r <directory> ➡️ Remove directory and its contents.
+
+Viewing and Editing Files :- 
+
+▪️cat <filename> ➡️ Display file contents.
+▪️less <filename> ➡️ View file content page by page.
+▪️nano <filename> ➡️ Simple text editor.
+▪️vim <filename> ➡️ Advanced text editor.
+
+Searching and Processing Text :- 
+
+▪️grep <pattern> <filename> ➡️ Search for a pattern in a file.
+▪️find <directory> -name <pattern> ➡️ Find files by name.
+▪️awk '{print $1}' <filename> ➡️ Print the first column of a file.
+
+Permissions and Ownership :- 
+
+▪️chmod <permissions> <filename> ➡️ Change file permissions.
+▪️chown <user>:<group> <filename> ➡️ Change file owner and group.
+
+System Information :- 
+
+▪️uname -a ➡️ Display system information.
+▪️df -h ➡️ Display disk space usage.
+▪️top ➡️ Display running processes.
+
+Networking :- 
+
+▪️ping <hostname> ➡️ Check network connectivity.
+▪️ifconfig ➡️ Display network configuration
+
+Process Management :- 
+
+▪️ps ➡️ Display running processes.
+▪️kill <PID> ➡️ Terminate a process.
+▪️killall <process> ➡️ Terminate all processes with the name.
+
+Other :- 
+▪️echo "text" ➡️ Printing text to console.
+
+------*****-------******---------******-------*****-------
+
+--------********---------*******-------********----------
+
+For End to End Interview Questions to CRACK ANY SDET INTERVIEWS for both Freshers and Experienced : 
