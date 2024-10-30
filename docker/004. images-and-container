@@ -244,8 +244,20 @@ Public Registries (e.g., Docker Hub) are open to everyone and allow for sharing 
 Private Registries are used by companies to store proprietary Docker images. Cloud providers like AWS (ECR), Google Cloud, and Azure 
 all offer private registries, and even Docker Hub allows you to create private repositories.
 
-Repository vs. Registry: A Docker registry (like AWS ECR or Docker Hub) provides the storage service, and inside the registry, you 
-  
+Repository vs. Registry: A Docker registry (like AWS ECR or Docker Hub) provides the storage service, and inside the registry, 
+_________________________________
+In Docker terminology:
+
+Registry: A Docker registry is a storage service that hosts Docker images. Examples of registries include Docker Hub, 
+AWS Elastic Container Registry (ECR), and Google Container Registry. A registry acts as a central repository for Docker 
+images, enabling developers to push and pull images as needed.
+
+Repository: Inside a Docker registry, a repository is a collection of related Docker images with the same name
+but different tags, representing different versions of an application or service. For example, in a repository
+called my-app, you might have tags like latest, v1.0, or v2.1, each representing a specific version
+of the Docker image.
+____________________________
+
 3. Creating Docker Images with a Dockerfile
 
 Creating a Dockerfile:
