@@ -28,7 +28,8 @@ if the virtual machine platform is not enabled, you will have to do it, or else 
 
 -----
 Docker Desktop - Virtual Machine Platform not enabled
-Virtual Machine Platform is not enabled. Enable it using the following PowerShell script (in an administrative PowerShell) and then restart your computer before using Docker Desktop:
+Virtual Machine Platform is not enabled. Enable it using the following PowerShell script (in an administrative PowerShell)
+and then restart your computer before using Docker Desktop:
 
 Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
 
