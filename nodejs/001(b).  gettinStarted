@@ -203,3 +203,5 @@ _____________________________________
 
 
 "devstart": "nodemon server.js" runs your app in development mode with nodemon, which automatically restarts your server when changes are made to server.js.
+
+you run it with "node run devstart"
