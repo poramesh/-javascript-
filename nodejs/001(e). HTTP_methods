@@ -257,8 +257,8 @@ server.listen(5000, () => {
 })
 
 
-We see that the other routes work fine, but the home page doesn't look as we expected. The problem is that we only see the HTML Structure of the navbar being displayed and not
-the other stuff like the CSS, logo, and JavaScript.
+We see that the other routes work fine, but the home page doesn't look as we expected. The problem is that we only see the HTML Structure of 
+the navbar being displayed and not the other stuff like the CSS, logo, and JavaScript.
 
 
 // ... above code
@@ -337,7 +337,17 @@ server.listen(5000, () => {
 
 
 
+***************After Toggling (Adding show-links)
+Once the toggle function is triggered (for example, when you click the navToggle button), JavaScript will add show-links to the class attribute
+of the links element. After toggling, the HTML of the element (in the browser's DOM) changes to:
 
+
+<ul class="links show-links">
+  <li><a href="index.html">home</a></li>
+  <li><a href="about.html">about</a></li>
+  <li><a href="projects.html">projects</a></li>
+  <li><a href="contact.html">contact</a></li>
+</ul>*********
 
 navbar-app/browser-app.js
 
