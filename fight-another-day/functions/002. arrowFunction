@@ -111,6 +111,7 @@ const button = document.getElementById('myButton');
 button.addEventListener('click', () => {
   console.log(this === window); // => true
   this.innerHTML = 'Clicked button';
+//nside the event handler, this.innerHTML = 'Clicked button'; will change the content of the button from "Click Me" to "Clicked button".
 });
 this is window in an arrow function that is defined in the global context. When a click event happens, browser tries to 
 invoke the handler function with button context, but arrow function does not change its pre-defined context.
