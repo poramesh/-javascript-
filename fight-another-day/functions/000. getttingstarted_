@@ -173,7 +173,7 @@ The Function Expression
 ________________________
 
 A function expression is very similar to (and has almost the same syntax as) a function statement. The main difference between a function expression and a
-function statement is the function name, which can be omitted from a function expression to create an anonymous function. Function expressions
+function statement is the function name, which can be omitted from a function expression to***** create an anonymous function.******** Function expressions
 are often used as Immediately Invoked Function Expressions (IIFEs), which run as soon as they're defined.
 
 The code below demonstrates an unnamed function expression.
@@ -229,7 +229,11 @@ function main(factN, fibN) {
                 return 1;
             }
     };
-    fib = function fibonacci(n){
+
+// defines an anonymous function assigned to the variable fib, but it’s also a named function expression because the function has a name, 
+fibonacci, within its own definition.
+
+fib = function fibonacci(n){
         if (n > 2) {
             return fibonacci(n - 1) + fibonacci(n - 2);
         }
@@ -281,30 +285,81 @@ f(2) f(1)  1      1   1         1     1
 
 EXAPLANATION OF ABOVE CODE:
 
-Object Creation: The math object is defined using an object literal:
+Here, the variable math is an object with a single property factorial. The factorial property is a function that
+calculates the factorial of a given number n using recursion.
 
-var math = {
-    factorial: function factorial(n) {
-        // Function implementation
-    }
+Object Declaration: var math = { ... }; declares an object named math.
+Property: The factorial property is defined within this object.
+Method: The factorial property is assigned a function that recursively calculates the factorial of a number. Since this
+function is assigned as a property of math, it can also be referred to as a method of the math object.
+
+How to Use It:
+To use this factorial method, you would call:
+
+math.factorial(5); // Output will be 120 (5 * 4 * 3 * 2 * 1)
+
+
+
+Example of an Anonymous Function Expression
+
+
+let square = function(x) {
+    return x * x;
+};
+In this example:
+
+The function function(x) { return x * x; } is anonymous because it doesn’t have a name.
+It’s assigned to the variable square, so you can call it with square(5), but the function itself doesn’t have a direct name.
+This approach is commonly used in JavaScript and is simply referred to as assigning an anonymous function expression to a variable or,
+more simply, as an anonymous function assigned to a variable.
+
+
+Named function expression
+
+
+let fib = function fibonacci(n){
+        if (n > 2) {
+        ......
+
+If you assign a value to a variable that has not been declared with var, let, or const, JavaScript will automatically
+create that variable in the global scope (i.e., window.fib in a browser environment or global.fib in Node.js).
+This behavior is allowed but can be dangerous, as it introduces the risk of overwriting existing global variables
+and can lead to bugs that are hard to trace.
+
+Named Function Expression: This function is a named function expression because fibonacci is given a name that is only accessible within 
+its own scope. You can't call fibonacci from outside the function; you can only use fib.
+
+
+
+
+
+Comparison with Function Expressions
+
+Function Statement (Declaration): It is hoisted to the top of its scope and can be called before its definition.
+
+Function Expression: It is not hoisted, and the function is only available after its definition. This is often 
+used when functions are assigned to variables.
+
+Example of a function expression:
+
+var square = function(x) {
+    return x * x;
 };
 
-In this context, math is an object that contains a property named factorial.
+console.log(square(5));
 
-Property as a Function: The factorial property is a function (also known as a method when it's associated with an object). This allows you
-to encapsulate related functionality within a single object:
+exampele of named function:
 
-By defining factorial as a method of the math object, you keep related mathematical operations organized under the math namespace.
-Calling the Method: When you call math.factorial(value), you are:
+console.log(square(5)); // Output: 25
 
-Accessing the Method: The dot notation (math.factorial) accesses the factorial method within the math object.
+function square(x) {
+    return x * x;
+}
 
-Passing the Argument: The value value (in this case, factN passed to the main function) is passed as an argument to the factorial method for computation.
-Benefits of Using Object Methods
 
-Encapsulation: By grouping related functions (like factorial, fibonacci, etc.) into an object, you create a clear and organized structure for your
-code, making it easier to understand and maintain.
+THIS FILE EPLAINS HOW FUNCTION STATEMENT, NAMED FUNCTION EXP,  ANNONYMOUS FUNCTION EXP WORKS
 
-Namespace: Using an object as a namespace helps avoid naming collisions. If you had multiple functions with the same name (e.g., multiple factorial functions),
-using an object helps distinguish between them.
-Modularity: It encourages a modular approach to coding, making it easier to expand or modify specific functionalities without affecting the entire codebase.
+
+
+
+
