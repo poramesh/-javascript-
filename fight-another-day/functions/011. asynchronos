@@ -12,14 +12,7 @@ console.log(sum);
 The above code is pretty simple – it sums two numbers and then logs the sum to the browser console. The interpreter
 executes these instructions one after another in that order until it is done.
 
-But this method comes along with disadvantages. Say we wanted to fetch some large amount of data from a database and
-then display it on our interface. When the interpreter reaches the instruction that fetches this data, the rest of the code is blocked 
-from executing until the data has been fetched and returned.
-
-Now you might say that the data to be fetched isn't that large and it won't take any noticeable time. Imagine that you have to fetch data 
-at multiple different points. This delay compounded doesn't sound like something users would want to come across.
-
-Luckily for us, the problems with synchronous JavaScript were addressed by introducing asynchronous JavaScript.
+the problems with synchronous JavaScript were addressed by introducing asynchronous JavaScript.
 
 Think of asynchronous code as code that can start now, and finish its execution later. When JavaScript is running asynchronously,
 the instructions are not necessarily executed one after the other as we saw before.
@@ -46,17 +39,6 @@ setTimeout(()=>{
 
 console.log('fired last');
 
-The snippet above is a small program that logs stuff to the console. But there is something new here. The interpreter will 
-execute the first instruction, then the second, but it will skip over the third and execute the last.
-
-The setTimeout is a JavaScript function that takes two parameters. The first parameter is another function, 
-and the second is the time after which that function should be executed in milliseconds. Now you see the definition of callbacks coming into play.
-
-The function inside setTimeout in this case is required to run after two seconds (2000 milliseconds). Imagine it being carried off to be 
-executed in some separate part of the browser, while the other instructions continue executing. After two seconds,
-the results of the function are then returned.
-
-That is why if we run the above snippet in our program, we will get this:
 
 fired first
 fired second
@@ -74,6 +56,41 @@ To fix this problem, promises were introduced.
 
 
 
+Key Points about Asynchronous Callbacks:
+
+Asynchronous Nature:
+
+A callback function can be asynchronous if it is passed into an asynchronous operation, such as setTimeout(), setInterval(),
+or even event handlers (e.g., button clicks).
+
+When the asynchronous operation is completed (such as waiting for a timer or a network request), the callback is executed 
+after the operation finishes, rather than immediately when the function is called.
+
+No async or Promise Needed:
+
+The asynchronous behavior of the callback is due to the fact that the function execution doesn't block the main thread.
+The function that accepts the callback may use it later, after completing its asynchronous task.
+For example, with setTimeout() or event listeners, the callback is executed after a delay or after a specific event happens.
+
+Example without async or Promise:
+
+In the following example, there is no async keyword or Promise involved, but the callback
+is asynchronous because it executes after a delay (due to setTimeout).
+
+
+Event-Driven Asynchronous Callbacks: Callbacks are often used in event-driven models where events like user input
+(e.g., mouse clicks, keyboard events) or data fetching (e.g., network requests) trigger the callback once the event happens.
+
+For example:
+
+button.addEventListener('click', () => {
+  console.log('Button clicked!');
+});
+
+
+
+
+
 What are Promises in JavaScript?
 
 
@@ -85,31 +102,41 @@ Some error occurs along the line and the promise is rejected
 Promises came along to solve the problems of callback functions. A promise takes in two functions as parameters.
 That is, resolve and reject. Remember that resolve is success, and reject is for when an error occurs.
 
-Let's take a look at promises at work:
 
-const getData = (dataEndpoint) => {
-   return new Promise ((resolve, reject) => {
-     //some request to the endpoint;
-     
-     if(request is successful){
-       //do something;
-       resolve();
-     }
-     else if(there is an error){
-       reject();
-     }
-   
-   });
+
+const getData = (city) => {
+    const apiKey = 'your_openweathermap_api_key'; // replace with your actual API key
+    const dataEndpoint = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    return new Promise((resolve, reject) => {
+        fetch(dataEndpoint)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    reject(`Error: ${response.status} ${response.statusText}`);
+                }
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(`Request failed: ${error}`));
+    });
 };
-The code above is a promise, enclosed by a request to some endpoint. The promise takes in resolve and reject like I mentioned before.
 
-After making a call to the endpoint for example, if the request is successful, we would resolve the promise and go on to do whatever we want
-with the response. But if there is an error, the promise will get rejected.
+getData('New York')
+    .then(data => {
+        console.log(`Current temperature in ${data.name}: ${data.main.temp}°C`);
+        console.log(`Weather: ${data.weather[0].description}`);
+    })
+    .catch(error => console.error('Error:', error));
+
+
 
 Promises are a neat way to fix problems brought about by callback hell, in a method known as promise chaining. You can use
 this method to sequentially get data from multiple endpoints, but with less code and easier methods.
 
 But there is an even better way! You might be familiar with the following method, as it's a preferred way of handling data and API calls in JavaScript.
+
+
 
 
 
