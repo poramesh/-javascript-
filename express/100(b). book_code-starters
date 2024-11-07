@@ -514,7 +514,8 @@ const Author = require('../models/author') //going to give an access to the auth
 
 //new author route
 router.get('/new',(req,res)=>{
-  res.render('authors/new',{author: new Author()}) //this doesnt actually creates anything in the db but it does create an author obejct that wecan use to save/deelete inside the db and also use the object in the ejs file. 
+  res.render('authors/new',{author: new Author()}) //this doesnt actually creates anything in the db but it does create an author obejct that 
+wecan use to save/deelete inside the db and also use the object in the ejs file. 
 })
 
 
@@ -703,8 +704,7 @@ const router = express.Router()
 const path - require('path')
 const book = require('../models/book')
 const multer = require('multer')
-const fs = requrie('fs') //to make sure we arent saving a soemthign that it is not valid
-const uploadPath = path.join('public', Book.coverImagesBasePath) 
+cconst uploadPath = path.join('public', Book.coverImagesBasePath) 
 const Author = require('../models/author')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 const upload = multer({
@@ -730,8 +730,6 @@ try {
 router.get('/new',async(req,res) =>{
 //res.sedn('new book')
 renderNewPage(res,new Book())
-  
-
 })
 
 ''''
