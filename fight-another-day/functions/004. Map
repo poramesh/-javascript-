@@ -42,6 +42,9 @@ const map = new Map([
     ['age', 25],
     ['city', 'New York']
 ]);
+//The Map constructor reads each sub-array, identifies the first item as the key, and the second item as the value.
+It then stores these key-value pairs in a way that preserves their insertion order.
+//If you provide an array with more than two items to the Map constructor, only the first two items in each sub-array will be used. 
 
 for (let key of map.keys()) {
     console.log(key);
