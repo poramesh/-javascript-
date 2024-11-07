@@ -45,7 +45,8 @@ average // 39.37
 
 note:
 
-In the reduce method, passing the array as an argument to the callback function allows you to access the entire array within the callback. This can be particularly useful when you need to perform operations that depend on the entire array's length or other properties
+In the reduce method, passing the array as an argument to the callback function allows you to access the entire array within the callback. This
+can be particularly useful when you need to perform operations that depend on the entire array's length or other properties
 
 const average = euros.reduce((total, amount, index, array) => {
   total += amount
