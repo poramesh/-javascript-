@@ -23,6 +23,9 @@ Hoisting: Function declarations are hoisted to the top of their scope, so they c
 Naming: The function must have a name, which can be used to call it later.
 
 
+
+
+
 2. Function Expression
 
 A function expression defines a function as part of a variable assignment. This can be either named or anonymous.
@@ -48,6 +51,8 @@ Hoisting: Function expressions are not hoisted. You cannot call the function bef
 Naming: An anonymous function expression does not have a name, while a named function expression does.
 
 
+
+
 3. Arrow Function
 
 Arrow functions provide a concise way to write functions using the => syntax. They are always anonymous and have a different this
@@ -60,6 +65,10 @@ console.log(subtract(5, 3)); // Output: 2
 Implicit Return: If the function body has a single expression, you can omit the curly braces and return keyword.
 this Binding: Arrow functions do not have their own this; they inherit it from the surrounding context.
 No arguments Object: Arrow functions do not have their own arguments object.
+
+const subtract = a => a - 1; ///vaalid arrow function
+
+const subtract = () => { return 1 } //valid arrow function
 
 
 4. Method Definition in an Object
