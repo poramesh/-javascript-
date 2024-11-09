@@ -1,0 +1,64 @@
+In Unix-based systems, file permissions define who can read, write, or execute a file. Each file has three
+main sets of permissions for three types of users:
+
+Owner (User): The person who owns the file.
+Group: Other users who belong to the same group as the file.
+Others (World): All other users on the system.
+
+  
+Each set has three types of permissions:
+
+Read (r): Allows viewing the contents of a file.
+Write (w): Allows modifying the contents of a file.
+Execute (x): Allows running the file as a program or script.
+
+  
+Permissions in Numeric (Octal) Notation
+Permissions can be represented in octal notation, where each permission type is represented by a number:
+
+4: Read (r)
+2: Write (w)
+1: Execute (x)
+0: No permission
+
+
+Permissions are combined for each category (Owner, Group, Others) and expressed in a three-digit number. For example:
+
+7 (4 + 2 + 1): Read, Write, and Execute (rwx)
+6 (4 + 2): Read and Write (rw-)
+5 (4 + 1): Read and Execute (r-x)
+4: Read-only (r--)
+0: No permissions (---)
+
+
+Common Permission Sets
+
+Here are some typical permission sets:
+
+777 (rwxrwxrwx): Everyone can read, write, and execute the file.
+755 (rwxr-xr-x): The owner can read, write, and execute; others can only read and execute.
+700 (rwx------): Only the owner can read, write, and execute; no permissions for group or others.
+644 (rw-r--r--): The owner can read and write; group and others can only read.
+600 (rw-------): The owner can read and write;
+
+
+chmod [permissions] [filename]
+
+ex:chmod 444 filename
+
+
+Checking Permissions
+
+To verify file permissions, you can use:
+
+ls -l filename
+
+ no permissions for group or others.
+
+These permissions provide flexibility in managing who can access and modify files on a system.
+
+
+
+
+
+
