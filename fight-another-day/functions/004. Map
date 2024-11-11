@@ -31,6 +31,25 @@ console.log(map.get(objKey));  // Output: Object Value
 console.log(map.get(arrKey));  // Output: Array Value
 console.log(map.get(funcKey)); // Output: Function Value
 
+for (let m in map){
+   console.log(m);
+}
+
+
+[ { id: 1 }, 'Object Value' ]
+[ [ 1, 2, 3 ], 'Array Value' ]
+[ [Function: funcKey], 'Function Value' ]
+
+
+
+for (let [key, value] of map) {
+   console.log(key, value);
+}
+
+{ id: 1 } 'Object Value'
+[ 1, 2, 3 ] 'Array Value'
+[Function: funcKey] 'Function Value'
+
 
 
 3. Iterating Over a Map
@@ -113,7 +132,7 @@ map.set(user2, 'User 2 Data');
 console.log(map.get(user1)); // Output: User 1 Data
 console.log(map.get(user2)); // Output: User 2 Data
 
-for (let key of keys) {
+for (let key of map.keys()) {
     console.log(key);
 } // or this would work too console.log([...map.keys()]); //{ id: 1, name: 'John' } { id: 2, name: 'Jane' }
 
