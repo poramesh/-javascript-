@@ -1,0 +1,126 @@
+
+
+
+
+const readline = require('readline')
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: 'my-app> '
+});
+
+rl.prompt(); // Display the initial prompt
+rl.on('line', (line) => {
+    console.log(`Received: ${line}`);
+    rl.prompt(); // Display prompt after each line
+});
+
+
+
+C:\Users\pooja\Desktop\code-shh\javascript>node hello.js
+my-app> pooa
+Received: pooa
+my-app> adas
+Received: adas
+my-app> asdas
+Received: asdas
+my-app> afasfa
+Received: afasfa
+my-app>
+
+
+
+
+
+const readline = require('readline');
+
+// Define the completer function
+function completer(line) {
+    // List of available commands for autocompletion
+    const completions = 'help exit hello world'.split(' ');
+    
+    // Filter commands that start with the input line
+    const hits = completions.filter((c) => c.startsWith(line));
+    
+    // Return an array: [matching completions or full completions list, original line]
+    return [hits.length ? hits : completions, line];
+}
+
+// Create the readline interface with completer
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    completer: completer,
+    prompt: 'app>'
+});
+
+rl.prompt();  // Show the initial prompt
+
+// Handle each line of input
+rl.on('line', (line) => {
+    switch (line.trim()) {
+        case 'help':
+            console.log('Available commands: help, exit, hello, world');
+            break;
+        case 'hello':
+            console.log('Hello!');
+            break;
+        case 'world':
+            console.log('The world is big and beautiful.');
+            break;
+        case 'exit':
+            rl.close();
+            break;
+        default:
+            console.log(`Unknown command: '${line.trim()}'`);
+            break;
+    }
+    rl.prompt();  // Show prompt again after each command
+});
+
+// Handle the close event
+rl.on('close', () => {
+    console.log('Goodbye!');
+    process.exit(0);
+});
+
+
+
+
+C:\Users\pooja\Desktop\code-shh\javascript>node hello.js
+app>pp\
+Unknown command: 'pp\'
+app>kn
+Unknown command: 'kn'
+app>hel
+help   hello   ///  i pressed tab after hel and it displayed help and hello, two poosible words. if i had entered hell it 
+owuld have displayed hello and displayed Hello!
+app>
+help   exit   hello  world
+//when you just click tab, this is what it displays
+app>hello
+Hello!
+app>world
+The world is big and beautiful.
+app>
+
+
+
+return [hits.length ? hits : completions, line];
+
+This is a ternary expression that checks if there are any matching commands (hits.length checks if hits array is non-empty).
+
+either way, the line is appeneded and returned.
+
+First element (hits.length ? hits : completions): This is the array of suggestions, based on what the user has typed so far.
+Second element (line): This is simply the user's current input. By returning it, you ensure that readline knows exactly where
+the user left off, which helps it place the autocompletion suggestions in the right spot.
+
+The readline module then processes this return array and uses the provided line context to correctly display and apply
+the completions. So, yes, readline inherently knows to use the second element as the line, which lets the autocompletion function integrate smoothly.
+
+
+
+the completer function is a part of the readline module in Node.js. Specifically, it's an option that you
+can provide when you create a readline.Interface instance using readline.createInterface()
