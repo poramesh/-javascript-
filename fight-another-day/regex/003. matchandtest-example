@@ -1,0 +1,60 @@
+
+const getLetter = (s) => 
+        s.match(/^[aeiou]/)? 'A': s.match(/^[bcdfg]/) ? 'B' : s.match(/^[hjklm]/)? 'C' : 'D';
+
+
+since ^ is used outside the chracter class it will be reference as beginning with. if it was inside the chracter class it would negate it.
+
+
+
+exmaple usage:
+
+let regex = /[^asr]/;
+
+console.log('apple'.match(regex));  // Output: ['p']
+console.log('star'.match(regex));   // Output: ['t']
+console.log('asr'.match(regex));    // Output: null
+
+
+How It Works:
+
+apple: The first character a is excluded because it's listed in the character class. It then checks the next
+character p, which matches because it's not in the list a, s, or r.
+
+star: The first character s is excluded, but the second character t is not, so it matches.
+
+asr: All the characters in asr are excluded, so it does not match anything, resulting in null.
+
+
+Example for the pattern /^[aeiou]/:
+
+let s = 'apple';
+let result = s.match(/^[aeiou]/);  // Returns match because 'apple' starts with 'a'
+
+s = 'banana';
+result = s.match(/^[aeiou]/);  // Returns null because 'banana' starts with 'b'
+
+
+The regular expression /^[aeiou]/ is designed to test whether a string starts with a vowel (one of the characters a, e, i, o, or u).
+
+Explanation:
+^: Asserts the start of the string.
+[aeiou]: A character class that matches any one of the characters a, e, i, o, or u.
+.test(s): Tests whether the string s starts with any of the vowels defined in the character class [aeiou].
+
+Example 1: s = "apple"
+let s = "apple";
+console.log(/^[aeiou]/.test(s));  // Output: true
+
+Since "apple" starts with the letter "a", which is a vowel, .test(s) returns true.
+
+
+
+Example 2: s = "banana"
+
+let s = "banana";
+console.log(/^[aeiou]/.test(s));  // Output: true
+
+The string s is "banana".
+It starts with the letter "b", which is not a vowel, so .test(s) would return false.
+
