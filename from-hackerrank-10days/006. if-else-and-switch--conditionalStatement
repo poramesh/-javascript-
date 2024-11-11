@@ -40,7 +40,7 @@ comparing objects
 
 we have two references that point to different objects taht look the same:
 
-var1!-var2
+var1!=var2
 
 var1 ->object in memory
 
@@ -206,7 +206,8 @@ the condition evaluates to true and "Hello from b" is printed.)
 }
 
 if (c) {
-    console.log("Hello from c");  (An empty string ("") is falsy in JavaScript. Therefore, the condition evaluates to false, and the else block is executed, printing "c is false".)
+    console.log("Hello from c");  (An empty string ("") is falsy in JavaScript. Therefore, the condition evaluates to false, and
+the else block is executed, printing "c is false".)
 }
 else {
     console.log("c is false"); //c is false
@@ -249,7 +250,8 @@ ______________________________
 
 A switch statement allows a program to evaluate an expression by attempting to match the expression's value to a case label. If a match is found, the
 program jumps to the statement(s) associated with the matched label and continues executing at that point. Note that execution will continue 
-sequentially through all the statements starting at the jump point unless there is a call to break;, which exits the switch statement. A switch statement looks like this:
+sequentially through all the statements starting at the jump point unless there is a call to break;, which exits the switch statement.
+A switch statement looks like this:
 
 switch (expression) {
     case label1:
@@ -267,12 +269,14 @@ switch (expression) {
 }
 
 the default clause
-By convention, the default clause is always listed last. This is because the statements are checked sequentially, so you run into the following issues if you use the default label in 
+By convention, the default clause is always listed last. This is because the statements are checked sequentially, so you run into the 
+following issues if you use the default label in 
 an earlier clause
 
 The break; Statement
 The break statement is optional, but you'll typically see one at the end of each case clause to ensure that the program breaks out of the switch statement once 
-the statements associated with a matched case are executed. Once the flow of execution hits break;, it exits the switch statement and continues executing at the next line
+the statements associated with a matched case are executed. Once the flow of execution hits break;, it exits the switch statement and continues executing 
+at the next line
 following the end of the switch statement; if the break statement is omitted, the program continues executing the next statement in the switch statement — 
 even if its case label doesn't match .
 
@@ -589,6 +593,8 @@ function getLetter(s) {
     return letter;
 }
 
+If i = 12, then 12 / 5 = 2.4. Math.trunc(2.4) will return 2.
+If i = 7, then 7 / 5 = 1.4. Math.trunc(1.4) will return 1.
 
 (or)
 
