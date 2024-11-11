@@ -104,11 +104,18 @@ const output = arr.map((num) => num += 10)
 console.log(arr); // [1, 2, 3, 4, 5]
 console.log(output); // [11, 12, 13, 14, 15]
 
-In the above example, arr is an array with five elements: 1, 2, 3, 4, and 5. map is a method that we use to apply a function
-to each element in an array, and it returns a new array with the modified elements.
 
-The callback function that is being passed to map uses the arrow function syntax, and it takes a single argument num. 
-This function adds 10 to num (every element in the array) and returns the result.
+-----------------------------------------------
+IT RETURNS IMPLICITLY< WE DONT HAVE TO MENTION IT.
+
+
+const result = users.map((user) => {
+    return user.firstName + ' ' + user.lastName;
+});
+is same as
+const result = users.map((user) => user.firstName + ' ' + user.lastName)
+
+----------------------------------------------------
 
 Example 2: Here we have an array of users. Suppose we only want their first and last name. We can simply use the map() 
 method to extract it from the users array.
