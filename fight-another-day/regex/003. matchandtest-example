@@ -34,6 +34,10 @@ let result = s.match(/^[aeiou]/);  // Returns match because 'apple' starts with 
 s = 'banana';
 result = s.match(/^[aeiou]/);  // Returns null because 'banana' starts with 'b'
 
+___________________________________________________________________________________________________________________________________________
+
+
+
 
 The regular expression /^[aeiou]/ is designed to test whether a string starts with a vowel (one of the characters a, e, i, o, or u).
 
@@ -57,4 +61,25 @@ console.log(/^[aeiou]/.test(s));  // Output: true
 
 The string s is "banana".
 It starts with the letter "b", which is not a vowel, so .test(s) would return false.
+
+
+
+if ^
+
+[^abc]: The ^ inside the square brackets negates the character set, so it matches any character not in the list a, b, or c.
+
+
+Example 1: String "apple"
+
+let s = "apple";
+console.log(/[^abc]/.test(s));  // Output: true
+This checks if there’s any character in "apple" that is not a, b, or c.
+Since "apple" contains "p" and "l", which are not a, b, or c, .test(s) returns true.
+
+Example 2: String "cab"
+
+let s = "cab";
+console.log(/[^abc]/.test(s));  // Output: false
+Every character in "cab" is either a, b, or c, so there are no characters outside of a, b, or c.
+Therefore, .test(s) returns false.
 
