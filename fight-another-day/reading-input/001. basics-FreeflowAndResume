@@ -289,3 +289,55 @@ Why is Enter Important?
 Enter signifies the end of a single line of input. Without pressing Enter, the program doesn't know 
 that the user has finished entering that piece of data.
 It’s the signal that indicates the input is complete and ready for processing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BUMMER: when i tried to execute the above resume code in the visual code. it was exiting when actually it should have paused. so its better to use
+readline module which provides a better interactiviity.
+
+
+
+
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+console.log('Enter lines of text (type "exit" to quit, "pause" to pause, "resume" to resume):');
+
+let isPaused = false;
+
+rl.on('line', (input) => {
+    if (input.trim() === 'exit') {
+        console.log('Exiting program...');
+        rl.close();  // Closes the readline interface
+    } else if (input.trim() === 'pause') {
+        console.log('Pausing input...');
+        isPaused = true;
+    } else if (input.trim() === 'resume') {
+        console.log('Resuming input...');
+        isPaused = false;
+    } else {
+        if (!isPaused) {
+            console.log(`You entered: ${input}`);
+        } else {
+            console.log('Input is paused. Type "resume" to continue.');
+        }
+    }
+});
+
