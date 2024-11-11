@@ -9,7 +9,7 @@ since ^ is used outside the chracter class it will be reference as beginning wit
 
 exmaple usage:
 
-let regex = /[^asr]/;
+let regex = /[^asr]/; ^ is inside
 
 console.log('apple'.match(regex));  // Output: ['p']
 console.log('star'.match(regex));   // Output: ['t']
