@@ -91,29 +91,22 @@ The typeof Operator
 _____________________
 As demonstrated in some of the code examples above, we can use the typeof operator to determine the type associated with a variable's current value:
 
-// Number Data Type: 
-var firstVar = 1.5e5; 
+var firstVar = 1.5e5; // Number Data Type: 
 
-// String Data Type:
 var secondVar = 'Hello'; 
 
-// Boolean Data Type:
 var thirdVar = true; 
 
-// Symbol Data Type:
 var fourthVar = Symbol("some Symbol variable"); 
 
-// Null Object:
-var fifthVar = null; 
+var fifthVar = null; // Null Object:
 
-// Undefined Data Type:
-var sixthVar; 
+var sixthVar; // Undefined Data Type:
 
-// Object:
-var seventhVar = {a: 1, b: 2}; 
 
-// NaN (It is a Number):
-var eighthVar = Math.sqrt(-1); 
+var seventhVar = {a: 1, b: 2}; // Object:
+
+var eighthVar = Math.sqrt(-1); // NaN (It is a Number):
 
 console.log(firstVar + " is a " + typeof firstVar);
 console.log(secondVar + " is a " + typeof secondVar);
