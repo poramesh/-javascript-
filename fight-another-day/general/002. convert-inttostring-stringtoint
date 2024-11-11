@@ -1,0 +1,90 @@
+1. parseInt():
+
+
+Purpose: parseInt() parses a string and returns the integer part of the number (ignoring the rest).
+Behavior: It stops parsing as soon as it encounters a character that is not a valid part of a number
+(e.g., spaces, letters, or special characters).
+
+Example:
+parseInt("42abc");  // 42 (parses the integer part and ignores the rest)
+parseInt("3.14");    // 3 (only the integer part is returned)
+parseInt("abc42");   // NaN (cannot parse anything)
+Use case: parseInt() is useful when you are specifically interested in extracting the integer
+part of a string that may contain non-numeric characters or decimals.
+
+2. Number():
+
+Purpose: The Number() function converts a value into a number, either integer or floating point, depending on the value. It doesn't stop parsing at a non-numeric character; it tries to convert the whole string into a number.
+Example:
+Number("42abc");  // NaN (cannot convert the entire string)
+Number("3.14");    // 3.14 (converts the entire number string)
+Number("abc42");   // NaN (cannot convert anything)
+Use case: Number() is useful when you want to convert a string into a full number (either integer or floating-point).
+If the string cannot represent a valid number, it returns NaN.
+
+3. Unary + (Plus Operator):
+Purpose: The unary + operator works the same as Number(), converting a string to a number.
+Example:
++"42abc";  // NaN
++"3.14";    // 3.14
++"abc42";   // NaN
+
+Use case: It is commonly used as a shorthand to quickly convert strings or other values to numbers. 
+It behaves the same way as Number() but is more concise.
+
+
+
+
+
+
+
+
+
+INTEGER TO STIRNG
+
+in JavaScript, you can convert an integer to a string in several ways. Here are the most common methods:
+
+1. Using toString() Method:
+The toString() method is available on all numbers (and other data types) in JavaScript. It converts a number to a string.
+
+let num = 42;
+let str = num.toString();
+console.log(str);  // Output: "42"
+
+Notes:
+You can also specify a base for the conversion (e.g., to convert to binary, octal, or hexadecimal).
+
+let num = 42;
+let binaryStr = num.toString(2);  // Converts to binary
+console.log(binaryStr);  // Output: "101010"
+
+2. Using String Constructor:
+
+You can use the String() function to explicitly convert an integer to a string.
+
+let num = 42;
+let str = String(num);
+console.log(str);  // Output: "42"
+Notes:
+This works for both numbers and other types.
+
+
+3. Using String Concatenation:
+
+You can concatenate the number with an empty string ("") to convert it to a string. This is a shorthand way to do it.
+
+let num = 42;
+let str = num + "";
+console.log(str);  // Output: "42"
+
+Notes:
+This method implicitly calls the toString() method, so it can be used to convert any type to a string.
+
+4. Using Template Literals:
+Template literals (backticks) allow you to embed expressions inside a string. You can use this feature to convert an integer to a string.
+
+let num = 42;
+let str = `${num}`;
+console.log(str);  // Output: "42"
+Notes:
+Template literals are a very flexible way to embed variables in strings.
