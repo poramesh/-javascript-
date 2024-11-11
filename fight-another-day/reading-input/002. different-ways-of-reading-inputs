@@ -1,0 +1,122 @@
+In a Node.js environment, you can read input submitted by users in various ways, depending on the context 
+(command-line app, web server, etc.). Here are the most common methods:
+
+
+1. Reading Command-Line Input (Directly in the Terminal)
+
+For command-line applications, you can use process.stdin or third-party packages like readline or prompt-sync.
+
+Using readline Module
+
+The readline module simplifies reading input from users:
+
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question('Enter your name: ', (name) => {
+    console.log(`Hello, ${name}!`);
+    rl.close(); // Close the input stream
+});
+
+readline.createInterface sets up an interface for standard input and output.
+rl.question prompts the user and captures the input.
+
+
+Using prompt-sync Package
+
+For synchronous input (simpler for small scripts), use prompt-sync:
+
+const prompt = require('prompt-sync')();
+
+const name = prompt('Enter your name: ');
+console.log(`Hello, ${name}!`);
+
+Install prompt-sync first with:
+npm install prompt-sync
+
+
+C:\Users\pooja\Desktop\code-shh\javascript>node hello.js
+Enter your name: pooja
+Hello, pooja!
+
+2. Reading Input in a Web Server (HTTP Requests)
+
+For applications receiving input via HTTP requests (like form submissions), use Express.js to
+handle input from the request body, query parameters, or URL parameters.
+
+Handling Form Data (Body Data) in Express.js
+
+const express = require('express');
+const app = express();
+
+// Middleware to parse JSON data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // For form-encoded data
+
+app.post('/submit', (req, res) => {
+    const userData = req.body;
+    console.log('User Data:', userData);
+    res.send(`Hello, ${userData.name}!`);
+});
+
+app.listen(3000, () => console.log('Server is running on http://localhost:3000'));
+
+Here:
+
+express.json() and express.urlencoded() are middleware functions to parse JSON and URL-encoded form data in req.body.
+You can send data to this route using a tool like Postman or an HTML form.
+
+Handling URL Parameters
+
+For dynamic routes, you can extract data from URL parameters.
+
+app.get('/user/:name', (req, res) => {
+    const name = req.params.name;
+    res.send(`Hello, ${name}!`);
+});
+
+With a request to /user/John, req.params.name would be "John".
+
+Handling Query Parameters
+
+For routes that include query strings like ?name=John, access query parameters with req.query:
+
+app.get('/search', (req, res) => {
+    const query = req.query.q;
+    res.send(`You searched for: ${query}`);
+});
+
+
+
+3. Reading Input from Forms on a Webpage (Frontend JavaScript)
+
+If you’re working in a browser (frontend JavaScript), you can capture user input through form elements:
+
+<form id="userForm">
+    <input type="text" id="name" name="name" placeholder="Enter your name">
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    document.getElementById('userForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        console.log(`Hello, ${name}!`);
+    });
+</script>
+
+This approach uses JavaScript to read values directly from form elements. Here, event.preventDefault() 
+prevents the form from reloading the page on submission.
+
+Summary
+
+CLI Apps: Use process.stdin, readline, or prompt-sync.
+Web Server: Use Express with req.body, req.params, or req.query.
+Frontend Form: Use event listeners to handle form submissions.
+
+
+
