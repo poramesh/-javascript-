@@ -349,6 +349,44 @@ return second;
 }
 
 
+const nums = [10, 5, 10, 8, 6];
+
+Step-by-Step Execution
+
+Initial values: first = -Infinity, second = -Infinity.
+
+First Iteration (i = 0)
+nums[0] is 10.
+Since 10 > first (i.e., 10 > -Infinity), we update:
+second = first (so second becomes -Infinity).
+first = 10.
+Current values: first = 10, second = -Infinity.
+
+Second Iteration (i = 1)
+nums[1] is 5.
+Since 5 < first (i.e., 5 < 10), we check the else if condition:
+5 > second (i.e., 5 > -Infinity), so we update second = 5.
+Current values: first = 10, second = 5.
+
+Third Iteration (i = 2)
+nums[2] is 10.
+Since 10 == first (i.e., 10 == 10), neither first nor second is updated.
+Current values: first = 10, second = 5.
+
+Fourth Iteration (i = 3)
+nums[3] is 8.
+Since 8 < first (i.e., 8 < 10), we check the else if condition:
+8 > second (i.e., 8 > 5), so we update second = 8.
+Current values: first = 10, second = 8.
+
+Fifth Iteration (i = 4)
+nums[4] is 6.
+Since 6 < first (i.e., 6 < 10), we check the else if condition:
+6 > second (i.e., 6 > 8) is false, so second remains unchanged.
+Final values: first = 10, second = 8.
+
+
+
 (or)
 
 return [...new Set(nums)].sort((a,b) => b-a)[1];
