@@ -52,6 +52,10 @@ var s = "HackerRank";
 console.log(s.includes() + " " + s.includes("")); // false true
 console.log(s.includes("hack") + " " + s.includes("Hack")); // true true
 
+   letter = "ABCD"["ueoai".includes(s[0]) ? 0 : "bcdfg".includes(s[0]) ? 1 : "hjklm".includes(s[0]) ? 2 : 3]
+its like a is in ueaoi
+
+
 String.endsWith(): Returns a boolean denoting whether the calling string ends with the characters of another string passed as an argument. For example:
 
 var s = "HackerRank"; 
@@ -108,6 +112,28 @@ console.log(s.match()); //[ '', index: 0, input: 'HackerRank', groups: undefined
 console.log(s.match("[a-z]+")); //[ 'acker', index: 1, input: 'HackerRank', groups: undefined ]
 
 
+
+What happened here:
+
+The regular expression [a-z]+ is used to match one or more lowercase letters in the string s.
+[a-z] is a character class that matches any single lowercase letter.
++ is a quantifier that matches one or more of the preceding element (in this case, lowercase letters).
+
+
+
+Case Sensitivity: By default, the regular expression is case-sensitive, meaning [a-z] only matches lowercase letters. If you wanted
+to match any letter regardless of case, you could use the i flag (e.g., /[a-z]+/i).
+
+[ 'HackerRank', index: 0, input: 'HackerRank', groups: undefined ]
+
+
+Global Flag: If you use the g (global) flag with match(), it will return all matches, not just the first one. For example:
+
+console.log("HackerRank".match(/[a-z]+/g)); // Output: ['acker', 'ank']
+Without the g flag, it will stop after the first match and return the result with detailed information 
+(like index and input), as shown in your second example.
+
+
 String.repeat():
 
 Returns a string consisting of the elements of the calling String object repeated some number of times (given as an integer argument).
@@ -135,7 +161,7 @@ Executes the search for a match between a regular expression and a specified str
 returns the index of the first character of the first match. For example:
 
 var s = "HackerRank";
-console.log(s.search() + " " + s.search("[a-z]")); // 0 7
+console.log(s.search() + " " + s.search("[a-z]")); // 0 1
 console.log(s.search("a") + " " + s.search("an")); // 1 7
 
 
