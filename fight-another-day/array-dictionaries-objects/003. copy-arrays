@@ -1,0 +1,50 @@
+1. Using Array.slice()
+
+The .slice() method without arguments returns a shallow copy of the array.
+
+const originalArray = [1, 2, 3];
+const copiedArray = originalArray.slice();
+console.log(copiedArray); // Output: [1, 2, 3]
+
+2. Using Array.from()
+
+The Array.from() method creates a new array from an array-like or iterable object.
+
+const originalArray = [1, 2, 3];
+const copiedArray = Array.from(originalArray);
+console.log(copiedArray); // Output: [1, 2, 3]
+
+3. Using concat()
+
+Concatenating the array with an empty array [] creates a new shallow copy.
+
+const originalArray = [1, 2, 3];
+const copiedArray = originalArray.concat();
+console.log(copiedArray); // Output: [1, 2, 3]
+
+4. Using map()
+Using .map() to map each element to itself also creates a shallow copy.
+
+const originalArray = [1, 2, 3];
+const copiedArray = originalArray.map(x => x);
+console.log(copiedArray); // Output: [1, 2, 3]
+
+5. Using JSON.parse(JSON.stringify(array))
+
+This method creates a deep copy of an array (useful if there are nested objects), but it only works with 
+arrays of serializable data (no functions, undefined, or Symbol).
+
+const originalArray = [1, 2, 3];
+const copiedArray = JSON.parse(JSON.stringify(originalArray));
+console.log(copiedArray); // Output: [1, 2, 3]
+
+6. Using for loop
+
+A manual way to copy an array with a loop.
+
+const originalArray = [1, 2, 3];
+const copiedArray = [];
+for (let i = 0; i < originalArray.length; i++) {
+    copiedArray.push(originalArray[i]);
+}
+console.log(copiedArray); // Output: [1, 2, 3]
