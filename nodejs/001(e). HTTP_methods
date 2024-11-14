@@ -354,6 +354,11 @@ navbar-app/browser-app.js
 const navToggle = document.querySelector('.nav-toggle')
 const links = document.querySelector('.links')
 
+
+****
+Selects an Element: It uses document.querySelector() to find the first element in the document with the class nav-toggle.
+Assigns it to a Variable: The result is assigned to the variable navToggle, so you can interact with this element in JavaScript.***
+
 navToggle.addEventListener('click', function () {
   links.classList.toggle('show-links')
 })
