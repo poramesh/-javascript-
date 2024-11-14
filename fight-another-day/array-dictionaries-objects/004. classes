@@ -1,0 +1,198 @@
+defining objects using fucntions
+
+
+function Fruit(type) {
+    this.type = type;
+    this.color = 'unknown';
+    this.getInformation = function() {
+        return 'This ' + this.type + ' is ' + this.color + '.';
+    }
+}
+
+let apple = new Fruit('apple');
+let orange = new Fruit('orange');
+
+// Both apple and orange have their own separate copies of the getInformation function
+console.log(apple.getInformation === orange.getInformation); // Output: false
+
+
+In this case, apple.getInformation and orange.getInformation are two separate function instances in memory, even
+though they do the exact same thing. This is inefficient, especially if you're creating many instances, 
+as it uses more memory than necessary.
+
+Solution Using the Prototype
+
+By defining getInformation on the prototype of Fruit, all instances share the same single function, instead of 
+creating a new function for each instance. This is more memory-efficient and keeps your code DRY (Don't Repeat Yourself).
+
+Here’s how it works:
+
+function Fruit(type) {
+    this.type = type;
+    this.color = 'unknown';
+}
+
+// Define getInformation on the prototype
+Fruit.prototype.getInformation = function() {
+    return 'This ' + this.type + ' is ' + this.color + '.';
+};
+
+let apple = new Fruit('apple');
+let orange = new Fruit('orange');
+
+// Now, both apple and orange share the same getInformation function
+console.log(apple.getInformation === orange.getInformation); // Output: true
+
+In this version, apple.getInformation and orange.getInformation both point to the same function on Fruit.prototype,
+so it doesn’t waste memory by creating a new function for each instance.
+
+
+
+
+Classes in JavaScript (ES6)
+
+With ES6, JavaScript introduced class syntax, which provides a more readable way to create constructors
+and use prototypes. Under the hood, classes in JavaScript work the same way with prototypes, 
+but they look more like classes in other programming languages.
+
+Here’s how we would write the Fruit example using a class:
+
+class Fruit {
+    constructor(type) {
+        this.type = type;
+        this.color = 'unknown';
+    }
+
+    // Method defined on the prototype
+    getInformation() {
+        return `This ${this.type} is ${this.color}.`;
+    }
+}
+
+let apple = new Fruit('apple');
+let orange = new Fruit('orange');
+
+console.log(apple.getInformation === orange.getInformation); // Output: true
+
+What’s Happening with Classes?
+
+In the class syntax:
+
+The constructor method is a special method for initializing new instances. It’s called automatically when you create an object using new Fruit(...).
+Methods defined inside the class but outside the constructor (like getInformation) are actually added to the
+class's prototype (Fruit.prototype) behind the scenes.
+This means getInformation is only created once, and all instances share it, just like in our earlier example using prototypes.
+
+
+
+
+
+Example Setup
+
+
+function Fruit(type) {
+this.type = type;
+    this.color = 'unknown';
+}
+
+Fruit.prototype.getInformation = function() {
+    return `This ${this.type} is ${this.color}.`;
+};
+
+let apple = new Fruit('apple');
+let orange = new Fruit('orange');
+
+
+How Memory Allocation Works Behind the Scenes
+
+Let’s go through each step, simulating memory addresses for clarity. I'll use fictional addresses
+like 0x01, 0x02, etc., to represent different memory locations.
+
+Step 1: Define the Fruit Constructor Function
+
+When JavaScript encounters the Fruit function, it allocates memory for this function. Let’s say it’s stored at memory address 0x01.
+
+plaintext
+Copy code
+Memory Address    | Value
+------------------|----------------------------------
+0x01              | function Fruit(type) { ... }
+
+Step 2: Create the Fruit.prototype Object
+
+Every function in JavaScript automatically has a prototype property, which is an object. JavaScript creates
+Fruit.prototype and sets it to a new object in memory, say at 0x02. By default, Fruit.prototype has a 
+constructor property that points back to Fruit.
+
+Memory Address    | Value
+------------------|----------------------------------
+0x01              | function Fruit(type) { ... }
+0x02              | { constructor: 0x01 }
+
+Step 3: Add getInformation to Fruit.prototype
+
+We add getInformation as a method on Fruit.prototype. This method is stored in a new memory location, say 0x03.
+
+Memory Address    | Value
+------------------|----------------------------------
+0x01              | function Fruit(type) { ... }
+0x02              | { constructor: 0x01, getInformation: 0x03 }
+0x03              | function() { return `This ${this.type} is ${this.color}.`; }
+
+Now, every instance created by Fruit will have access to getInformation through Fruit.prototype.
+
+Step 4: Create an apple Instance
+
+When we do let apple = new Fruit('apple');, several things happen:
+
+
+So, apple has its own properties (type and color), but it doesn’t have getInformation directly on it. Instead, it has an 
+internal link (called __proto__ in most environments) that points to Fruit.prototype.
+
+
+Memory Address    | Value
+------------------|----------------------------------
+0x01              | function Fruit(type) { ... }
+0x02              | { constructor: 0x01, getInformation: 0x03 }
+0x03              | function() { return `This ${this.type} is ${this.color}.`; }
+0x04              | { type: "apple", color: "unknown", __proto__: 0x02 }
+
+Step 5: Create an orange Instance
+
+Similarly, when we create let orange = new Fruit('orange');:
+
+A new object orange is created in memory (say at 0x05).
+Fruit is called with orange as its this context, setting this.type to "orange" and this.color to "unknown".
+JavaScript links orange to Fruit.prototype.
+
+Memory Address    | Value
+------------------|----------------------------------
+0x01              | function Fruit(type) { ... }
+0x02              | { constructor: 0x01, getInformation: 0x03 }
+0x03              | function() { return `This ${this.type} is ${this.color}.`; }
+0x04              | { type: "apple", color: "unknown", __proto__: 0x02 }
+0x05              | { type: "orange", color: "unknown", __proto__: 0x02 }
+
+Accessing getInformation
+When we call apple.getInformation(), here’s how JavaScript looks up the method:
+
+JavaScript checks if apple (at 0x04) has a property called getInformation. It doesn’t.
+It then follows the __proto__ link from apple (at 0x04) to Fruit.prototype (at 0x02).
+On Fruit.prototype, it finds getInformation (at 0x03) and uses it.
+The same happens with orange.getInformation(). Both apple and orange share the same getInformation function stored at 0x03.
+
+
+
+Updated Memory Layout (After apple.color = 'red')
+
+
+Here’s how the memory layout changes after updating apple.color:
+
+
+Memory Address    | Value
+------------------|----------------------------------
+0x01              | function Fruit(type) { ... }
+0x02              | { constructor: 0x01, getInformation: 0x03 }
+0x03              | function() { return `This ${this.type} is ${this.color}.`; }
+0x04              | { type: "apple", color: "red", __proto__: 0x02 }
+0x05              | { type: "orange", color: "unknown", __proto__: 0x02 }
