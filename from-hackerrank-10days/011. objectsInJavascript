@@ -150,6 +150,16 @@ console.log('Method \'o.foo()\':', o.foo());
 
 o/p:
 
+When you create an object using Object.create(x), it creates a new object, o, that has x as its prototype. 
+This means that o inherits properties and methods from x, but o itself doesn't have any properties of its
+own initially, which is why it prints as {} (an empty object).
+
+In JavaScript, the console.log() function shows only the "own properties" of an object directly on that object
+itself. Since o doesn’t have any of its own properties initially (they’re all inherited from x), 
+it appears as an empty object {} in the log output.
+
+
+
 'x': { a: 5, foo: [Function: foo] }
 Object 'o': {}
 Property 'o.a': 5
