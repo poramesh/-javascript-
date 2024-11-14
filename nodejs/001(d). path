@@ -149,3 +149,90 @@ and finally a file named authenticate.
 var Passport = require('../..').Passport;
 
 //This loads a module located two directories up (../..) and then accesses the Passport property of the module's export.
+
+
+
+
+
+
+
+
+
+
+
+
+Let's go through an in-depth example where we have a project directory with several subdirectories and files. 
+I'll explain the difference between using ../ and ../../ with real file paths.
+
+Example Directory Structure:
+
+project/
+│
+├── index.html
+├── app/
+│   ├── main.js
+│   └── utils/
+│       ├── helper.js
+│       └── config/
+│           └── settings.js
+└── assets/
+    └── images/
+        └── logo.png
+
+
+Example 1: Using ../
+
+Let's say you're in the file app/utils/helper.js and want to reference app/main.js.
+
+
+const mainScript = require('../main.js');  // Moving one level up to 'app' and accessing 'main.js'
+
+Here, ../ moves up one level from helper.js (which is in utils/) to the utils/ directory.
+Then you can access main.js, which is in the app/ directory.
+
+
+Example 2: Using ../../
+
+
+// From app/utils/config/settings.js to index.html
+
+const indexFile = require('../../../../index.html');  
+
+
+
+ANDD
+
+
+The ./ notation is valid in file paths and refers to the current directory. It's commonly used to explicitly
+indicate that you are referring to something in the same directory as the file or script you're working with.
+
+
+project/
+├── index.html
+├── app/
+│   └── main.js
+└── script.js
+
+const indexFile = require('./index.html');  // Referring to 'index.html' in the same directory as 'script.js'
+
+
+MORE ON THIS
+
+
+The path .././ is technically valid, but it's somewhat redundant and typically unnecessary. Let’s break it down:
+
+Explanation of .././:
+
+../: This means "move up one directory level" (to the parent directory of the current directory).
+./: This refers to the current directory.
+
+project/
+├── index.html
+└── app/
+    └── main.js
+
+In practice, .././index.html is equivalent to simply writing ../index.html.
+
+
+
+
