@@ -711,6 +711,49 @@ http.createServer(req,res) =>{
 
 
 
+Without pipe()
+
+If you weren’t using .pipe(), you would need to manually handle the reading, writing, and ending of the response, like so:
+
+const http = require('http');
+const fs = require('fs');
+
+http.createServer((req, res) => {
+    const readStream = fs.createReadStream('./static/example.png');
+    
+    res.writeHead(200, { 'Content-Type': 'image/png' });
+
+    readStream.on('data', (chunk) => {
+        res.write(chunk); // Write each chunk to the response
+    });
+
+    readStream.on('end', () => {
+        res.end(); // End the response when the stream finishes
+    });
+
+    readStream.on('error', (err) => {
+        res.writeHead(500); // Handle any errors
+        res.end('Error loading file');
+    });
+}).listen(3000);
+
+Why pipe() is Preferred
+
+Simplifies code: pipe() takes care of data transfer, response ending, and error handling.
+
+Efficiency: pipe() is optimized for handling streams and managing backpressure, so it performs better for larger files.
+
+In short, readStream.pipe(res) is a more efficient, cleaner approach to stream data directly to the response,
+and it handles res.write() and res.end() automatically for you.
+
+
+
+
+
+
+
+
+
 
 
 
