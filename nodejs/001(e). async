@@ -48,12 +48,27 @@ function doSomethingSync(callback) {
   callback(result);
 }
 
+
 // Synchronous callback
 doSomethingSync(result => {
   console.log('Callback received:', result);
 });
 
 console.log('This line executes after the synchronous callback');
+
+__________________________________________________
+
+function calculateSquare(number, callback) {
+  const result = number * number;
+  // Call the callback with the result
+  callback(result);
+}
+
+// Use the function with a callback
+calculateSquare(5, square => {
+  console.log('The square is:', square);
+});
+
 
 ________________
 Using Promises:
@@ -70,6 +85,19 @@ fs.readFile('file.txt', 'utf8')
   });
 
 console.log('This will print immediately after initiating the file read');
+
+
+
+""""""
+Why Use .promises?
+
+Cleaner Code: Using Promises allows you to chain .then() and .catch(), or use async/await to write cleaner,
+more readable code.
+
+Error Handling: Promises simplify error handling compared to callback-based approaches. You can catch errors 
+globally using .catch() instead of checking for errors in every callback.
+
+Avoid Callback Hell: By using Promises, you can avoid nested callbacks that make the code harder to read and maintain.""""""""
 __________________
 Using Async/Await:
 ___________________
