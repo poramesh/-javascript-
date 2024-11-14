@@ -1,0 +1,96 @@
+What is ASCII and UTF-8?
+
+ASCII (American Standard Code for Information Interchange) is a character encoding standard that represents English characters, digits, 
+and some special symbols using 7-bit binary numbers (although stored as 8-bit bytes).
+
+UTF-8 (Unicode Transformation Format - 8-bit) is a variable-length encoding for Unicode, capable of encoding all characters
+in the Unicode standard. UTF-8 is backward-compatible with ASCII for characters in the ASCII range (0–127), but it can represent a 
+much wider range of characters by using multiple bytes (1 to 4 bytes per character).
+
+ASCII Encoding Example:
+
+Let's take a simple example of how the character 'A' is encoded in ASCII.
+
+Character: 'A'
+
+ASCII Code: 65 (decimal representation of the character 'A')
+Binary Representation: 01000001 (7-bit binary value for 'A', but typically stored in an 8-bit byte)
+So, in ASCII, the letter 'A' is represented as the number 65 or 01000001 in binary.
+
+UTF-8 Encoding Example:
+
+Now, let's take a look at how the same character 'A' is encoded in UTF-8:
+
+Character: 'A'
+
+UTF-8 Code: 65 (decimal representation of 'A')
+Binary Representation: 01000001 (same as ASCII because 'A' is within the ASCII range)
+
+In UTF-8, characters from the ASCII range (0–127) are encoded exactly the same way as in ASCII. So, 'A' will have 
+the same encoding in both ASCII and UTF-8.
+
+Example with a Non-ASCII Character (e.g., 'é'):
+ASCII can only handle characters in the range of 0–127, so it cannot encode characters like 'é'. However, UTF-8 can encode these characters.
+
+Let's see how the character 'é' (a letter with an accent) is represented in both ASCII and UTF-8:
+
+Character: 'é'
+
+ASCII Code: Not available in ASCII because 'é' is outside the ASCII range.
+
+UTF-8 Code:
+UTF-8 encoding for 'é' is 0xC3 0xA9 (two bytes in hexadecimal)
+The first byte 0xC3 and the second byte 0xA9 together represent 'é' in UTF-8.
+
+Step-by-Step Breakdown of 'é' in UTF-8:
+
+Character: 'é'
+
+Unicode Code Point: U+00E9 (This is the Unicode code point for 'é').
+
+UTF-8 Encoding: UTF-8 uses a multi-byte encoding scheme, and since 'é' is a non-ASCII character, it is encoded using 2 bytes.
+
+First Byte: 11000011 (0xC3 in hexadecimal)
+Second Byte: 10101001 (0xA9 in hexadecimal)
+So, 'é' is represented as the bytes 0xC3 0xA9 in UTF-8.
+
+
+
+
+
+Code Example to Convert Characters Using ASCII and UTF-8 in JavaScript:
+
+Here’s a JavaScript example that shows how you can convert a character into its ASCII or UTF-8 representation:
+
+// ASCII Example: Character 'A'
+const asciiCharacter = 'A';
+const asciiCode = asciiCharacter.charCodeAt(0);  // Get ASCII code of 'A'
+console.log(`ASCII Code for 'A':`, asciiCode); // Output: 65 (or 01000001 in binary)
+
+// UTF-8 Example: Character 'é'
+const utf8Character = 'é';
+const utf8Codes = Array.from(new TextEncoder().encode(utf8Character)); // UTF-8 encoding using TextEncoder
+console.log(`UTF-8 Code for 'é':`, utf8Codes);  // Output: [195, 169] (0xC3 0xA9)
+
+
+Explanation of the Code:
+
+ASCII Encoding:
+
+We use charCodeAt(0) to get the ASCII (or Unicode) code of the character 'A'. This returns 65, which is the ASCII code for 'A'.
+
+UTF-8 Encoding:
+
+We use the TextEncoder() class in JavaScript, which is built into modern browsers to handle UTF-8 encoding.
+The TextEncoder().encode() method returns an array of bytes that represents the character 'é' in UTF-8. The result is [195, 169],
+which corresponds to 0xC3 0xA9 in hexadecimal.
+
+
+Summary of ASCII vs UTF-8:
+
+ASCII: Can only represent 128 characters (English letters, digits, and some symbols).
+Example: 'A' = 65 (decimal), 01000001 (binary).
+UTF-8: Extends ASCII to represent all Unicode characters (including characters from different languages, symbols, emojis, etc.).
+Example: 'é' = 0xC3 0xA9 in UTF-8, requiring 2 bytes for encoding.
+UTF-8 is widely used on the web because it can represent a vast range of characters while being backward-compatible 
+with ASCII for characters in the ASCII range.
