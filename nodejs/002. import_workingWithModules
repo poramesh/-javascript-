@@ -1,8 +1,10 @@
 
-n Node.js, a module is essentially a reusable block of code that can be used to perform a specific set of tasks or provide a specific functionality. A module can contain variables, functions, classes, objects, 
+in Node.js, a module is essentially a reusable block of code that can be used to perform a specific set of tasks or provide a specific functionality. 
+A module can contain variables, functions, classes, objects, 
 or any other code that can be used to accomplish a particular task or set of tasks
 
-The primary purpose of using modules in Node.js is to help organize code into smaller, more manageable pieces. A modules can then be imported at any time and used flexibly which helps in creating reusable code
+The primary purpose of using modules in Node.js is to help organize code into smaller, more manageable pieces. A modules can then 
+be imported at any time and used flexibly which helps in creating reusable code
 components that can be shared across multiple projects.
 
 example:
