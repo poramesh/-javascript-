@@ -307,6 +307,14 @@ Index Underflow: -3
 
 QUES TO SOLVE
 
+Sample Input 0
+"1234"
+
+Sample Output 0
+4321
+
+Explanation 0 is a string type, so it can be reversed without throwing an exception. Thus, we print the reversed value, 4321, as our answer.
+
 Sample Input
 Number(1234)
 
