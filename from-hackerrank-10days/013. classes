@@ -126,6 +126,10 @@ We define an anonymous constructor function.
 We invoke the anonymous constructor function with the new keyword.
 
 
+This is creating an object (lime) that behaves like a singleton in that you cannot create another instance of the object because 
+it's assigned directly through the function expression.
+
+
 let lime = new function() {
     this.type = 'Mexican lime';
     this.color = 'green';
