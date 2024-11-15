@@ -1,0 +1,102 @@
+Destructuring is a feature in JavaScript that allows you to unpack values from arrays or properties from objects into
+distinct variables. This makes it easier to extract and use parts of complex structures.
+
+
+Array Destructuring
+
+Array destructuring means taking values from an array and assigning them to variables in a concise way.
+
+Example:
+
+const array = [1, 2, 3];
+const [name1, name2] = array;
+
+console.log(name1); // 1
+console.log(name2); // 2
+
+
+
+Skipping Elements:
+
+const array = [1, 2, 3];
+const [, name2] = array;
+
+console.log(name2); // 2
+Here, the comma , skips the first element, so name2 gets the second element (2).
+
+
+Using Defaults:
+
+const array = [1];
+const [name1, name2 = 42] = array;
+
+console.log(name1); // 1
+console.log(name2); // 42 (default value)
+If the array doesn't have enough elements, default values can be provided.
+
+
+
+
+Object Destructuring
+
+Object destructuring extracts values from objects and assigns them to variables with matching property names.
+
+Example:
+
+const obj = { a: 10, b: 20 };
+const { a, b } = obj;
+
+console.log(a); // 10
+console.log(b); // 20
+
+
+Renaming Variables:
+
+const obj = { a: 10, b: 20 };
+const { a: alpha, b: beta } = obj;
+
+console.log(alpha); // 10
+console.log(beta); // 20
+Here, a is renamed to alpha and b to beta.
+
+
+Using Defaults:
+
+const obj = { a: 10 };
+const { a, b = 30 } = obj;
+
+console.log(a); // 10
+console.log(b); // 30 (default value)
+
+If the property doesn't exist in the object, the default value is used.
+
+
+
+
+Destructuring Combined with Export:
+
+When you see:
+
+export const [name1, name2] = array;
+
+The first two elements of the array are destructured into name1 and name2.
+These variables are then exported, so other modules can import them.
+
+For example:
+
+// module.js
+export const array = [1, 2, 3];
+export const [name1, name2] = array;
+
+// main.js
+import { name1, name2 } from './module.js';
+
+console.log(name1); // 1
+console.log(name2); // 2
+
+Why Use Destructuring?
+
+Cleaner Syntax: Reduces the need for repetitive code.
+Direct Access: Makes it easy to extract values without manual indexing or property access.
+Default Values: Handles cases where some elements or properties may not exist.
+In short, destructuring is a powerful, concise way to extract data from arrays or objects in JavaScript.
