@@ -1,0 +1,123 @@
+let: Declares block-scoped variables (introduced in ES6).
+Can be re-assigned.
+Cannot be redeclared in the same scope.
+
+const: Declares block-scoped variables but with a fixed value (cannot be reassigned after initialization).
+The value itself can be an object or array, which can be modified, but the variable reference cannot be reassigned.
+
+var: Declares function-scoped variables (older behavior pre-ES6).
+Allows redeclaration and hoisting.
+
+
+var fun = function () {
+  var v = 5;  
+  var fun1 = function () {
+    var v = 6; // Declares a new `v` scoped to `fun1`.
+  };
+  console.log(v); // Prints 5, not 6.
+};
+
+fun();
+
+
+var fun = function () {
+  let v = 5;  
+  var fun1 = function () {
+    let v = 6; // Declares a new `v` scoped to `fun1`.
+  };
+  console.log(v); // Prints 5.
+};
+
+fun();
+
+let and const are preferred in modern JavaScript because of their block-scoping and immutability advantages.
+var is rarely used in modern code because of its function scope and lack of block scope, which can lead to bugs.
+
+
+
+
+
+Examples and Behaviors of var and let
+
+1. Function Scope:
+var is scoped to the nearest function, not the block.
+
+function exampleVar() {
+  if (true) {
+    var x = 10; // Scoped to the function, not the block
+  }
+  console.log(x); // Output: 10 (accessible outside the block)
+}
+
+exampleVar();
+
+Compare this with let:
+
+function exampleLet() {
+  if (true) {
+    let x = 10; // Scoped to the block
+  }
+  console.log(x); // Error: x is not defined
+}
+
+exampleLet();
+
+2. Hoisting:
+
+Variables declared with var are hoisted to the top of their scope but are initialized as undefined.
+
+
+function hoistingExample() {
+  console.log(x); // Output: undefined (x is hoisted)
+  var x = 5;
+  console.log(x); // Output: 5
+}
+
+hoistingExample();
+
+Compare this with let:
+
+function letHoisting() {
+  console.log(x); // Error: Cannot access 'x' before initialization
+  let x = 5;
+}
+
+
+3. Redeclaration:
+var allows redeclaration of variables in the same scope, which can lead to accidental overwriting.
+
+var x = 10;
+var x = 20; // No error
+console.log(x); // Output: 20
+Compare this with let or const:
+
+let y = 10;
+// let y = 20; // Error: Identifier 'y' has already been declare
+
+4. Global Scope Behavior:
+
+Variables declared with var in the global scope become properties of the window object.
+
+var globalVar = 'I am global';
+console.log(window.globalVar); // Output: 'I am global'
+let and const do not behave this way:
+
+let globalLet = 'I am global';
+// console.log(window.globalLet); // Output: undefined
+
+
+5. Use Case: Declaring Variables at the Top of a Function
+Sometimes, var is used to group variable declarations at the start of a function for readability and compatibility with older code.
+
+function calculate(a, b) {
+  var result, sum;
+  sum = a + b;
+  result = sum * 2;
+  return result;
+}
+
+console.log(calculate(2, 3)); // Output: 10
+
+When to Avoid var
+Modern JavaScript prefers let and const because they provide better scoping (block-scoped) and prevent accidental redeclaration or overwriting.
+Best Practice: Use let for variables that need to be reassigned and const for variables that won't change.
