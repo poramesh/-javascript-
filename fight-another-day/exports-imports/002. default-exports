@@ -1,0 +1,209 @@
+default export in a module, it means that the exported value does not require a specific name when it is imported
+into another module. You can assign any name to the imported value, regardless of the name used in the original module.
+
+Example:
+
+Module with a default export (mathUtils.js):
+
+// Default export
+export default function add(a, b) {
+  return a + b;
+}
+
+Importing the default export:
+
+In another file, you can import this default export using any name you want:
+
+
+import sum from './mathUtils.js';
+console.log(sum(2, 3)); // 5
+
+Here, the function add was exported as the default, but we imported it with the name sum.
+
+You could also use another name, like calculate:
+
+import calculate from './mathUtils.js';
+console.log(calculate(4, 5)); // 9
+
+Why does this work?
+Default exports are intended to represent the "main" or primary value of a module.
+When importing a default export, you don't have to match the name of the exported entity because the default
+export is the single main value of the module, and its name is not bound by the module's definition.
+
+Contrast with Named Exports:
+For named exports, you must use the exact exported name unless you explicitly rename it during import using as.
+
+Example:
+
+// mathUtils.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+
+// Importing named exports
+import { add, subtract } from './mathUtils.js';
+console.log(add(2, 3));      // 5
+console.log(subtract(5, 3)); // 2
+
+// Renaming during import
+import { add as sum } from './mathUtils.js';
+console.log(sum(2, 3)); // 5
+
+With default exports, renaming is unnecessary because the name is defined by the importing module.
+
+
+
+
+
+
+ a module can have only one default export.
+This is because the default export is intended to represent the "main" entity of the module, 
+and having multiple default exports would create ambiguity.
+
+If you try to define more than one default export, you'll get a SyntaxError.
+
+Example of single default export:
+
+export default function greet() {
+  console.log("Hello!");
+}
+
+Example of multiple default exports (Invalid):
+
+// Invalid
+export default function greet() {
+  console.log("Hello!");
+}
+
+export default function farewell() {
+  console.log("Goodbye!");
+}
+// SyntaxError: Only one default export allowed per module
+
+
+
+* in import to import all the values
+
+If you want to export everything from a module, you can use a combination of named exports and export *. There are a few ways to achieve this:
+
+Define everything you want to export with export:
+
+// File: utils.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+export const pi = 3.14;
+Import everything using import * as:
+
+// File: app.js
+import * as Utils from './utils.js';
+
+console.log(Utils.add(2, 3));      // 5
+console.log(Utils.subtract(5, 3)); // 2
+console.log(Utils.pi);             // 3.14
+
+
+
+Use default and named exports together:
+
+You can have a default export for the "main" functionality and named exports for additional utilities.
+
+// File: math.js
+export default function calculateCircleArea(radius) {
+  return Math.PI * radius * radius;
+}
+
+export const add = (a, b) => a + b;
+export const pi = 3.14;
+
+
+// File: app.js
+import calculateCircleArea, { add, pi } from './math.js';
+
+console.log(calculateCircleArea(5)); // 78.5
+console.log(add(3, 4));              // 7
+console.log(pi);                     // 3.14
+
+
+
+
+Aggregate exports from multiple files:
+
+
+If you have multiple files and want to create a single "barrel" module to export everything, you can use export *.
+
+
+// File: add.js
+export function add(a, b) {
+  return a + b;
+}
+
+// File: subtract.js
+export function subtract(a, b) {
+  return a - b;
+}
+
+// File: index.js (barrel module)
+export * from './add.js';
+export * from './subtract.js';
+Now you can import everything from the barrel module:
+
+
+// File: app.js
+import { add, subtract } from './index.js';
+
+console.log(add(2, 3));      // 5
+console.log(subtract(5, 3)); // 2
+
+
+
+
+
+
+
+
+
+
+Example file with both default and named exports:
+
+// File: utils.js
+
+// Default export
+export default function greet() {
+  console.log("Hello, welcome to the module!");
+}
+
+// Named exports
+export function add(a, b) {
+  return a + b;
+}
+
+export function subtract(a, b) {
+  return a - b;
+}
+
+export const pi = 3.14;
+
+
+How to import:
+1. Importing default export:
+
+import greet from './utils.js';  // Import the default export
+greet();  // Outputs: Hello, welcome to the module!
+
+2. Importing named exports:
+
+import { add, subtract, pi } from './utils.js';  // Import named exports
+
+console.log(add(5, 3));      // 8
+console.log(subtract(5, 3)); // 2
+console.log(pi);             // 3.14
+
+
+3. Importing both default and named exports:
+
+import greet, { add, subtract, pi } from './utils.js';
+
+greet();                     // Outputs: Hello, welcome to the module!
+console.log(add(5, 3));      // 8
+console.log(subtract(5, 3)); // 2
+console.log(pi);             // 3.14
+
