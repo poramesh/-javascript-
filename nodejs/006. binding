@@ -61,6 +61,14 @@ server.listen(3000, () => {
 
 
 
+io.on('connection', (socket) => {...}):
+
+>This line listens for the connection event on the Socket.IO server (denoted by io).
+>The connection event is emitted by Socket.IO whenever a new client connects to the server.
+>The callback function (socket) => { ... } is executed whenever a client connects. The socket object represents 
+the WebSocket connection between the client and the server. Each client gets its own socket object, and this object
+is used to listen for and emit events specific to that connection.
+
 
 1. express() (Creating the Express Application):
 
