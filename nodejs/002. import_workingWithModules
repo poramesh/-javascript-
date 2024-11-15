@@ -17,6 +17,11 @@ function sayHello(name){
 }
 module.exports = sayHello
 
+
+The backticks (`...`) indicate a template literal.
+${name} is an expression inside the template literal.
+JavaScript evaluates name and replaces ${name} with its value, "Pooja", in the string.
+
 This is the code in app.js file:
 
 const sayHello = require('./hello.js');
