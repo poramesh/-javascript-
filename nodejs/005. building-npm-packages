@@ -154,5 +154,11 @@ if we dont mention either of this, it will not update anything. it wil remain th
 
 
 
+Backward compatibility in technology refers to the ability of a system, device, or software to work with or support older versions of itself 
+or previous generations of technology. Essentially, it ensures that newer versions of a product can still run or interact with software,
+hardware, or file formats from older versions without issues.
 
+
+Programming languages: New versions of a programming language maintain support for code written in older versions, allowing developers
+to run their existing applications without rewriting them entirely.
 
