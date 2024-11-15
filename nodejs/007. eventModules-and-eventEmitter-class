@@ -26,7 +26,7 @@ _________________
 class Person extends EventEmitter{
   constructor(name){
      super();
-     this._name = name;
+     this._name = name;  // _name is a private-like property (underscore convention)
 }
   get name(){
     return this._name;
@@ -47,6 +47,20 @@ chros.on('name',()=>{
 
 pedro.emit('name'); //my name is pedro
 chros.emit('name'); //my name is chros
+
+
+When you create a custom class that extends EventEmitter, you don't need to create a new EventEmitter object; instead, 
+you call super() in your constructor to initialize the inherited functionality.
+
+Person extends EventEmitter to allow instances of Person (like pedro and chros) to emit and listen to events (such as the name event). 
+Without extending EventEmitter, your Person class wouldn't have these event-related capabilities.
+
+
+Without the getter, the code would attempt to access the _name property directly, which is not accessible outside the class due to its underscore convention.
+
+Make _name Public: If you don’t want to use the getter, you could directly access _name by making it public
+(though this is not recommended for encapsulation). You could do this by removing the underscore and just using this.name directly in the constructor.
+
 
 (or)
 
@@ -99,7 +113,8 @@ const greetBirthday = (name, newAge) => {
 
 myEmitter.on('birthdayEvent', greetBirthday);
 
-myEmitter.emit('birthdayEvent', 'John', '24');
+myEmitter.emit('birthdayEvent', 'John', '24'); // Emit the 'birthdayEvent' and pass parameters ('John' and '24') to the callback function
+
 
 
 
