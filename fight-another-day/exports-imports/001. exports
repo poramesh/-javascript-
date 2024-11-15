@@ -1,0 +1,126 @@
+The export declaration allows you to share code between JavaScript modules by making values from one module accessible in another. 
+Exported values can be imported using the import statement.
+
+Two Types of Exports:
+
+Named Exports: Allows multiple exports per module.
+Default Exports: Only one default export is allowed per module.
+
+
+Module Requirements
+
+The source file must be treated as a module.
+Use <script type="module"> in HTML.
+Modules are automatically in strict mode.
+Cannot run modules via file:// URLs; must use an HTTP server.
+
+Syntax
+
+Exporting Declarations:
+
+// Named exports
+export let name1, name2; 
+export const name1 = 1, name2 = 2;
+export function functionName() { /* … */ }
+export class ClassName { /* … */ }
+
+// Object and Array destructuring
+export const { name1, name2: alias } = object;
+export const [ name1, name2 ] = array;
+
+// Export list
+export { name1, nameN };  // Exports variables defined elsewhere.
+export { var1 as alias1, var2 as alias2 };
+export { var1 as "string alias" }; // Allows string names as aliases.
+export { name1 as default };
+
+// Default exports
+export default expression;
+export default function () { /* … */ }
+export default class { /* … */ }
+
+
+Re-exporting/Aggregating Modules:
+
+export * from "module-name";  // Re-export all named exports.
+export * as alias from "module-name";  // Re-export as a namespace.
+export { name1, name2 } from "module-name";
+export { default as alias } from "module-name";
+
+
+
+Examples
+
+Named Exports
+
+// myModule.js
+export const pi = 3.14;
+export function add(a, b) { return a + b; }
+
+// Importing in another file
+import { pi, add } from './myModule.js';
+console.log(pi);  // 3.14
+
+
+Default Exports
+
+// myModule.js
+export default function square(x) { return x * x; }
+
+// Importing in another file
+import square from './myModule.js';
+console.log(square(4));  // 16
+
+
+Renaming Exports
+
+export { myFunc as renamedFunc };
+
+// Import
+import { renamedFunc } from './module.js';
+
+
+
+Exporting Objects
+
+const settings = { theme: 'dark' };
+export { settings };
+
+
+
+Re-exporting
+
+// Aggregate exports from multiple modules
+export { name1 } from './module1.js';
+export { name2 } from './module2.js';
+
+
+The export list 
+
+in JavaScript is a way to selectively export variables, functions, or objects from a module so that they can be used 
+in other modules via import.
+
+Basic Export List
+
+export { name1, /* …, */ nameN };
+
+What This Means:
+
+This exports a list of variables, functions, or objects that are already declared in the module.
+The names name1, nameN, etc., must be valid identifiers that exist in the current file.
+
+// File: module.js
+const a = 10;
+const b = 20;
+export { a, b };
+
+// File: main.js
+import { a, b } from './module.js';
+console.log(a, b); // Output: 10 20
+
+
+Key Points
+Named Exports: Must be imported with the exact name, or use as to alias.
+Default Exports: Can be imported with any name.
+Export Order: Declared exports are accessible immediately, even if the value is defined later.
+Conflicts: Duplicate exports result in syntax errors.
