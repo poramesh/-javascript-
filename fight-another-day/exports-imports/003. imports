@@ -1,0 +1,89 @@
+the import statement is used to bring functions, objects, or values from other modules into the current file. 
+This allows you to work with modular code by referencing exported members from other files. 
+
+
+Static Import Declaration
+
+Static imports are used to import bindings (i.e., exported items) from another module.
+These bindings are live, meaning they are updated by the module that exports them.
+Once imported, the values cannot be reassigned in the importing module.
+
+The syntax for static import is:
+
+
+import defaultExport from "module-name";      // Import default export so we dont have to puit it flower braces
+import * as name from "module-name";           // Import all exports as a namespace
+import { export1 } from "module-name";         // Import a specific export
+import { export1 as alias1 } from "module-name"; // Import and rename an export
+import { default as alias } from "module-name"; // Import default export with alias
+import { export1, export2 } from "module-name";  // Import multiple exports
+
+
+1. Named Import
+You can import specific exports from a module.
+
+Example:
+import { myExport } from "./my-module.js";
+
+You can also import multiple named exports:
+import { foo, bar } from "./my-module.js";
+
+
+If you want to rename an import, you can do:
+import { longName as shortName } from "./my-module.js";
+
+
+2. Default Import
+Modules can have one default export, and you can import it using the following syntax:
+
+import myDefault from "./my-module.js";
+
+You can also combine default imports with named imports:
+import myDefault, { foo, bar } from "./my-module.js";
+
+
+3. Namespace Import
+With the * syntax, you can import all exports of a module as a single object (namespace).
+import * as myModule from "./my-module.js";
+
+You can then access all exports as properties of the namespace object:
+
+myModule.foo();
+myModule.bar();
+
+
+4. Side Effect Import
+You can import a module purely for its side effects (executing its code) without importing any specific exports:
+
+import "./my-module.js";
+
+This is commonly used for polyfills or when the module's code needs to run but the exports aren't directly needed.
+
+
+Dynamic Import
+
+Dynamic imports are used when you want to load a module asynchronously. This is done using the import() 
+function, which returns a promise that resolves to the module.
+
+Example:
+
+import("./my-module.js").then(module => {
+  module.myFunction();
+});
+
+Dynamic imports allow the module to be loaded at runtime, and you don't need to specify "type=module" in the script tag for this.
+
+
+Module Resolution
+
+When importing modules, the module specifier (the path or URL) is resolved relative to the current module’s URL. It can be:
+
+Relative: ./, ../
+Absolute: A full URL, like https://example.com/module.js
+Bare: A module name, typically resolved from node_modules or defined through an import map.
+
+
+Key Points
+Hoisting: Import declarations are hoisted, meaning they are available before the rest of the module code executes.
+Live Bindings: Imports cannot be reassigned in the importing module. They are references to the original bindings from the exported module.
+Strict Mode: All ES modules are in strict mode by default.
