@@ -1,0 +1,177 @@
+A closure is a function that "remembers" the variables and environment in which it was created, even after that environment is no longer active.
+
+In simpler terms:
+
+A closure is formed when a function is defined inside another function and accesses variables from the outer function.
+This ability to "remember" and access its lexical scope is what makes closures powerful.
+
+
+
+Key Characteristics of Closures
+
+Inner Function Accessing Outer Scope:
+An inner function can access variables declared in its outer function's scope.
+
+Persistent State:
+The inner function "closes over" the outer function's variables, retaining access to them even after the outer function has executed.
+
+Encapsulation:
+Closures can be used to encapsulate state and create private variables.
+
+
+How Closures Work
+
+Closures leverage lexical scoping, meaning a function's scope is determined by where it is defined, not where it is executed.
+
+
+
+
+function outer() {
+  let count = 0; // Outer function's variable
+  
+  function inner() {
+    count++; // Accessing and modifying the outer variable
+    return count;
+  }
+  
+  return inner; // Return the inner function
+}
+
+const counter = outer(); // Call outer and store the returned inner function
+console.log(counter()); // 1
+console.log(counter()); // 2
+console.log(counter()); // 3
+
+(or)
+
+function outer() {
+  let count = 0; 
+  
+  return function() { // Anonymous function
+    count++; 
+    return count;
+  };
+}
+
+The inner function is unnamed (anonymous) and is directly returned.
+
+(or)
+
+function outer() {
+  let count = 0; 
+  
+  return function inner() { // // Returns a named inner function
+    count++; 
+    return count;
+  };
+}
+
+okay this errr=or
+
+return inner() { // Syntax Error: Unexpected token
+  count++; 
+  return count;
+}
+
+JavaScript does not allow named function declarations (inner()) in the return statement directly like that. 
+If you want to use a named function and return it, you must define the function first and then return it.
+
+
+
+
+
+Common Use Cases of Closures
+
+Private Variables (Encapsulation):
+
+function createCounter() {
+  let count = 0;
+  return {
+    increment: () => ++count,
+    decrement: () => --count,
+    getCount: () => count
+  };
+}
+
+const counter = createCounter();
+console.log(counter.increment()); // 1
+console.log(counter.increment()); // 2
+console.log(counter.getCount());  // 2
+
+
+Event Handlers:
+
+
+function attachHandler(message) {
+  return function() {
+    console.log(message);
+  };
+}
+
+const buttonHandler = attachHandler('Button clicked!');
+buttonHandler(); // 'Button clicked!'
+
+
+
+Partial Application:
+
+
+function multiply(x) {
+  return function(y) {
+    return x * y; // Closure remembers `x`
+  };
+}
+
+const double = multiply(2);
+console.log(double(5)); // 10
+
+
+Memoization:
+
+
+function memoize(fn) {
+  const cache = {};
+  return function(x) {
+    if (cache[x] !== undefined) {
+      return cache[x]; // Return cached result
+    }
+    cache[x] = fn(x); // Store result in cache
+    return cache[x];
+  };
+}
+
+const square = memoize(x => x * x);
+console.log(square(4)); // 16 (calculated)
+console.log(square(4)); // 16 (cached)
+
+
+
+The memoization technique is used to improve the performance of functions that are computationally expensive by caching their results. 
+When the same inputs are passed to the function again, instead of recalculating the result, the function returns the cached value. 
+This is particularly useful for functions that are called repeatedly with the same arguments.
+
+Calling memoize(x => x * x):
+
+memoize(x => x * x) is a function that takes another function (x => x * x) as its argument.
+This means fn in the memoize function is now the function x => x * x (which squares x).
+The memoize function then returns a new function (the memoized function) that remembers fn and the cache.
+
+
+
+First-class functions: Functions like x => x * x are first-class citizens, meaning they can be
+passed as arguments to other functions (like memoize).
+
+Closures: The memoize function returns a new function that "remembers" (via closure) the original function 
+(fn) and the cache object. This allows the memoized function to use
+fn when needed and store the results in the cache.
+
+Efficient re-use: By caching the results of expensive calculations (like x * x), memoization allows you
+to quickly return results without redundant calculations.
+
+
+Why Closures are Useful?
+
+Data Privacy: Hide variables and limit access to them.
+Reusable Logic: Create functions with pre-configured behavior.
+Stateful Functions: Maintain state across multiple function calls.
+Closures are foundational in JavaScript programming and are widely used in functional programming, event handling, and more.
