@@ -26,6 +26,24 @@ Closures leverage lexical scoping, meaning a function's scope is determined by w
 
 
 
+Visualization of the Memory Layout:
+
+At the time when outer() is executed and returns inner(), the memory looks like this:
+
+markdown
+Copy code
+Memory Address      | Variable         | Value          | Explanation
+--------------------|------------------|----------------|------------------------------------------------------
+0x100               | `count`          | 0              | `count` is a local variable in `outer()`, stored here.
+0x200               | `inner()` (Closure) | References `count` | The closure `inner` keeps a reference to `count` at 0x100.
+
+Closure (Function inner): The closure (inner) holds a reference to the outer function's environment, 
+meaning it knows the memory location of count (i.e., 0x100).
+
+The Variable count: Even though outer() has finished execution, the memory location of count (0x100) is
+still accessible through the closure. This is what allows inner() to keep modifying the value of count.
+
+
 function outer() {
   let count = 0; // Outer function's variable
   
