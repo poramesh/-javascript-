@@ -1,0 +1,445 @@
+WHAT AM I EVEN DOING IGGHGHGH I HOPE IT WILL ALL MAKE SENSE WHEN I COME BACKKK TO IT NEXT AHAHAHAH I AM PUTIING IN A LOT OF EFFORT DLEARNIGN THIS>
+
+
+
+
+Currying is a functional programming technique in JavaScript where a function with multiple arguments is
+transformed into a sequence of functions, each taking a single argument. Instead of calling a function with all arguments at once, 
+you call it step by step, with each call taking one argument.
+
+Key Features of Currying
+
+Partial Application: It allows partial application of arguments. This means you can create specialized 
+functions by fixing some arguments of a more general function.
+
+Readability and Reusability: It makes functions more reusable and easier to understand when broken into smaller steps.
+
+Avoiding Repetition: Currying helps avoid repetitive function calls with the same arguments.
+
+
+
+
+xample of Currying
+
+Non-curried Function
+
+function multiply(a, b, c) {
+    return a * b * c;
+}
+console.log(multiply(2, 3, 4)); // 24
+
+
+Curried Version
+
+function multiply(a) {
+    return function(b) {
+        return function(c) {
+            return a * b * c;
+        };
+    };
+}
+
+// Call the function step by step
+const step1 = multiply(2); // Returns a function
+const step2 = step1(3);    // Returns a function
+const result = step2(4);   // Returns the final result
+console.log(result); // 24
+
+// Or in a single line:
+console.log(multiply(2)(3)(4)); // 24
+
+
+
+
+
+Refined Memory Representation of multiply Execution:
+
+Memory
+Address	Name   	Type	   Value / References
+0x000	 multiply	Function	Function definition of multiply(a)
+0x001  step1    Closure  	Closure	Captures { a: 2 }
+0x002	 step2    Closure	  Closure	Captures { a: 2, b: 3 }
+0x003	 step3    Closure	  Closure	Captures { a: 2, b: 3, c: 4 }
+
+Key Points:
+
+multiply:
+
+The top-level function multiply is stored in memory as a callable function at 0x000.
+It doesn't capture any variables yet because it hasn't been executed.
+
+step1 Closure:
+
+When multiply(2) is called, it creates a closure capturing a = 2.
+This closure is a new function returned from multiply and stored in memory at 0x001.
+
+step2 Closure:
+
+When step1(3) is called, it creates another closure, this time capturing a = 2 (from step1) and b = 3.
+This closure is stored in memory at 0x002.
+
+step3 Closure:
+
+Finally, when step2(4) is called, it completes the chain, capturing all variables: a = 2, b = 3, and c = 4.
+This closure resides at 0x003, and its execution returns the final result of 2 * 3 * 4 = 24.
+
+
+
+
+
+and Execution of multiply(2)(3)(4):
+
+First Call: multiply(2)
+
+The multiply function is called with a = 2.
+It returns a new function that accepts b as an argument, while "remembering" a = 2 in its closure.
+
+return function(b) {  // Returned function
+    return function(c) {
+        return a * b * c;
+    };
+};
+
+Second Call: (2)(3)
+
+The function returned from multiply(2) is called with b = 3.
+This returns another new function that accepts c as an argument, while "remembering" both a = 2 and b = 3 in its closure.
+
+return function(c) {  // Returned function
+    return a * b * c;
+};
+
+Third Call: (2)(3)(4)
+
+The function returned from the previous step is called with c = 4.
+This calculates and returns the final result using the values stored in its closure (a = 2, b = 3, c = 4):
+
+return a * b * c;  // Returns 2 * 3 * 4 = 24
+
+Memory Representation During Execution:
+Memory Address	Variable	Type	Value / References
+0x000	multiply	Function	function multiply(a)
+0x001	Closure 1	Closure	Captures { a: 2 }
+0x002	Closure 2	Closure	Captures { a: 2, b: 3 }
+0x003	Closure 3	Closure	Captures { a: 2, b: 3, c: 4 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Practical Use Cases
+
+Reusable Functions
+
+const add = a => b => a + b;
+
+const add5 = add(5); // Create a new function that adds 5
+console.log(add5(10)); // 15
+console.log(add5(20)); // 25
+
+
+Custom Configuration Currying is helpful when you need to pass configuration repeatedly:
+
+const log = level => message => console.log(`[${level}] ${message}`);
+
+const info = log("INFO");
+const error = log("ERROR");
+
+info("This is an info message.");  // [INFO] This is an info message.
+error("Something went wrong!");    // [ERROR] Something went wrong!
+
+
+
+Built-in Support in Libraries
+
+Libraries like Lodash and Ramda provide utility functions for currying:
+
+const _ = require('lodash');
+
+const curriedMultiply = _.curry((a, b, c) => a * b * c);
+console.log(curriedMultiply(2)(3)(4)); // 24
+
+
+
+
+
+
+More example:
+
+
+Let’s take same sum example:
+
+function sum(a) {
+    return (b, c) => {
+        return a * b * c
+    }
+}
+It can be called like this:
+
+let x = sum(10);
+x(3,12);
+x(20,12);
+x(20,13);
+// OR
+sum(10)(3,12);
+sum(10)(20,12);
+sum(10)(20,13);
+
+-
+the above function is not curry it is partial function:
+
+
+
+1. Understanding the partial Function
+
+The goal of the partial function is to create a specialized version of a function by fixing some of its 
+arguments in advance, leaving the rest to be supplied later.
+
+function partial(func, ...fixedArgs) {
+  return function(...remainingArgs) {
+    return func(...fixedArgs, ...remainingArgs);
+  };
+}
+
+func: The original function we want to partially apply.
+...fixedArgs: The arguments to fix in the new function.
+...remainingArgs: The arguments provided when the new partial function is called.
+func(...fixedArgs, ...remainingArgs): Combines the fixed and remaining arguments to call the original function.
+
+
+2. Execution Flow: Partial Application
+
+Step 1: Define the original function.
+
+function multiply(a, b, c) {
+  return a * b * c;
+}
+This function takes three arguments and returns their product.
+
+
+Step 2: Create the partial function.
+
+const multiplyByTwo = partial(multiply, 2);
+
+Input to partial: func: The multiply function AND  fixedArgs: [2].
+Output of partial: A new function that remembers fixedArgs = [2] and waits for the remaining arguments.
+
+The returned function looks something like this (conceptually):
+
+function(...remainingArgs) {
+  return multiply(2, ...remainingArgs);
+}
+
+
+Step 3: Call the partial function.
+
+console.log(multiplyByTwo(3, 4));
+
+Input to the returned function: remainingArgs: [3, 4].
+The new function combines the fixed arguments ([2]) with the remaining arguments ([3, 4]):
+
+multiply(2, 3, 4);
+
+The multiply function is executed with: a = 2, b = 3, c = 4.
+
+Result: 2 * 3 * 4 = 24
+
+
+3. How Arguments Are Combined
+
+The ... (spread syntax) plays a critical role in combining the arguments:
+Fixed Arguments: Stored during the creation of the partial function.
+Remaining Arguments: Passed when calling the new function.
+Combined Arguments: [...fixedArgs, ...remainingArgs].
+This makes it flexible and reusable.
+
+
+
+
+Currying and partial application are related because of closure, but they are different concepts.
+
+Partial application transforms a function into another function with smaller arity.
+
+function sum1(x, y, z) {
+    return sum2(x,y,z)
+}
+// to
+function sum1(x) {
+    return (y,z) => {
+        return sum2(x,y,z)
+    }
+}
+
+For currying, it would look like this:
+
+function sum1(x) {
+    return (y) = > {
+        return (z) = > {
+            return sum2(x,y,z)
+        }
+    }
+}
+
+Currying creates nesting functions according to the number of the arguments of the function. 
+Each function receives an argument. If there is no argument, there is no currying.
+
+
+Here’s how you can develop a function that takes a function and returns a curried function:
+
+function currying(fn, ...args) {
+    return (..._arg) => {
+        return fn(...args, ..._arg);
+    }
+}
+
+
+function sum(a,b,c) {
+    return a + b + c
+}
+let add = currying(sum,10);
+add(20,90); // 120
+add(70,60); // 140
+
+
+fn: The original function you want to curry.
+...args: Initial arguments passed to currying when it's first called.
+_arg: Additional arguments passed to the returned function when it is invoked. LIKE A PLACEHOLDER
+
+
+
+
+First Call: currying(add, 1)
+args is [1].
+Returns a new function.
+
+Second Call: curriedAdd(2, 3)
+_arg is [2, 3].
+Combines args and _arg to call fn as: add(...[1], ...[2, 3]); // Equivalent to add(1, 2, 3)
+
+Result: 6.
+
+
+
+
+
+Lodash
+
+
+const _ = require('lodash');
+
+// Original log function
+function log(date, importance, message) {
+  console.log(`[${date.getHours()}:${date.getMinutes()}] [${importance}] ${message}`);
+}
+
+// Curry the function
+log = _.curry(log);
+
+// Use curried log
+log(new Date(), "INFO", "System started"); // Normal call
+log(new Date())("INFO")("System started"); // Curried call
+
+// Partial application
+let logNow = log(new Date());
+logNow("DEBUG", "Debugging issue"); // Partially applied
+
+let debugNow = logNow("DEBUG");
+debugNow("Final debug message"); // Fully partially applied
+
+
+This uses Lodash's _.curry utility function to convert the log function into a curried function. Here's what happens:
+
+Importing Lodash:
+
+To use _.curry, you need to import Lodash in your project:
+
+const _ = require('lodash'); // Node.js
+import _ from 'lodash';      // Modern JavaScript
+
+Lodash is a popular utility library with functions like _.curry, _.map, and more.
+
+Making log Curried:
+_.curry(log) wraps the original log function so that:
+It can be called normally: log(a, b, c).
+It can also be called in parts: log(a)(b)(c) or any combination.
+
+Replacing the Original log:
+
+After the line log = _.curry(log);, the log function now refers to the curried version
+
+
+Example with log:
+Suppose log requires 3 arguments: date, importance, and message.
+
+
+log = curry(log);
+
+// Step 1: log(new Date())
+curried.apply(this, [new Date()]); // `args` is [new Date()]
+
+// Step 2: log(new Date())("DEBUG")
+curried.apply(this, [new Date(), "DEBUG"]); // `args.concat(nextArgs)`
+
+// Step 3: log(new Date())("DEBUG")("message")
+func.apply(this, [new Date(), "DEBUG", "message"]); // Executes original log
+The recursive call (curried.apply) ensures you can keep chaining until all required arguments are provided.
+
+
+
+Advanced curry implementation
+
+
+It’s pretty short:
+
+function curry(func) {
+
+  return function curried(...args) {
+    if (args.length >= func.length) {
+      return func.apply(this, args);
+    } else {
+      return function(...args2) {
+        return curried.apply(this, args.concat(args2));
+      }
+    }
+  };
+
+}
+
+Usage examples:
+
+function sum(a, b, c) {
+  return a + b + c;
+}
+
+let curriedSum = curry(sum);
+
+alert( curriedSum(1, 2, 3) ); // 6, still callable normally
+alert( curriedSum(1)(2,3) ); // 6, currying of 1st arg
+alert( curriedSum(1)(2)(3) ); // 6, full currying
+The new curry may look complicated, but it’s actually easy to understand.
+
+The result of curry(func) call is the wrapper curried that looks like this:
+
+// func is the function to transform
+function curried(...args) {
+  if (args.length >= func.length) { // (1)
+    return func.apply(this, args);
+  } else {
+    return function(...args2) { // (2)
+      return curried.apply(this, args.concat(args2));
+    }
+  }
+};
+
+
+I SURVIDED IT. I HOPE I WILL SURVIVE I COME EHERE
