@@ -1,3 +1,7 @@
+LINIK:
+
+https://github.com/WebDevSimplified/JWT-Authentication/blob/master/authServer.js
+
 Basic JWT Authentication
 
 Setup the Project
@@ -218,5 +222,19 @@ Next Steps:
 
 Implement database storage for refresh tokens instead of an in-memory array.
 Add further security, like HTTPS and rate limiting, for production-ready applications.
+
+
+The Callback (err, user)
+
+jwt.verify() takes the JWT (token) and the secret (process.env.ACCESS_TOKEN_SECRET) and decodes it. After decoding, it
+checks if the token is valid by verifying its signature.
+
+The callback (err, user) is invoked with the following:
+
+err: If an error occurs during verification, this will contain information about the error (e.g., if the token is invalid, expired, or tampered with).
+For example, if the token is expired, you’ll get an error like JsonWebTokenError: jwt expired.
+
+user: If the token is valid, this will contain the decoded payload, which could be user-specific information (e.g., user ID). 
+This is the part of the token that you encode when the token is created.
 
 
