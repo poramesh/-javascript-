@@ -1,0 +1,137 @@
+Scope in JavaScript
+
+Global Scope:
+Variables declared outside any function or block are in the global scope.
+They are accessible from anywhere in the code.
+
+Function Scope:
+Variables declared inside a function are local to that function and are not accessible from outside.
+They exist only during the function’s execution and are destroyed afterward.
+
+Block Scope (ES6 and above):
+Variables declared inside a block (e.g., inside {}) using let or const are block-scoped.
+These variables are only accessible within that block.
+
+Lexical Scope (Static Scope):
+Scope in JavaScript is lexical, meaning that a variable's scope is determined by where it is declared in the source code.
+Inner functions have access to variables in their outer functions, but not vice versa.
+
+The this Keyword:
+The value of this depends on how a function is called, and it refers to the object that is currently executing the code.
+
+Module Scope and Variable Persistence
+
+Module Scope (In Node.js):
+
+Variables declared inside a module (file) but outside any function are scoped to that module and are persistent across function calls.
+This means they maintain their value until modified by the code within that module.
+
+var count = 1;
+
+var increment = function() { 
+    count++; 
+};
+
+var getCount = function() { 
+    return count; 
+};
+
+console.log(count);      // Prints 1
+increment();            // Updates the module-scoped count
+console.log(count);      // Prints 2
+console.log(getCount()); // Prints 2
+
+Local vs Global Variables in Functions
+
+When you pass a variable into a function as an argument, you create a new local copy of the variable inside the function.
+Changes to this local copy don't affect the original variable in the outer scope.
+
+var count = 1;
+
+var increment = function(count) { 
+    count++; // Modifies the local copy, not the global 'count'
+};
+
+increment(count);
+console.log(count); // Prints 1, because the global 'count' was not modified
+
+
+
+Call-by-Value
+
+Primitive types are passed by-value:
+
+var num = 123, str = "foo";
+
+function f(num, str) {
+  num += 1;
+  str += "bar";
+  console.log("inside of f:", num, str);
+}
+
+f(num, str);
+console.log("outside of f:", num, str);
+
+inside of f: 124 foobar
+outside of f: 123 foo
+
+
+
+Primitives are passed by value, and Objects are passed by "copy of a reference".
+
+Specifically, when you pass an object (or array) you are (invisibly) passing a reference to that object,
+and it is possible to modify the contents of that object, but if you attempt to overwrite the reference 
+it will not affect the copy of the reference held by the caller - i.e. the reference itself is passed by value:
+
+function replace(ref) {
+    ref = {};           // this code does _not_ affect the object passed
+}
+
+function update(ref) {
+    ref.key = 'newvalue';  // this code _does_ affect the _contents_ of the object
+}
+
+var a = { key: 'value' };
+replace(a);  // a still has its original value - it's unmodfied
+update(a);   // the _contents_ of 'a' are changed
+
+
+
+MORE EXAMPLE
+
+var myString = 'Test string 1';
+
+var sameString = myString;
+
+sameString = 'New string';
+
+console.log(myString); // Logs 'Test string 1';
+console.log(sameString); // Logs 'New string';
+
+
+MORE EXAMPLE:
+
+function myFunc(sameString) {
+  sameString = 'New string';
+}
+
+var myString = 'Test string 1';
+
+myFunc(myString);
+
+console.log(myString); // Again, logs 'Test string 1';
+
+MORE EXAMPLE:
+
+var myObject = { name: 'Joe'; }
+
+var sameObject = myObject;
+
+myObject.name = 'Jack';
+console.log(sameObject.name); // Logs 'Jack'
+
+sameObject.name = 'Jill';
+console.log(myObject.name); // Logs 'Jill'
+
+sameObject = { name: 'Howard' };
+console.log(myObject.name); // Logs 'Jill'
