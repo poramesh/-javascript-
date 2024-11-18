@@ -6,7 +6,18 @@ I Am just REOCRIDING IT HERE JUST FOR MY FUTURE SELF CAUSE I KNOW I WILL FORGET 
 https://www.sitepoint.com/understanding-module-exports-exports-node-js/
 https://stackoverflow.com/questions/5311334/what-is-the-purpose-of-node-js-module-exports-and-how-do-you-use-it?noredirect=1&lq=1
 https://stackoverflow.com/questions/7137397/module-exports-vs-exports-in-node-js
+_____
 
+
+var Strategy = require('./strategy');  // Importing Strategy from another file, './strategy'
+
+exports = module.exports = Strategy;  // Exporting `Strategy` directly as the module's main export
+
+exports.Strategy = Strategy;  // Also explicitly exporting `Strategy` as a property of the exports object
+
+THIS IS WHERE IT ALL STARTED
+
+___
 
 
 Creating and Exporting a Module
