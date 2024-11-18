@@ -1,0 +1,100 @@
+/**
+ * Module dependencies.
+ */
+var Strategy = require('./strategy');
+
+
+/**
+ * Expose `Strategy` directly from package.
+ */
+exports = module.exports = Strategy;
+
+/**
+ * Export constructors.
+ */
+exports.Strategy = Strategy;
+
+
+this is what i want to understand.
+
+
+var Strategy = require('./strategy');
+
+This line is importing the Strategy object (or function/class) from another file called strategy.js in the current directory (./).
+require('./strategy') means we are looking for a module named strategy.js in the same directory as the current file.
+The value returned from that file will be assigned to the variable Strategy.
+For example, if strategy.js exports a class or function called Strategy, then Strategy will now hold that class/function.
+
+
+
+
+2. exports = module.exports = Strategy;
+
+Here, we are making Strategy the default export for the module.
+module.exports is the special object that is returned when you require() a module. By default, it is an empty object {},
+but we can assign any value to it, and that value will be the exported module.
+
+By setting both exports and module.exports to Strategy, we are:
+Replacing the empty object with Strategy, so when this module is required in another file, it directly returns Strategy.
+exports is a reference to module.exports, so exports and module.exports are effectively the same thing.When you modify
+exports or module.exports, you modify the object that will be exported from the module.
+
+Why both?
+exports is a shorthand for the module.exports object. In this line, we’re setting both exports and module.exports to Strategy to
+ensure that when someone imports this module, they get Strategy as the module's default export.
+
+This is the same as doing:
+
+module.exports = Strategy;
+exports = module.exports;  // This is unnecessary but can be used in some cases for clarity.
+
+
+3. exports.Strategy = Strategy;
+
+In addition to setting Strategy as the default export, we are also adding Strategy as a property on the exports object.
+
+After the first line (exports = module.exports = Strategy), Strategy is the default export.
+In this line, we are also saying that Strategy is a property of the exports object. So, this adds another way to access Strategy.
+
+Now, this module has two ways you can access Strategy:
+
+Default export – require('./your-module') directly gives you Strategy.
+As a property of exports – require('./your-module').Strategy gives you Strategy.
+
+
+Example Breakdown
+Assuming strategy.js looks like this:
+
+
+// strategy.js
+class Strategy {
+  // Some class logic
+}
+module.exports = Strategy;
+Then in another file, you can import and use Strategy in two ways:
+
+Accessing via default export:
+
+const Strategy = require('./strategy');  // Directly gets the Strategy class
+const strategyInstance = new Strategy();  // Create an instance of Strategy
+
+Accessing via the Strategy property of exports:
+
+const strategyModule = require('./strategy');
+const Strategy = strategyModule.Strategy;  // Access the Strategy property
+const strategyInstance = new Strategy();  // Create an instance of Strategy
+
+Why Do This?
+
+This pattern of exporting is typically used for convenience and flexibility:
+
+Default export (via module.exports) is the most common way to export the main feature or object of the module.
+Named export (via exports.Strategy) allows you to access the same thing with a different name, offering flexibility for users of your module.
+
+This is useful when you want to give users of your module two ways to access the same thing or when you want to provide other features in the 
+same module in the future.
+
+Summary
+module.exports = Strategy makes Strategy the default export of the module.
+exports.Strategy = Strategy exposes Strategy as a property of the exports object, giving an alternative way to access it.
+Both lines allow other files to import Strategy,
