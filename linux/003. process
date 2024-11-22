@@ -1,0 +1,29 @@
+1. Find the Process Using the Port: You can identify which process is using port 3000.
+
+On Linux/Mac:
+
+Run this command in your terminal: lsof -i :3000
+The PID column will show the process ID of the application using port 3000.
+
+On Windows:
+
+Run this in the Command Prompt: netstat -ano | findstr :3000
+This will return the process ID (PID) of the program using the port.
+
+2. Kill the Process
+
+Once you've identified the process ID (PID), terminate it.
+
+On Linux/Mac: kill -9 <PID>
+On Windows: taskkill /PID <PID> /F
+
+PS C:\Users\pooja\Desktop\code-shh\javascript\simple_nodejs_\authentication_using_passport> netstat -ano | findstr :3000
+>>
+  TCP    0.0.0.0:3000           0.0.0.0:0              LISTENING       9252
+  TCP    [::]:3000              [::]:0                 LISTENING       9252
+PS C:\Users\pooja\Desktop\code-shh\javascript\simple_nodejs_\authentication_using_passport> tasklist | findstr 9252
+>>
+node.exe                      9252 Console                    1     34,536 K
+PS C:\Users\pooja\Desktop\code-shh\javascript\simple_nodejs_\authentication_using_passport> taskkill /PID 9252 /F
+>>
+SUCCESS: The process with PID 9252 has been terminated.
