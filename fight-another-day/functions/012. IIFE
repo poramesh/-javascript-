@@ -1,0 +1,31 @@
+Immediately Invoked Function Expression (IIFE).
+
+
+//fun.js
+function attempt(i) {
+  console.log("The value of i is: " + i);
+}
+
+
+when i run node fun.js it doenst print anything
+
+
+//fun.js
+(function attempt(i) {
+  console.log("The value of i is: " + i);
+})(0);
+
+it prints the value 0
+
+ it is immediately invoked with the argument 0.
+
+
+
+
+Why Use IIFE?
+
+Encapsulation: IIFE helps in creating a private scope for variables and functions. Variables inside an IIFE
+are not accessible from outside, preventing them from polluting the global namespace.
+
+Execution at the point of definition: It’s useful when you want to execute code immediately after
+defining a function (for example, during initialization).
