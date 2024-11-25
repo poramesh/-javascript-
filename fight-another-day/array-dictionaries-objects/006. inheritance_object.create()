@@ -228,3 +228,126 @@ Consistency:
 
 Just like in Passport, where different strategies share the same authenticate() method, here the speak() method is shared across all
 animals, even though the implementation differs for each one.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                      OBJECT.CREATE()
+
+Object.create() is a method in JavaScript that allows you to create a new object and set the prototype of that object 
+to an existing object, enabling inheritance. This is indeed a way of inheriting properties and methods in JavaScript.
+
+Syntax:
+
+Object.create(proto, [propertiesObject])
+
+Parameters:
+
+proto: The object which should be the prototype of the newly created object. This can also be null if 
+you don’t want the object to inherit from any prototype.
+
+propertiesObject (optional): An object that defines additional properties to add to the new object. 
+These properties are added as if they were defined using Object.defineProperties().
+
+
+
+                                                                      
+
+
+const parent = {
+  greet: function() {
+    console.log('Hello from the parent!');
+  }
+};
+
+const child = Object.create(parent); // Create child object with `parent` as prototype
+child.greet(); // Output: Hello from the parent!
+
+console.log(Object.getPrototypeOf(child) === parent); // true
+
+
+Here, child inherits the greet method from the parent.
+
+
+Adding Additional Properties:
+
+const parent = {
+  greet: function() {
+    console.log('Hello!');
+  }
+};
+
+const child = Object.create(parent, {
+  name: { value: 'Child', writable: true, enumerable: true }
+});
+
+console.log(child.name); // Output: Child
+child.greet(); 
+
+
+
+Benefits of Object.create() for Inheritance:
+                                                                                    
+Direct Prototype Inheritance: It lets you explicitly set the prototype of the new object.
+Cleaner Syntax: It avoids the complexity of new constructors and is useful in certain inheritance scenarios.
+
+
+Differences from Constructor-Based Inheritance:
+                                                                                    
+Object.create() creates an object with the specified prototype, while constructor functions use this and new to initialize objects.
+Object.create() doesn’t execute a constructor function; it simply sets up the inheritance chain.
+
+
+
+Object.create()?
+                                                                                    
+When you want to create objects with a specific prototype.
+When you want lightweight inheritance without using classes or constructors
+
+
+
+// Define a base object for animals
+const animal = {
+  makeSound() {
+    console.log(`${this.name} says: ${this.sound}`);
+  },
+};
+
+// Create a dog object that inherits from animal
+const dog = Object.create(animal);
+dog.sound = "Woof!";
+dog.callOwner = function (ownerName) {
+  console.log(`${this.name} runs to ${ownerName}!`);
+};
+
+// Create a specific dog instance (breed)
+const labrador = Object.create(dog);
+labrador.name = "Buddy";
+
+// Another specific dog instance
+const beagle = Object.create(dog);
+beagle.name = "Charlie";
+beagle.sound = "Arooo!";
+
+// Use the methods inherited through the prototype chain
+labrador.makeSound(); // Buddy says: Woof!
+labrador.callOwner("John"); // Buddy runs to John!
+
+beagle.makeSound(); // Charlie says: Arooo!
+beagle.callOwner("Emma"); // Charlie runs to Emma!
