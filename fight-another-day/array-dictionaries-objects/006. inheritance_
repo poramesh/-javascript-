@@ -1,0 +1,230 @@
+What is Inheritance?
+
+
+Inheritance is a concept in object-oriented programming (OOP) that allows one class (the child or subclass) to 
+inherit properties and methods from another class (the parent or superclass).
+
+In JavaScript, this can be achieved through prototype chaining.
+
+
+Step-by-Step Explanation of Inheritance in Your Code:
+
+1. Strategy Base Class:
+
+The SessionStrategy class extends from the Strategy class, which is defined by passport-strategy. This base class
+provides a general structure and behavior for Passport authentication strategies.
+
+2. SessionStrategy Constructor:
+
+function SessionStrategy(options, deserializeUser) {
+  if (typeof options == 'function') {
+    deserializeUser = options;
+    options = undefined;
+  }
+  options = options || {};
+
+  Strategy.call(this);
+  this.name = 'session';
+  this._key = options.key || 'passport';
+  this._deserializeUser = deserializeUser;
+}
+
+The SessionStrategy constructor is used to create instances of the SessionStrategy class.
+It accepts two arguments:
+options: An object containing options (like key).
+deserializeUser: A function used to deserialize the user from the session.
+
+********Inside the constructor, Strategy.call(this) is used to call the constructor of the parent class Strategy. This is important
+because it ensures that any properties or methods from the parent class (Strategy) are set up in the child class (SessionStrategy).********
+
+3. util.inherits (Prototypal Inheritance):
+
+util.inherits(SessionStrategy, Strategy);
+
+This line is where prototypal inheritance happens.
+util.inherits is a utility function in Node.js that sets up inheritance between two classes. It ensures that SessionStrategy 
+inherits the prototype methods from Strategy.
+This means that SessionStrategy will have access to all methods defined on Strategy (like authenticate).
+Without this line, SessionStrategy would not have access to any methods from the Strategy class (e.g., authenticate()).
+
+
+4. How Methods Are Inherited:
+
+After calling util.inherits(SessionStrategy, Strategy), the SessionStrategy class inherits all methods from Strategy.
+This includes methods like authenticate().
+
+For example, the SessionStrategy class has its own authenticate method that overrides the one from Strategy. 
+The SessionStrategy method is specific to session-based authentication, while the one from Strategy is likely a generic authentication method.
+
+5. Accessing Inherited Methods:
+
+When an instance of SessionStrategy is created, it can access all the inherited methods from Strategy.
+
+For instance:
+
+var strategy = new SessionStrategy(options, deserializeUser);
+strategy.authenticate(req, options);  // Calls the `authenticate` method from `SessionStrategy` which may call inherited methods
+
+The authenticate() method in SessionStrategy has additional logic specific to session authentication, but it still has access to any 
+methods or properties from Strategy (thanks to the inheritance).
+
+
+
+
+Key Concepts of Inheritance in Your Code:
+
+Prototype Chain:
+
+When you call a method on an instance of SessionStrategy, JavaScript first looks for that method in the SessionStrategy class itself.
+If it doesn’t find it, it looks in the parent class (Strategy), and so on up the prototype chain.
+
+
+Calling Parent Constructor:
+
+Inside the SessionStrategy constructor, Strategy.call(this) invokes the parent constructor to set up the necessary properties of
+the Strategy class in SessionStrategy.
+
+
+Access to Parent Methods:
+
+SessionStrategy can access and override methods from Strategy. For example, it defines its own authenticate() method but still has 
+access to all the methods in Strategy.
+
+Customizing Behavior:
+
+By using inheritance, SessionStrategy customizes certain behavior (like how authentication works in a session context) but still inherits
+the core functionality of Strategy (which could be the common behavior for various types of authentication strategies).
+
+
+
+
+
+
+Example of How Inheritance is Used:
+
+Let’s consider this simplified analogy:
+
+// Parent class (Strategy)
+function Strategy() {
+  this.name = "Generic Strategy";
+}
+
+Strategy.prototype.authenticate = function(req, options) {
+  console.log("Authenticating using generic strategy...");
+};
+
+// Child class (SessionStrategy)
+function SessionStrategy(options, deserializeUser) {
+  Strategy.call(this);  // Call parent constructor
+  this.name = "Session Strategy";  // Overriding property
+}
+
+require('util').inherits(SessionStrategy, Strategy);  // Set up inheritance
+
+// Now we have access to the authenticate method of Strategy
+SessionStrategy.prototype.authenticate = function(req, options) {
+  console.log("Authenticating using session strategy...");
+  Strategy.prototype.authenticate.call(this, req, options);  // Call parent method
+};
+
+// Example usage:
+var strategy = new SessionStrategy();
+console.log(strategy.name);  // Outputs "Session Strategy"
+strategy.authenticate();  // Calls the session-specific authenticate method, which calls the parent's authenticate
+
+
+
+
+
+Example: Animal Inheritance with Common Methods
+
+1. Parent Class: Animal
+
+The Animal class defines a common interface (speak()) that will be shared by all animal subclasses.
+
+// Parent class: Animal
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+
+  // Common method shared by all animals
+  speak() {
+    console.log(`${this.name} makes a sound.`);
+  }
+}
+
+
+
+2. Subclass: Dog
+
+The Dog class inherits from Animal, but it has its own implementation of the speak() method to make a specific sound, like barking.
+
+// Subclass: Dog
+class Dog extends Animal {
+  speak() {
+    console.log(`${this.name} barks: Woof!`);
+  }
+}
+
+
+3. Subclass: Cat
+
+The Cat class inherits from Animal as well, and it overrides the speak() method to make a different sound, like meowing.
+
+// Subclass: Cat
+class Cat extends Animal {
+  speak() {
+    console.log(`${this.name} meows: Meow!`);
+  }
+}
+
+4. Subclass: Bird
+
+The Bird class also inherits from Animal and overrides the speak() method to make a different sound, like chirping.
+
+// Subclass: Bird
+class Bird extends Animal {
+  speak() {
+    console.log(`${this.name} chirps: Tweet!`);
+  }
+}
+
+
+5. Using the Classes
+Now you can create instances of Dog, Cat, and Bird and call the speak() method on each. Even though each class has its
+own implementation of speak(), they all share the same method name and structure because they inherit from the Animal class.
+
+// Create instances of each animal
+const dog = new Dog("Buddy");
+const cat = new Cat("Whiskers");
+const bird = new Bird("Tweety");
+
+// Call the speak method
+dog.speak();  // Output: Buddy barks: Woof!
+cat.speak();  // Output: Whiskers meows: Meow!
+bird.speak(); // Output: Tweety chirps: Tweet!
+
+
+
+Explanation:
+Inheritance (Code Reusability):
+
+The Dog, Cat, and Bird classes don’t need to implement their own version of every method from Animal. They automatically inherit 
+the speak() method from Animal. This means we don’t need to write common code in each class.
+
+Custom Behavior (Overriding Methods):
+
+Each subclass (like Dog, Cat, Bird) overrides the speak() method to provide its own specific sound. This is similar to how Passport
+strategies like LocalStrategy and SessionStrategy may override the authenticate() method to provide their own specific logic, but they still share the same interface and method name.
+
+
+Polymorphism (Calling the Same Method on Different Objects):
+
+Even though we have different types of animals (Dog, Cat, Bird), we can call the speak() method on any of them. The correct version
+of the speak() method is called based on the actual type of object, demonstrating polymorphism. This allows us to work with different types of animals in a consistent manner.
+
+Consistency:
+
+Just like in Passport, where different strategies share the same authenticate() method, here the speak() method is shared across all
+animals, even though the implementation differs for each one.
