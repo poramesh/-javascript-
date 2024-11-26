@@ -15,6 +15,24 @@ db.posts.aggregate([
 ])
 
 
+[
+  { "_id": 1, "category": "Technology", "likes": 5 },
+  { "_id": 2, "category": "Food", "likes": 3 },
+  { "_id": 3, "category": "Technology", "likes": 2 },
+  { "_id": 4, "category": "Travel", "likes": 1 },
+  { "_id": 5, "category": "Food", "likes": 0 },
+  { "_id": 6, "category": "Technology", "likes": 7 },
+  { "_id": 7, "category": "Travel", "likes": 6 }
+]
+
+
+[
+  { "_id": "Technology", "totalLikes": 14 },
+  { "_id": "Food", "totalLikes": 3 },
+  { "_id": "Travel", "totalLikes": 7 }
+]
+
+
 1. group
 
 db.listingsAndReviews.aggregate(
@@ -131,6 +149,39 @@ _id: "House" means this group contains all the documents where property_type was
 _id: "Apartment" means this group contains all the documents where property_type was "Apartment".
 _id: "Villa" means this group contains all the documents where property_type was "Villa".
 
+
+[
+  { "_id": 1, "property_type": "Apartment", "price": 100 },
+  { "_id": 2, "property_type": "House", "price": 200 },
+  { "_id": 3, "property_type": "Apartment", "price": 150 },
+  { "_id": 4, "property_type": "House", "price": 250 },
+  { "_id": 5, "property_type": "Studio", "price": 80 }
+]
+
+[
+  { "_id": "Apartment" },
+  { "_id": "House" },
+  { "_id": "Studio" }
+]
+
+
+Each document in the result contains a distinct property_type as the _id.
+No aggregation is being done on the price or any other field — the query only groups by property_type.
+
+What This Query Does:
+It finds all the unique values of property_type across all documents in the collection and returns them.
+The _id field in each document will hold the value of property_type.
+
+
+db.listingsAndReviews.aggregate([
+  { $group: { _id: "$property_type", count: { $sum: 1 } } }
+]);
+
+[
+  { "_id": "Apartment", "count": 2 },
+  { "_id": "House", "count": 2 },
+  { "_id": "Studio", "count": 1 }
+]
 
 __________________________________________________________________________________________
 Aggregation $limit:
@@ -324,7 +375,6 @@ Using $match early in the pipeline can improve performance since it limits the n
 
 Example:
 
-In this example, we are using the "sample_airbnb" database loaded from our sample data in the Intro to Aggregations section.
 
 db.listingsAndReviews.aggregate([ 
   { $match : { property_type : "House" } },
@@ -360,7 +410,6 @@ Aggregation $addFields
 This aggregation stage adds new fields to documents.
 
 Example
-In this example, we are using the "sample_restaurants" database loaded from our sample data in the Intro to Aggregations section.
 
 db.restaurants.aggregate([
   {
@@ -436,3 +485,364 @@ This will return the number of documents at the $count stage as a field called "
 
 The result will be a single document with a field named totalChinese, which will contain the count of the matching documents.
 
+
+
+
+
+
+
+
+
+
+
+
+
+__________________
+
+
+
+Aggregation in MongoDB is a powerful tool used to process and analyze data in a more sophisticated manner than simple queries allow. 
+It allows you to transform, filter, and compute data across documents, typically through the aggregation pipeline.
+
+
+Core Aggregation Stages
+
+
+[
+  { "_id": 1, "customer_id": "A123", "amount": 500, "status": "completed", "category": "electronics", "date": "2024-11-01" },
+  { "_id": 2, "customer_id": "A124", "amount": 150, "status": "completed", "category": "clothing", "date": "2024-11-02" },
+  { "_id": 3, "customer_id": "A123", "amount": 200, "status": "completed", "category": "electronics", "date": "2024-11-03" },
+  { "_id": 4, "customer_id": "A125", "amount": 50, "status": "pending", "category": "groceries", "date": "2024-11-03" },
+  { "_id": 5, "customer_id": "A126", "amount": 750, "status": "completed", "category": "electronics", "date": "2024-11-05" },
+  { "_id": 6, "customer_id": "A124", "amount": 100, "status": "completed", "category": "clothing", "date": "2024-11-06" },
+  { "_id": 7, "customer_id": "A127", "amount": 300, "status": "completed", "category": "home", "date": "2024-11-07" },
+  { "_id": 8, "customer_id": "A123", "amount": 700, "status": "completed", "category": "electronics", "date": "2024-11-08" }
+]
+
+$match:
+
+Filters the documents to pass only those that match the given condition. It’s similar to a find query but used in aggregation pipelines.
+
+Example:
+db.collection.aggregate([
+  { $match: { status: "completed" } }
+]);
+This would only pass documents with a status of "completed".
+
+[
+  { "_id": 1, "customer_id": "A123", "amount": 500, "status": "completed", "category": "electronics", "date": "2024-11-01" },
+  { "_id": 2, "customer_id": "A124", "amount": 150, "status": "completed", "category": "clothing", "date": "2024-11-02" },
+  { "_id": 3, "customer_id": "A123", "amount": 200, "status": "completed", "category": "electronics", "date": "2024-11-03" },
+  { "_id": 5, "customer_id": "A126", "amount": 750, "status": "completed", "category": "electronics", "date": "2024-11-05" },
+  { "_id": 6, "customer_id": "A124", "amount": 100, "status": "completed", "category": "clothing", "date": "2024-11-06" },
+  { "_id": 7, "customer_id": "A127", "amount": 300, "status": "completed", "category": "home", "date": "2024-11-07" },
+  { "_id": 8, "customer_id": "A123", "amount": 700, "status": "completed", "category": "electronics", "date": "2024-11-08" }
+]
+
+
+$group:
+
+Used to group documents by a specific field or expression. You can also compute aggregate values like sums, averages, counts, etc., for each group.
+Example:
+db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } }
+]);
+
+This groups documents by the category field and computes the total amount for each category.
+[
+  { "_id": "A123", "totalAmount": 1400 },
+  { "_id": "A124", "totalAmount": 250 },
+  { "_id": "A126", "totalAmount": 750 },
+  { "_id": "A127", "totalAmount": 300 }
+]
+
+
+$project:
+
+Modifies the shape of the documents that pass through it. You can include, exclude, or rename fields.
+Example:
+db.collection.aggregate([
+  { $project: { _id: 0, name: 1, age: 1 } }
+]);
+This projects only the name and age fields for each document, excluding the _id.
+
+db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } },
+  { $addFields: { discountedAmount: { $multiply: ["$totalAmount", 0.9] } } },
+  { $sort: { totalAmount: -1 } },
+  { $limit: 3 },
+  { $project: { _id: 0, customer_id: "$_id", totalAmount: 1, discountedAmount: 1 } }
+]);
+
+[
+  { "customer_id": "A123", "totalAmount": 1400, "discountedAmount": 1260 },
+  { "customer_id": "A126", "totalAmount": 750, "discountedAmount": 675 },
+  { "customer_id": "A127", "totalAmount": 300, "discountedAmount": 270 }
+]
+
+
+$sort:
+
+Sorts the documents based on a specified field in either ascending or descending order.
+Example:
+db.collection.aggregate([
+  { $sort: { age: 1 } }  // Sort by age in ascending order
+]);
+This would sort the documents by age in ascending order.
+
+db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } },
+  { $addFields: { discountedAmount: { $multiply: ["$totalAmount", 0.9] } } },
+  { $sort: { totalAmount: -1 } }
+]);
+
+[
+  { "_id": "A123", "totalAmount": 1400, "discountedAmount": 1260 },
+  { "_id": "A126", "totalAmount": 750, "discountedAmount": 675 },
+  { "_id": "A127", "totalAmount": 300, "discountedAmount": 270 },
+  { "_id": "A124", "totalAmount": 250, "discountedAmount": 225 }
+]
+
+
+$limit:
+
+Limits the number of documents passed to the next stage of the pipeline.
+Example:
+db.collection.aggregate([
+  { $limit: 5 }
+]);
+This will return only the first 5 documents.
+
+db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } },
+  { $addFields: { discountedAmount: { $multiply: ["$totalAmount", 0.9] } } },
+  { $sort: { totalAmount: -1 } },
+  { $limit: 3 }
+]);
+
+[
+  { "_id": "A123", "totalAmount": 1400, "discountedAmount": 1260 },
+  { "_id": "A126", "totalAmount": 750, "discountedAmount": 675 },
+  { "_id": "A127", "totalAmount": 300, "discountedAmount": 270 }
+]
+
+
+
+$skip:
+
+Skips over a specified number of documents.
+Example:
+db.collection.aggregate([
+  { $skip: 10 }
+]);
+This will skip the first 10 documents and pass the rest to the next stage.
+
+[
+  { "_id": 1, "name": "Product A", "tags": ["electronics", "sale"], "price": 100 },
+  { "_id": 2, "name": "Product B", "tags": ["clothing", "new"], "price": 50 },
+  { "_id": 3, "name": "Product C", "tags": ["electronics", "bestseller"], "price": 200 },
+  { "_id": 4, "name": "Product D", "tags": ["home", "new"], "price": 30 },
+  { "_id": 5, "name": "Product E", "tags": ["clothing", "sale"], "price": 150 },
+  { "_id": 6, "name": "Product F", "tags": ["electronics", "new"], "price": 120 },
+  { "_id": 7, "name": "Product G", "tags": ["home", "sale"], "price": 80 },
+  { "_id": 8, "name": "Product H", "tags": ["clothing", "bestseller"], "price": 60 }
+]
+
+
+db.products.aggregate([
+  { $skip: 4 }
+]);
+
+[
+  { "_id": 5, "name": "Product E", "tags": ["clothing", "sale"], "price": 150 },
+  { "_id": 6, "name": "Product F", "tags": ["electronics", "new"], "price": 120 },
+  { "_id": 7, "name": "Product G", "tags": ["home", "sale"], "price": 80 },
+  { "_id": 8, "name": "Product H", "tags": ["clothing", "bestseller"], "price": 60 }
+]
+
+
+$unwind:
+
+Deconstructs an array field from the documents, creating a separate document for each element of the array.
+Example:
+If a document has an array of tags, this stage will create one document for each tag.
+
+db.products.aggregate([
+  { $unwind: "$tags" }
+]);
+
+[
+  { "_id": 1, "name": "Product A", "tags": "electronics", "price": 100 },
+  { "_id": 1, "name": "Product A", "tags": "sale", "price": 100 },
+  { "_id": 2, "name": "Product B", "tags": "clothing", "price": 50 },
+  { "_id": 2, "name": "Product B", "tags": "new", "price": 50 },
+  { "_id": 3, "name": "Product C", "tags": "electronics", "price": 200 },
+  { "_id": 3, "name": "Product C", "tags": "bestseller", "price": 200 },
+  { "_id": 4, "name": "Product D", "tags": "home", "price": 30 },
+  { "_id": 4, "name": "Product D", "tags": "new", "price": 30 },
+  { "_id": 5, "name": "Product E", "tags": "clothing", "price": 150 },
+  { "_id": 5, "name": "Product E", "tags": "sale", "price": 150 },
+  { "_id": 6, "name": "Product F", "tags": "electronics", "price": 120 },
+  { "_id": 6, "name": "Product F", "tags": "new", "price": 120 },
+  { "_id": 7, "name": "Product G", "tags": "home", "price": 80 },
+  { "_id": 7, "name": "Product G", "tags": "sale", "price": 80 },
+  { "_id": 8, "name": "Product H", "tags": "clothing", "price": 60 },
+  { "_id": 8, "name": "Product H", "tags": "bestseller", "price": 60 }
+]
+
+
+
+$addFields:
+
+Adds new fields to documents or modifies existing ones.
+Example:
+db.collection.aggregate([
+  { $addFields: { total: { $multiply: ["$price", "$quantity"] } } }
+]);
+This adds a new field total to each document, calculated by multiplying the price and quantity fields.
+
+
+$lookup:
+Performs a join between two collections. This is like an SQL JOIN.
+Example:
+This looks up documents from the products collection based on the productId field and joins them with the orders collection.
+
+
+
+Dataset:
+Orders Collection:
+[
+  { "_id": 1, "orderId": "A123", "productId": 101, "quantity": 2 },
+  { "_id": 2, "orderId": "B456", "productId": 102, "quantity": 1 },
+  { "_id": 3, "orderId": "C789", "productId": 101, "quantity": 3 }
+]
+
+Products Collection:
+[
+  { "_id": 101, "name": "Laptop", "price": 1000 },
+  { "_id": 102, "name": "Smartphone", "price": 500 }
+]
+
+Using $lookup to Join orders and products:
+
+db.orders.aggregate([
+  { 
+    $lookup: {
+      from: "products",       // The collection to join (products)
+      localField: "productId", // Field from the orders collection
+      foreignField: "_id",     // Field from the products collection
+      as: "productDetails"     // The name of the new field that will hold the joined data
+    }
+  }
+]);
+
+Output:
+[
+  {
+    "_id": 1,
+    "orderId": "A123",
+    "productId": 101,
+    "quantity": 2,
+    "productDetails": [
+      { "_id": 101, "name": "Laptop", "price": 1000 }
+    ]
+  },
+  {
+    "_id": 2,
+    "orderId": "B456",
+    "productId": 102,
+    "quantity": 1,
+    "productDetails": [
+      { "_id": 102, "name": "Smartphone", "price": 500 }
+    ]
+  },
+  {
+    "_id": 3,
+    "orderId": "C789",
+    "productId": 101,
+    "quantity": 3,
+    "productDetails": [
+      { "_id": 101, "name": "Laptop", "price": 1000 }
+    ]
+  }
+]
+
+
+$out:
+
+Writes the results of the aggregation to a new collection.
+Example:
+
+[
+  { "_id": 1, "category": "electronics", "amount": 1000 },
+  { "_id": 2, "category": "clothing", "amount": 500 },
+  { "_id": 3, "category": "electronics", "amount": 1200 },
+  { "_id": 4, "category": "clothing", "amount": 700 },
+  { "_id": 5, "category": "home", "amount": 300 }
+]
+
+db.sales.aggregate([
+  { 
+    $group: {
+      _id: "$category",              // Group by category
+      totalAmount: { $sum: "$amount" } // Sum the amount for each category
+    }
+  },
+  { 
+    $out: "category_totals" // Output the result to a new collection called "category_totals"
+  }
+]);
+
+This will output the results of the aggregation to a new collection called category_totals.
+
+Example Aggregation Pipeline
+Let’s walk through an example pipeline with multiple stages:
+
+db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: {
+      _id: "$customer_id",
+      totalSpent: { $sum: "$amount" }
+  }},
+  { $sort: { totalSpent: -1 } },
+  { $limit: 5 }
+]);
+
+
+[
+  { "_id": "electronics", "totalAmount": 2200 },
+  { "_id": "clothing", "totalAmount": 1200 },
+  { "_id": "home", "totalAmount": 300 }
+]
+
+
+How this works:
+$match: Filters for only "completed" orders.
+$group: Groups the documents by customer_id and calculates the total amount spent by each customer using the $sum operator.
+$sort: Sorts the grouped results by totalSpent in descending order, so the customers who spent the most appear first.
+$limit: Limits the output to the top 5 customers.
+
+
+Complex Aggregation Example
+Let's combine some operators to get a more complex aggregation:
+db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: { 
+      _id: "$customer_id",
+      totalSpent: { $sum: "$amount" },
+      averageSpent: { $avg: "$amount" },
+      orderCount: { $sum: 1 }
+  }},
+  { $match: { totalSpent: { $gte: 1000 } } }, // Only customers who spent at least $1000
+  { $sort: { totalSpent: -1 } }
+]);
+
+Explanation:
+$match: Filters completed orders.
+$group: Groups by customer_id, summing the amount to get totalSpent, calculating the averageSpent, and counting the number of orders per customer.
+$match: Filters out customers who spent less than $1000.
+$sort: Sorts customers by the total amount spent in descending order.
