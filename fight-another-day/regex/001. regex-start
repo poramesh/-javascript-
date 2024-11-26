@@ -120,6 +120,270 @@ Groups and backreferences:
 Quantifiers:
 x*, x+, x?, x{n}, x{n,}, x{n,m}	
 
+________________________________________________________________________________________
+THE ABOVE NOTES IS FROM DOCUMENTATION. THE BELOW ONE IS FROM CHATGPT EHICH IS MORE EASIER TO UNDERSTAND
+
+
+
+Literal Characters
+
+These are the actual characters you want to match exactly in the string.
+Example: /cat/ matches the string "cat".
+
+
+Meta-Characters
+
+These are special characters with specific meanings:
+
+. (dot): Matches any single character except for line breaks.
+/a.b/ will match acb, a1b, etc., but not ab (because the dot represents any character).
+
+\ (backslash): Escapes a metacharacter or gives special meaning to a character.
+\. matches a literal dot, and \\ matches a backslash.
+
+^: Matches the start of a string.
+/^hello/ matches any string that starts with "hello".
+
+$: Matches the end of a string.
+/world$/ matches any string that ends with "world".
+
+[]: Matches any one of the characters inside the brackets.
+/[aeiou]/ matches any vowel (a, e, i, o, or u).
+/[0-9]/ matches any digit.
+
+|: Acts as an OR operator between two patterns.
+/cat|dog/ matches either "cat" or "dog".
+
+(): Groups expressions.
+/(abc)/ captures "abc" as a group.
+
+
+
+Character Classes
+
+Character classes define a set of characters that can match a position in the string:
+
+\d: Matches any digit, equivalent to [0-9].
+/\d/ matches any digit.
+
+\w: Matches any word character (letters, digits, and underscores), equivalent to [a-zA-Z0-9_].
+/\w/ matches any word character.
+
+\s: Matches any whitespace character (spaces, tabs, line breaks).
+/\s/ matches spaces or tabs.
+
+
+Quantifiers
+
+Quantifiers specify how many times a character or group should appear:
+
+*: Matches 0 or more occurrences of the preceding character or group.
+/a*/ matches zero or more as (e.g., "", "a", "aa").
+
++: Matches 1 or more occurrences of the preceding character or group.
+/a+/ matches one or more as (e.g., "a", "aa").
+
+?: Matches 0 or 1 occurrence of the preceding character or group (optional).
+/a?/ matches 0 or 1 a.
+
+{n}: Matches exactly n occurrences of the preceding character or group.
+/a{3}/ matches exactly three as (e.g., "aaa").
+{n,}: Matches n or more occurrences.
+
+/a{2,}/ matches two or more as (e.g., "aa", "aaa").
+{n,m}: Matches between n and m occurrences.
+
+/a{2,4}/ matches two, three, or four as.
+
+
+
+Anchors
+
+Anchors allow you to match positions in the string, rather than characters.
+
+^: Matches the start of the string.
+/^hello/ matches "hello" only at the beginning of the string.
+
+$: Matches the end of the string.
+/world$/ matches "world" only at the end of the string.
+
+Character Ranges
+
+You can define a range of characters to match:
+[a-z] matches any lowercase letter.
+[A-Z] matches any uppercase letter.
+[0-9] matches any digit.
+
+
+
+Advanced Concepts
+ 
+Groups and Capturing
+Parentheses () are used to group parts of the regex. You can refer to these groups later in your regex or programmatically.
+
+Capturing groups:
+Example: /(ab)+/ matches ab, abab, ababab, etc. The parentheses group ab together, and the + quantifier means one or more occurrences.
+
+a.
+
+const regex = /(\d+)/;
+const result = "abc123def".match(regex);
+console.log(result); // ["123", "123"]
+console.log(result[1]); // "123" (this is the captured part)
+
+b.
+
+const regex = /(ab)+/;
+const result = "ababab".match(regex);
+console.log(result); // ["ababab", "ab"]
+console.log(result[1]); // "ab" (this is the captured group)
+
+c.
+
+const regex = /(\d{4})-(\d{2})-(\d{2})/;
+const date = "2024-11-26";
+const match = date.match(regex);
+console.log(match);  // ["2024-11-26", "2024", "11", "26"]
+console.log(match[1]); // "2024" (captured year)
+console.log(match[2]); // "11" (captured month)
+console.log(match[3]); // "26" (captured day)
+
+d.
+
+const regex = /(\w+)\s(\w+)/;
+const name = "John Doe";
+const match = name.match(regex);
+console.log(match); // ["John Doe", "John", "Doe"]
+console.log(match[1]); // "John" (captured first name)
+console.log(match[2]); // "Doe" (captured last name)
+
+
+
+
+Non-capturing groups:
+Use (?:...) to group without capturing.
+Example: (?:ab)+ matches ab, abab, but doesn't capture the ab group.
+
+const regex = /(?:ab)+/;
+const result = "ababab".match(regex);
+console.log(result); // ["ababab"]
+
+
+
+Mixing Capturing and Non-Capturing Groups
+
+You can mix capturing and non-capturing groups in your regex.
+
+Example: Matching a Phone Number with Optional Country Code
+Regex: /(\+?(\d{1,3}))?(\d{10})/
+(\+?(\d{1,3}))?: Captures the optional country code (may include + and up to 3 digits).
+(\d{10}): Captures the 10-digit phone number.
+
+//THIS ONE IS A CAPTURING GROUP
+
+const regex = /(\+?(\d{1,3}))?(\d{10})/;
+const phone1 = "+1234567890";
+const phone2 = "4567890123";
+console.log(phone1.match(regex)); // ["+1234567890", "+123", "123", "4567890123"]
+console.log(phone2.match(regex)); // ["4567890123", undefined, undefined, "4567890123"]
+
+
+//MIX OF BOTH
+const regex = /([a-zA-Z0-9]+)(?:@([a-zA-Z0-9]+))?/;
+const email1 = "example@domain.com";
+const email2 = "example";
+console.log(email1.match(regex)); // ["example@domain", "example", "domain"]
+console.log(email2.match(regex)); // ["example", "example", undefined]
+
+
+Using Non-Capturing Groups for Complex Patterns
+
+Suppose you want to match a pattern with different parts but don't need to capture all parts. For instance,
+matching a date format like "YYYY-MM-DD" but only capturing the year and month (not the hyphen separators).
+
+Regex: /(\d{4})(?:-)(\d{2})(?:-)\d{2}/
+
+(\d{4}): Captures the year (4 digits).
+(?:-): A non-capturing group for the hyphen separator.
+(\d{2}): Captures the month (2 digits).
+(?:-): Another non-capturing group for the hyphen separator.
+\d{2}: Matches the day (but doesn't capture it).
+
+Example:
+
+const regex = /(\d{4})(?:-)(\d{2})(?:-)\d{2}/;
+const date = "2024-11-26";
+const match = date.match(regex);
+console.log(match); // ["2024-11-26", "2024", "11"]
+console.log(match[1]); // "2024" (captured year)
+console.log(match[2]); // "11" (captured month)
+
+(): Creates a capturing group that saves the matched content.
+(?:...): Creates a non-capturing group that groups parts of the regex but does not save the matched content.
+
+
+
+Lookahead and Lookbehind
+Lookahead and lookbehind assertions are zero-width assertions, which check for a pattern without consuming characters.
+
+Lookahead ((?=...)): Ensures that a given pattern is followed by another pattern.
+Example: /\d(?=\s)/ matches a digit followed by a space (but does not consume the space).
+
+Negative Lookahead ((?!...)): Ensures that a given pattern is not followed by another pattern.
+Example: /\d(?!\s)/ matches a digit not followed by a space.
+
+Lookbehind ((?<=...)): Ensures that a given pattern is preceded by another pattern.
+Example: /(?<=@)\w+/ matches a word preceded by the @ symbol (like in email addresses).
+
+Negative Lookbehind ((?<!...)): Ensures that a given pattern is not preceded by another pattern.
+
+
+
+Flags (Modifiers)
+
+Flags modify the behavior of the regular expression. Here are the most common flags:
+
+g (global): Matches all occurrences, not just the first one.
+Example: /a/g will match all as in a string.
+
+i (ignore case): Makes the regex case-insensitive.
+Example: /a/i matches both "a" and "A".
+
+m (multiline): Treats the start ^ and end $ anchors as working across lines (not just the start and end of the string).
+Example: /^hello/m matches "hello" at the beginning of each line.
+
+u (unicode): Enables full Unicode matching, as discussed earlier.
+Example: /\u{1F600}/u matches the "grinning face" emoji.
+
+s (dotall): Allows the . character to match line breaks (\n).
+Example: /a.b/s matches "a\nb" (with a newline).
+
+
+
+Examples
+
+Validating Email Address:
+const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+console.log(regex.test('test@example.com')); // true
+console.log(regex.test('invalid-email')); // false
+
+Extracting Dates:
+const regex = /(\d{2})\/(\d{2})\/(\d{4})/;
+const match = regex.exec('12/05/2023');
+console.log(match); // ["12/05/2023", "12", "05", "2023"]
+
+Replace All Spaces with Hyphens:
+const regex = /\s+/g;
+const result = 'hello world from regex'.replace(regex, '-');
+console.log(result); // "hello-world-from-regex"
+
+Regular expressions are useful for a variety of tasks:
+
+Text validation (e.g., validating email, phone numbers, URLs).
+Search and replace (e.g., replacing certain text patterns in a document).
+String parsing (e.g., extracting dates, phone numbers, or tags from text).
+Data extraction (e.g., pulling out relevant data from logs or web pages).
+
 
 
 
