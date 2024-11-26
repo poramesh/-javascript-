@@ -351,3 +351,58 @@ labrador.callOwner("John"); // Buddy runs to John!
 
 beagle.makeSound(); // Charlie says: Arooo!
 beagle.callOwner("Emma"); // Charlie runs to Emma!
+
+
+
+
+MORE EXAMPLE:
+
+
+// Original Constructor
+function Person(name) {
+  this.name = name;
+}
+
+// Augmenting with action methods
+Person.prototype.sayHello = function () {
+  return `Hello, my name is ${this.name}`;
+};
+
+// Creating an object using Object.create
+const pooja = Object.create(Person.prototype); // Use Person.prototype
+pooja.name = "Pooja";
+
+console.log("Pooja:", pooja);
+console.log("Name:", pooja.name);
+console.log("Say Hello:", pooja.sayHello()); // Correctly inherits sayHello
+/***
+Object.create and Prototypes:
+Object.create(Person) creates a new object with Person as its prototype.
+However, Person is a constructor function, not an object or a prototype itself. This results in a bit of an incorrect structure in your code.
+***/
+// Creating an object using the constructor
+const john = new Person("John");
+console.log("Say Hello:", john.sayHello()); // Output: Hello, my name is John
+console.log("John:", john);
+console.log("Person Constructor:", pooja);
+
+var pro = Object.create(pooja);
+
+console.log(pro.sayHello())
+pro.dead = function(){
+  console.log("hey")
+
+}
+console.log("pr",pro)
+
+
+Pooja: Person { name: 'Pooja' }
+Name: Pooja
+Say Hello: Hello, my name is Pooja
+Say Hello: Hello, my name is John
+John: Person { name: 'John' }
+Person Constructor: Person { name: 'Pooja' }
+Hello, my name is Pooja
+pr Person { dead: [Function (anonymous)] }
+PS C:\Users\pooja\Desktop\code-shh\javascript\ok__> 
+
