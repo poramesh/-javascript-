@@ -75,6 +75,25 @@ expression, you need to escape it at the string literal level. /a\*b/ and new Re
 for "a" followed by a literal "*" followed by "b".
 
 
+WE PUT DOUBLE BACKSLASH CAUSE ONE IS TO ESCAPE IT WHEN THE STRING IS COMPILED iN NEW REGEX AND THE NEXT IS TO ESCAPE IT DURING NEXT COMPILATION OF THE REGEX.
+
+Therefore, when you want to match a literal dot (.) in a regex using new RegExp(), you need to escape it twice:
+Once for the string (so JavaScript knows you want a backslash).
+Once for the regex pattern (so the regex engine knows you want a literal dot).
+
+NOTICE HOW /\.com/ doenst have  quotes.
+
+
+const regex = /\.com/; // No need to escape for the string
+console.log(regex.test('example.com')); // true
+console.log(regex.test('examplecom'));  // false
+
+
+const regex = new RegExp('\\.com');  // Two backslashes to escape dot
+console.log(regex.test('example.com')); // true
+console.log(regex.test('examplecom'));  // false
+
+
 Method	Description:
 
 exec()	Executes a search for a match in a string. It returns an array of information or null on a mismatch.
