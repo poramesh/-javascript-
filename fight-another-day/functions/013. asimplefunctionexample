@@ -1,0 +1,55 @@
+// Simulating the 'req' object with a login method
+const req = {
+  login: function (user, callback) {
+    console.log("Logging in user:", user);
+    // Simulate asynchronous operation with a delay
+    setTimeout(() => {
+      console.log("User logged in successfully!");
+      callback(null); // Indicating success with no error
+    }, 1000);
+  }
+};
+
+// Function that executes 'req.login'
+function authenticateAndLogin(req, user, callback) {
+  console.log("Authenticating user:", user);
+  
+  // Simulate successful authentication
+  if (user.username === "pooja" && user.password === "1234") {
+    console.log("User authenticated successfully!");
+    
+    // Call req.login within this function
+    req.login(user, (err) => {
+      if (err) {
+        console.error("Error during login:", err);
+        return callback(err);
+      }
+      console.log("Login process complete!");
+      callback(null, "Login successful!");
+    });
+  } else {
+    console.error("Authentication failed!");
+    callback("Invalid credentials");
+  }
+}
+
+// Example Usage
+const user = { username: "pooja", password: "1234" };
+
+authenticateAndLogin(req, user, (err, message) => {
+  if (err) {
+    console.error("Error:", err);
+  } else {
+    console.log("Message:", message);
+  }
+});
+
+
+/****
+ * Authenticating user: { username: 'pooja', password: '1234' }
+User authenticated successfully!
+Logging in user: { username: 'pooja', password: '1234' }
+User logged in successfully!
+Login process complete!
+Message: Login successful!
+ */
