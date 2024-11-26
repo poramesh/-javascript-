@@ -3,14 +3,21 @@ MongoDB Query Operators
 There are many query operators that can be used to compare and reference document fields.
 
 Comparison
-The following operators can be used in queries to compare values:
-$eq: Values are equal
-$ne: Values are not equal
-$gt: Value is greater than another value
-$gte: Value is greater than or equal to another value
-$lt: Value is less than another value
-$lte: Value is less than or equal to another value
-$in: Value is matched within an array
+
+Operator	Description   	         Example Query
+$eq      	Equal to                  { age: { $eq: 25 } }
+$ne	      Not equal to	            { age: { $ne: 25 } }
+$gt	      Greater than            	{ age: { $gt: 30 } }
+$gte	    Greater than or equal to	{ age: { $gte: 18 } }
+$lt	      Less than	                { age: { $lt: 18 } }
+$lte	    Less than or equal to	    { age: { $lte: 60 } }
+$in	      Value is in an array	    { status: { $in: ["active", "pending"] } }
+
+db.collection.find({
+  age: { $gte: 18, $lte: 25 },
+  status: { $in: ["active", "pending"] }
+});
+
 
 Logical
 The following operators can logically compare multiple queries.
@@ -44,3 +51,106 @@ $addToSet: Adds distinct elements to an array
 $pop: Removes the first or last element of an array
 $pull: Removes all elements from an array that match the query
 $push: Adds an element to an array
+
+
+Let's consider a document in the users collection:
+
+{
+  _id: 1,
+  name: "Alice",
+  age: 25,
+  tags: ["developer", "coder"],
+  lastModified: null
+  comments: ['a','b','c']
+}
+
+1. Set the status and lastModified fields
+
+db.users.updateOne(
+  { _id: 1 },
+  { 
+    $set: { status: "active" },
+    $currentDate: { lastModified: true }
+  }
+);
+
+Effect:
+If lastModified does not exist, it will be created and set to the current date and time.
+If lastModified exists, it will be updated to the current date and time.
+
+Result:
+{
+  _id: 1,
+  lastModified: ISODate("2024-11-26T12:34:56.789Z")
+}
+
+
+
+Value for $currentDate          	Effect
+true	                    Sets the field to the current date and time (ISODate).
+{ $type: "date" }	        Explicitly sets the field to the current date and time (ISODate). Timestamp(1698413576, 1)
+{ $type: "timestamp" }	  Sets the field to a MongoDB BSON timestamp. Timestamp(1698413576, 1)
+
+
+2. Increment the age by 1:
+
+db.users.updateOne(
+  { _id: 1 },
+  { $inc: { age: 1 } }
+);
+
+3. Add a new tag only if it doesn’t already exist:
+
+db.users.updateOne(
+  { _id: 1 },
+  { $addToSet: { tags: "expert" } }
+);
+
+4. Remove the first tag from the tags array:
+
+db.users.updateOne(
+  { _id: 1 },
+  { $pop: { tags: -1 } }
+);
+
+5. Remove a specific tag ("coder"):
+
+db.users.updateOne(
+  { _id: 1 },
+  { $pull: { tags: "coder" } }
+);
+
+
+
+6. Removes a field from the document.
+
+db.users.updateOne(
+  { _id: 1 },
+  { $unset: { lastModified: "" } }
+);
+
+
+7. change the name of the field.
+
+db.users.updateOne(
+  { _id: 1 },
+  { $rename: { lastModified: "newField" } }
+);
+
+
+8. $pop: Removes the first or last element of an array.
+
+db.users.updateOne(
+  { _id: 1 },
+  { $pop: { comments: -1 } }
+);
+Effect: Removes the first element from the comments array.
+Use 1 to remove the last element.
+
+9. $push:
+
+Adds a value to an array.
+db.collection.updateOne(
+  { _id: 1 },
+  { $push: { comments: "Great post!" } }
+);
