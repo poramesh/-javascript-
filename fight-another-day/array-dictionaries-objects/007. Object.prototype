@@ -1,0 +1,190 @@
+The Object.setPrototypeOf() method in JavaScript is used to set the prototype of a specified object to another object or null.
+This method is generally used to change the inheritance of an object dynamically.
+
+Object.setPrototypeOf(obj, prototype)
+
+obj: The object whose prototype is to be set.
+prototype: The new prototype object for the obj, or null if the object should not inherit from any object.
+
+Dynamic Prototype Assignment
+
+const proto = { greet: function () { console.log('Hello!'); } };
+const obj = {};
+Object.setPrototypeOf(obj, proto);
+obj.greet(); // Output: Hello!
+
+Changing the Prototype of an Existing Object
+
+const obj1 = { name: 'Pooja' };
+const proto = { greet: function () { console.log('Hi!'); } };
+Object.setPrototypeOf(obj1, proto);
+obj1.greet(); // Output: Hi!
+
+Setting to null: You can remove the prototype of an object, effectively making it a standalone object with no inheritance.
+
+const obj = { key: 'value' };
+Object.setPrototypeOf(obj, null);
+console.log(Object.getPrototypeOf(obj)); // Output: null
+console.log(obj.toString); // Output: undefined (no prototype chain)
+
+
+
+
+class MongooseCollection {
+    connect() {
+        console.log('Connecting to Mongoose Collection');
+    }
+}
+
+class NativeCollection {
+    nativeSpecificMethod() {
+        console.log('This is a native-specific method');
+    }
+}
+
+Object.setPrototypeOf(NativeCollection.prototype, MongooseCollection.prototype);
+const nativeCol = new NativeCollection();
+nativeCol.connect(); // Output: Connecting to Mongoose Collection
+nativeCol.nativeSpecificMethod(); // Output: This is a native-specific method
+
+
+
+
+The toString() method is a built-in function in JavaScript that is part of the Object.prototype. It is used to return
+a string representation of an object. Since every object in JavaScript (except those created with Object.create(null))
+inherits from Object.prototype, the toString() method is available to all objects unless explicitly overridden.
+The toString() method is a built-in function in JavaScript that is part of the Object.prototype. 
+
+
+Default Behavior of toString()
+
+When called on an object, Object.prototype.toString() returns a string in the following format:
+
+[object Type]
+Type is the internal type of the object, such as Object, Array, Function, etc.
+
+Example:
+const obj = {};
+console.log(obj.toString()); // Output: [object Object]
+
+
+Customizing toString()
+
+You can override the toString() method in your own objects to provide a more meaningful string representation.
+
+Example: Custom toString() for an Object
+
+const person = {
+    name: 'Pooja',
+    age: 25,
+    toString: function () {
+        return `Name: ${this.name}, Age: ${this.age}`;
+    }
+};
+
+console.log(person.toString()); // Output: Name: Pooja, Age: 25
+
+
+
+Special Cases
+
+Arrays Arrays have their own toString() implementation, which converts all elements to strings and joins them with commas.
+
+const arr = [1, 2, 3];
+console.log(arr.toString()); // Output: 1,2,3
+
+
+Functions For functions, toString() returns the source code of the function.
+
+function greet() {
+    return 'Hello';
+}
+console.log(greet.toString());
+// Output: function greet() { return 'Hello'; }
+
+Primitive Wrappers Wrapper objects for primitives like Number, String, and Boolean have their own implementations:
+
+const num = new Number(42);
+console.log(num.toString()); // Output: 42
+
+
+Explicit Call If you explicitly call Object.prototype.toString, you get a detailed type tag:
+
+
+console.log(Object.prototype.toString.call([])); // Output: [object Array]
+console.log(Object.prototype.toString.call({})); // Output: [object Object]
+console.log(Object.prototype.toString.call(null)); // Output: [object Null]
+console.log(Object.prototype.toString.call(undefined)); // Output: [object Undefined]
+
+
+
+
+Object.setPrototypeOf(NativeCollection.prototype, MongooseCollection.prototype):
+This sets up prototype-level inheritance, meaning instances of NativeCollection inherit 
+the methods and properties defined on MongooseCollection.prototype.
+
+Object.setPrototypeOf(NativeCollection, MongooseCollection): This sets up constructor-level inheritance, meaning 
+static properties and methods on MongooseCollection are inherited by NativeCollection.
+
+Example: Animal and Dog
+Without Static Inheritance
+
+function Animal(name) {
+    this.name = name;
+}
+
+Animal.prototype.speak = function () {
+    return `${this.name} makes a sound.`;
+};
+
+// Add a static method to the constructor
+Animal.describe = function () {
+    return 'Animals are living creatures.';
+};
+
+function Dog(name, breed) {
+    Animal.call(this, name); // Call Animal constructor
+    this.breed = breed;
+}
+
+// Set up prototype-level inheritance
+Object.setPrototypeOf(Dog.prototype, Animal.prototype);
+
+const dog = new Dog('Buddy', 'Golden Retriever');
+console.log(dog.speak()); // Output: Buddy makes a sound.
+
+console.log(Dog.describe()); // Error: Dog.describe is not a function
+
+In this case:
+
+Dog.prototype inherits methods from Animal.prototype, so dog.speak() works.
+Static properties/methods (Animal.describe) are NOT inherited, so calling Dog.describe() results in an error.
+
+
+With Static Inheritance
+
+function Animal(name) {
+    this.name = name;
+}
+
+Animal.prototype.speak = function () {
+    return `${this.name} makes a sound.`;
+};
+
+Animal.describe = function () {
+    return 'Animals are living creatures.';
+};
+
+function Dog(name, breed) {
+    Animal.call(this, name);
+    this.breed = breed;
+}
+
+Object.setPrototypeOf(Dog.prototype, Animal.prototype);
+Object.setPrototypeOf(Dog, Animal);
+
+const dog = new Dog('Buddy', 'Golden Retriever');
+console.log(dog.speak()); // Output: Buddy makes a sound.
+
+console.log(Dog.describe()); // Output: Animals are living creatures.
+
