@@ -1,0 +1,211 @@
+1. Basic query search:
+MongoDB uses standard queries to find documents that match certain criteria.
+
+Example:
+
+db.users.find({ age: { $gt: 25 } });
+This searches for users who are older than 25, using a query operator ($gt) that checks if the age field is greater than 25.
+
+2. Text Search
+As mentioned earlier, you can create a text index on a field to perform full-text searches.
+
+First, create the index:
+
+db.articles.createIndex({ content: "text" });
+Then, perform a text search using $text:
+db.articles.find({ $text: { $search: "mongodb" } });
+
+This will return all documents in the articles collection where the content field contains the word "mongodb."
+
+3. Regex Search
+You can also perform regex-based searches on string fields using the $regex operator.
+
+db.users.find({ name: { $regex: /^A/ } });
+This finds all users whose name starts with the letter "A" (case-sensitive).
+
+4. Fuzzy Search
+MongoDB provides fuzzy search through the text index when you use the $text operator along with $search. 
+This is particularly useful for searching words even if there are spelling mistakes.
+
+Example:
+
+db.articles.find({ $text: { $search: "monogdb~" } });
+The tilde (~) character tells MongoDB to perform a fuzzy search, finding terms close to "monogdb" (which could be a typo).
+
+
+Index:
+
+Indexes help speed up query processing by enabling the database engine to quickly locate data. Without indexes,
+MongoDB must perform a collection scan (i.e., checking each document) to find the relevant documents for a query,
+which can be very slow for large datasets.
+
+
+Types of Indexes in MongoDB
+
+Single Field Indexes:
+
+Default Index: MongoDB automatically creates an index on the _id field for every collection.
+Index on a Single Field: You can create an index on any other field to speed up queries.
+
+Example:
+db.users.createIndex({ username: 1 });
+This creates an ascending index on the username field. The 1 denotes ascending order; -1 would denote descending order.
+
+
+
+WHY DO WE NEED INDEXING?
+
+An index in MongoDB is like an index in a book—it helps MongoDB find specific documents quickly instead of scanning the entire collection.
+
+
+Default _id Index: Every collection in MongoDB automatically has an index on the _id field.
+This ensures that queries like db.collection.find({ _id: someValue }) are fast.
+You don’t need to manually create this index—it’s always there.
+Index on a Custom Field: You can create an index on any field in your collection. 
+
+For example:
+db.users.createIndex({ username: 1 });
+{ username: 1 }: This means MongoDB will create an index on the username field in ascending order.
+{ username: -1 }: You can also create a descending order index.
+
+How Does It Look?
+Imagine you have the following dataset in the users collection:
+
+db.users.insertMany([
+  { _id: 1, username: "alice", age: 30 },
+  { _id: 2, username: "bob", age: 25 },
+  { _id: 3, username: "charlie", age: 35 },
+  { _id: 4, username: "david", age: 28 },
+  { _id: 5, username: "eve", age: 40 }
+]);
+
+Before Creating an Index
+If you run a query to find a specific user by username:
+db.users.find({ username: "charlie" });
+
+Without an index, MongoDB performs a collection scan:
+It will look at each document in the collection until it finds "charlie".
+This is slow for large collections.
+
+After Creating an Index
+Now, create an index on the username field:
+db.users.createIndex({ username: 1 });
+
+This tells MongoDB to:
+Organize the username field into a sorted order (ascending in this case).
+Quickly locate any value in username using the index, rather than scanning every document.
+
+What the Index Looks Like Internally
+Indexes in MongoDB are typically implemented as B-trees. This means:
+The username values will be sorted.
+MongoDB can perform efficient searches using binary search.
+
+For the example above, the username index would look like this internally:
+
+[ "alice", "bob", "charlie", "david", "eve" ]
+Each entry points to the document with that username. If you search for "charlie", MongoDB can find it quickly.
+
+Verify the Index
+You can verify that the index was created using:
+
+db.users.getIndexes();
+Output:
+[
+  {
+    "v": 2,
+    "key": { "_id": 1 },
+    "name": "_id_",
+    "ns": "test.users"
+  },
+  {
+    "v": 2,
+    "key": { "username": 1 },
+    "name": "username_1",
+    "ns": "test.users"
+  }
+]
+
+This shows:
+
+The default _id index.
+The new username index.
+
+
+
+DIFFERENT TYPES OF INDEXING;
+
+
+
+Compound Indexes:
+Compound Index: An index on multiple fields is known as a compound index. MongoDB uses the compound index to optimize 
+queries that use multiple fields in the query criteria.
+
+db.users.createIndex({ lastName: 1, firstName: 1 });
+
+The keys are stored in sorted order based on:
+The lastName field first.
+If two lastName values are the same, the firstName field is used as a tie-breaker
+
+
+
+
+
+
+Multikey Indexes:
+Multikey Index: Used when a field contains an array. MongoDB creates an index entry for each element in the array.
+db.posts.createIndex({ tags: 1 });
+If tags is an array, MongoDB will create a multikey index, meaning each element in the array will be indexed.
+
+How the Multikey Index is Structured
+
+Each document's tags array is "flattened," and MongoDB creates an index entry for each individual element in the array.
+Here’s what the index looks like logically:
+
+db.posts.insertMany([
+  { _id: 1, title: "Post 1", tags: ["mongodb", "database", "indexing"] },
+  { _id: 2, title: "Post 2", tags: ["javascript", "programming"] },
+  { _id: 3, title: "Post 3", tags: ["mongodb", "tutorial"] },
+  { _id: 4, title: "Post 4", tags: [] },
+  { _id: 5, title: "Post 5", tags: ["database"] }
+]);
+
+
+Index Key (tags)	Document Reference
+"mongodb"      	_id: 1, _id: 3
+"database"	    _id: 1, _id: 5
+"indexing"	    _id: 1
+"javascript"	  _id: 2
+"programming"	  _id: 2
+"tutorial"	    _id: 3
+
+db.posts.find({ tags: "mongodb" });
+
+[
+  { _id: 1, title: "Post 1", tags: ["mongodb", "database", "indexing"] },
+  { _id: 3, title: "Post 3", tags: ["mongodb", "tutorial"] }
+]
+
+db.posts.find({ tags: { $in: ["database", "tutorial"] } });
+[
+  { _id: 1, title: "Post 1", tags: ["mongodb", "database", "indexing"] },
+  { _id: 3, title: "Post 3", tags: ["mongodb", "tutorial"] },
+  { _id: 5, title: "Post 5", tags: ["database"] }
+]
+
+
+
+
+
+
+Text Indexes:
+Text Index: Used for searching text fields and performing full-text searches on the content of string fields. MongoDB 
+provides a way to index string content and search it more efficiently.
+
+db.articles.createIndex({ content: "text" });
+Then, perform a text search using $text:
+db.articles.find({ $text: { $search: "mongodb" } });
+
+
+db.users.createIndex({ bio: "text" });
+db.users.find({ $text: { $search: "developer" } });
+
