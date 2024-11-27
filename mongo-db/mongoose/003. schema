@@ -1,0 +1,758 @@
+filename = /models/author.js
+
+const mongoose = require('mongoose')
+
+const authorSchema = new mongoose.Schema({
+    name : {
+        type: String,
+        required: true
+    }
+})
+
+module.exports = mongoose.model('Author', authorSchema) //Author could be safely called as the name of the table.whenever someonse
+invoking this part of code they need to use new Author.
+
+filename = router/author.js
+
+const Author = require('../models/author')
+
+router.post('/', (req,res)=>{
+    const author = new Author({
+        name: req.body.name
+    })
+    author.save((err, newAuthor)=>{
+        if(err){
+            res.render('author/new',{ author: author,
+                errorMessage:'error creating author'}
+            )
+        } else{
+            res.redirect('authors')
+        }
+    })
+
+})
+
+
+
+Defining your schema
+
+Everything in Mongoose starts with a Schema. Each schema maps to a MongoDB collection and defines the shape of the documents within that collection.
+
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
+
+const blogSchema = new Schema({
+  title: String, // String is shorthand for {type: String}
+  author: String,
+  body: String,
+  comments: [{ body: String, date: Date }],
+  date: { type: Date, default: Date.now },
+  hidden: Boolean,
+  meta: {
+    votes: Number,
+    favs: Number
+  }
+});
+
+If you want to add additional keys later, use the Schema#add method.
+
+The permitted SchemaTypes are:
+
+String
+Number
+Date
+Buffer
+Boolean
+Mixed
+ObjectId
+Array
+Decimal128
+Map
+UUID
+
+
+
+
+
+Ids
+
+
+By default, Mongoose adds an _id property to your schemas.
+
+const schema = new Schema(); 
+//This creates a new Mongoose schema object. The Schema() constructor is used to define the structure of
+your MongoDB documents, though here, it is an empty schema with no fields defined yet.
+schema.path('_id'); // ObjectId { ... } 
+//the method path('_id') retrieves the definition of the _id field from the schema. If no 
+custom _id field is defined in the schema, Mongoose will return a default ObjectId type definition.
+
+When you create a new document with the automatically added _id property, Mongoose creates a new _id of type ObjectId to your document.
+
+const Model = mongoose.model('Test', schema);
+const doc = new Model();
+doc._id instanceof mongoose.Types.ObjectId; // true
+
+
+const schema = new Schema({
+  name: String,
+  age: Number
+});
+
+const fieldType = schema.path('name'); // Returns the type definition for 'name' field
+console.log(fieldType.instance); // Logs 'String' because it's a string type
+
+
+
+You can also overwrite Mongoose's default _id with your own _id. Just be careful: Mongoose will refuse to save a top-level
+document that doesn't have an _id, so you're responsible for setting _id if you define your own _id path.
+
+const schema = new Schema({
+  _id: Number // <-- overwrite Mongoose's default `_id`
+});
+const Model = mongoose.model('Test', schema);
+
+const doc = new Model();
+await doc.save(); // Throws "document must have an _id before saving"
+
+doc._id = 1;
+await doc.save(); // works
+
+
+
+Mongoose also adds an _id property to subdocuments. You can disable the _id property on your subdocuments as follows.
+Mongoose does allow saving subdocuments without an _id property.
+
+const nestedSchema = new Schema(
+  { name: String },
+  { _id: false } // <-- disable `_id`
+);
+const schema = new Schema({
+  subdoc: nestedSchema,
+  docArray: [nestedSchema]
+});
+const Test = mongoose.model('Test', schema);
+
+// Neither `subdoc` nor `docArray.0` will have an `_id`
+await Test.create({
+  subdoc: { name: 'test 1' },
+  docArray: [{ name: 'test 2' }]
+});
+
+
+
+instance methods
+
+Instances of Models are documents. Documents have many of their own built-in instance methods. We may also
+define our own custom document instance methods.
+
+
+here cb is callback
+
+const animalSchema = new Schema({ name: String, type: String },
+  {
+    methods: {
+      findSimilarTypes(cb) {
+        return mongoose.model('Animal').find({ type: this.type }, cb);
+      }
+    }
+  });
+
+// Or, assign a function to the "methods" object of our animalSchema
+animalSchema.methods.findSimilarTypes = function(cb) {
+  return mongoose.model('Animal').find({ type: this.type }, cb);
+};
+Now all of our animal instances have a findSimilarTypes method available to them.
+
+const Animal = mongoose.model('Animal', animalSchema);
+const dog = new Animal({ type: 'dog' });
+
+dog.findSimilarTypes((err, dogs) => {
+  console.log(dogs); // woof
+});
+
+
+better put it:
+
+Define the Schema with Instance Method:
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const animalSchema = new Schema({
+  name: String,
+  type: String
+});
+
+animalSchema.methods.findSimilarTypes = function(cb) {
+  return mongoose.model('Animal').find({ type: this.type }, cb);
+};
+
+const Animal = mongoose.model('Animal', animalSchema);
+
+Create a New Document:
+
+const dog = new Animal({ name: 'Buddy', type: 'dog' });
+
+Save the Document:
+
+dog.save().then(() => {
+  // Now, we can use the findSimilarTypes method to find other dogs
+  dog.findSimilarTypes((err, dogs) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('Found similar dogs:', dogs);
+    }
+  });
+});
+
+
+
+more ex:
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const animalSchema = new Schema({
+  name: String,
+});
+
+animalSchema.methods.findByName = function(name) {
+  return this.model('Animal').find({ name: new RegExp(name, 'i') });  // Here, the variable name is simply the pattern that you want to match in the field.
+It doesn't necessarily have to be related to the field name itself.
+};
+
+const Animal = mongoose.model('Animal', animalSchema);
+
+const dog = new Animal({ name: 'Dog' });
+const cat = new Animal({ name: 'cat' });
+const dogUpperCase = new Animal({ name: 'DOG' });
+const rabbit = new Animal({ name: 'rabbit' });
+
+async function saveAnimals() {
+  await dog.save();
+  await cat.save();
+  await dogUpperCase.save();
+  await rabbit.save();
+}
+
+async function searchAnimals(name) {
+  const animals = await Animal.findByName(name);
+  console.log('Found animals:', animals);
+}
+
+saveAnimals().then(() => {
+  searchAnimals('dog'); // This should find "Dog" and "DOG"
+  searchAnimals('cat'); // This should find "cat"
+});
+
+
+we can also do this with the help of statics": https://mongoosejs.com/docs/guide.html
+
+
+
+
+Indexes:
+
+
+MongoDB supports secondary indexes. With mongoose, we define these indexes within our Schema at the path level or the
+schema level. Defining indexes at the schema level is necessary when creating compound indexes.
+
+const animalSchema = new Schema({
+  name: String,
+  type: String,
+  tags: { type: [String], index: true } // path level
+});
+
+animalSchema.index({ name: 1, type: -1 }); // schema level
+
+
+
+
+Virtuals:
+
+Virtuals are document properties that you can get and set but that do not get persisted to MongoDB. The getters are useful 
+for formatting or combining fields, while setters are useful for de-composing a single value into multiple values for storage.
+
+// define a schema
+const personSchema = new Schema({
+  name: {
+    first: String,
+    last: String
+  }
+});
+
+// compile our model
+const Person = mongoose.model('Person', personSchema);
+
+// create a document
+const axl = new Person({
+  name: { first: 'Axl', last: 'Rose' }
+});
+Suppose you want to print out the person's full name. You could do it yourself:
+
+console.log(axl.name.first + ' ' + axl.name.last); // Axl Rose
+
+
+But concatenating the first and last name every time can get cumbersome. And what if you want to do some extra processing on the name, 
+like removing diacritics? A virtual property getter lets you define a fullName property that won't get persisted to MongoDB.
+
+// That can be done either by adding it to schema options:
+const personSchema = new Schema({
+  name: {
+    first: String,
+    last: String
+  }
+}, {
+  virtuals: {
+    fullName: {
+      get() {
+        return this.name.first + ' ' + this.name.last;
+      }
+    }
+  }
+});
+
+// Or by using the virtual method as following:
+personSchema.virtual('fullName').get(function() {
+  return this.name.first + ' ' + this.name.last;
+});
+
+Now, mongoose will call your getter function every time you access the fullName property:
+
+console.log(axl.fullName); // Axl Rose
+
+
+If you use toJSON() or toObject() Mongoose will not include virtuals by default. Pass { virtuals: true } to toJSON() or toObject() to include virtuals.
+
+// Convert `doc` to a POJO, with virtuals attached
+doc.toObject({ virtuals: true });
+
+// Equivalent:
+doc.toJSON({ virtuals: true });
+
+
+
+
+we can also set the first andlast name by creating virtual:
+
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const personSchema = new Schema({
+  name: {
+    first: String,
+    last: String,
+  },
+}, {
+  virtuals: {
+    fullName: {
+      // Getter: Combines first and last names into a full name string
+      get() {
+        return `${this.name.first} ${this.name.last}`;
+      },
+      // Setter: Splits full name into first and last names
+      set(v) {
+        this.name.first = v.substr(0, v.indexOf(' ')); // Extracts the first name
+        this.name.last = v.substr(v.indexOf(' ') + 1); // Extracts the last name
+      },
+    },
+  },
+});
+
+const Person = mongoose.model('Person', personSchema);
+
+// Create a new person
+const axl = new Person();
+axl.fullName = 'William Rose'; // Sets the virtual field
+console.log('First Name:', axl.name.first); // Output: "William"
+console.log('Last Name:', axl.name.last);  // Output: "Rose"
+
+// Save the person to the database
+(async () => {
+  await mongoose.connect('mongodb://localhost:27017/mydatabase', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  await axl.save(); // Saves first and last name in the database
+  const person = await Person.findOne();
+  console.log('Saved Person:', person);
+
+  await mongoose.disconnect();
+})();
+
+
+Key Concepts in the Example
+
+Getter (get):
+Combines this.name.first and this.name.last into a single string.
+Called whenever you access axl.fullName.
+
+Setter (set):
+Splits a full name string (e.g., "William Rose") into first and last names.
+Updates this.name.first and this.name.last.
+
+
+
+Options
+
+Schemas have a few configurable options which can be passed to the constructor or to the set method:
+
+new Schema({ /* ... */ }, options);
+
+// or
+
+const schema = new Schema({ /* ... */ });
+schema.set(option, value);
+
+
+
+option: autoIndex
+
+By default, Mongoose's init() function creates all the indexes defined in your model's schema by calling Model.createIndexes() 
+after you successfully connect to MongoDB. Creating indexes automatically is great for development and test environments.
+But index builds can also create significant load on your production database. If you want to manage indexes carefully in production, 
+you can set autoIndex to false.
+
+const schema = new Schema({ /* ... */ }, { autoIndex: false });
+const Clock = mongoose.model('Clock', schema);
+Clock.ensureIndexes(callback);
+
+The autoIndex option is set to true by default. You can change this default by setting mongoose.set('autoIndex', false);
+
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+// Define the schema with an indexed field
+const clockSchema = new Schema(
+  {
+    time: { type: String, index: true }, // Indexed field
+    type: { type: String },
+  },
+  { autoIndex: true } // Indexes will be created automatically
+);
+
+// Create the model
+const Clock = mongoose.model('Clock', clockSchema);
+
+// Connect to the database
+mongoose
+  .connect('mongodb://localhost:27017/mydatabase', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(async () => {
+    console.log('Connected to MongoDB');
+
+    // Clear existing data for a clean slate
+    await Clock.deleteMany({});
+
+    // Insert sample data
+    await Clock.create([
+      { time: '12:00 PM', type: 'analog' },
+      { time: '01:00 PM', type: 'digital' },
+      { time: '02:00 PM', type: 'analog' },
+      { time: '03:00 PM', type: 'digital' },
+    ]);
+
+    console.log('Sample data inserted');
+
+    // Query for clocks of type 'analog'
+    const analogClocks = await Clock.find({ type: 'analog' });
+    console.log('Analog Clocks:', analogClocks);
+
+    // Query for a specific time using the indexed field
+    const specificTime = await Clock.find({ time: '12:00 PM' });
+    console.log('Clock at 12:00 PM:', specificTime);
+
+    // Close the database connection
+    await mongoose.disconnect();
+    console.log('Disconnected from MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error:', err);
+  });
+
+
+o/p:
+
+Connected to MongoDB
+Sample data inserted
+Analog Clocks: [
+  { _id: 63898e3cfdfed5cd3c29255b, time: '12:00 PM', type: 'analog' },
+  { _id: 63898e3cfdfed5cd3c29255c, time: '02:00 PM', type: 'analog' }
+]
+Clock at 12:00 PM: [
+  { _id: 63898e3cfdfed5cd3c29255b, time: '12:00 PM', type: 'analog' }
+]
+Disconnected from MongoDB
+
+
+
+
+Visualizing Index:
+To see the index created, use the MongoDB shell or a GUI tool like MongoDB Compass. Run the following in the shell:
+
+use mydatabase;
+db.clocks.getIndexes();
+
+You’ll see an output like:
+[
+  { v: 2, key: { _id: 1 }, name: '_id_', ns: 'mydatabase.clocks' },
+  { v: 2, key: { time: 1 }, name: 'time_1', ns: 'mydatabase.clocks' }
+]
+Here, the time_1 index indicates that an index has been created on the time field.
+
+
+
+Code example without indexes:
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+// Define the schema without an indexed field
+const clockSchema = new Schema(
+  {
+    time: { type: String }, // No index
+    type: { type: String },
+  },
+  { autoIndex: false } // No indexes will be created automatically
+);
+
+// Create the model
+const Clock = mongoose.model('Clock', clockSchema);
+
+// Connect to the database
+mongoose
+  .connect('mongodb://localhost:27017/mydatabase', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(async () => {
+    console.log('Connected to MongoDB');
+
+    // Clear existing data for a clean slate
+    await Clock.deleteMany({});
+
+    // Insert sample data
+    await Clock.create([
+      { time: '12:00 PM', type: 'analog' },
+      { time: '01:00 PM', type: 'digital' },
+      { time: '02:00 PM', type: 'analog' },
+      { time: '03:00 PM', type: 'digital' },
+    ]);
+
+    console.log('Sample data inserted');
+
+    // Query for clocks of type 'analog'
+    const analogClocks = await Clock.find({ type: 'analog' });
+    console.log('Analog Clocks:', analogClocks);
+
+    // Query for a specific time
+    const specificTime = await Clock.find({ time: '12:00 PM' });
+    console.log('Clock at 12:00 PM:', specificTime);
+
+    // Close the database connection
+    await mongoose.disconnect();
+    console.log('Disconnected from MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error:', err);
+  });
+
+Connected to MongoDB
+Sample data inserted
+Analog Clocks: [ { _id: ..., time: '12:00 PM', type: 'analog' }, { _id: ..., time: '02:00 PM', type: 'analog' } ]
+Clock at 12:00 PM: [ { _id: ..., time: '12:00 PM', type: 'analog' } ]
+Disconnected from MongoDB
+
+With a small dataset like in this example, the output would be similar to the indexed case:
+However, with larger datasets (e.g., millions of records), you would notice a slower query time due to the lack of indexes.
+
+Without an index, MongoDB performs a collection scan for every query, which means it has to search through all documents to find matches.
+In large datasets, this can significantly increase query times.
+
+
+
+
+
+options: autocreate
+
+
+The autoCreate option controls whether Mongoose automatically creates the underlying MongoDB collection for a model when the application starts. 
+By default, this is set to true.
+
+autoCreate: true (default): Mongoose will automatically call Model.createCollection() when a model is used for the first time.
+autoCreate: false: You need to explicitly create the collection using Model.createCollection().
+
+
+
+Explanation of Code Behavior
+
+Schema Definition
+autoCreate: false: Prevents automatic collection creation when the Test model is used.
+capped: { size: 1024 }: Specifies that the collection should be capped, with a maximum size of 1024 bytes.
+
+Manual Collection Creation
+The code first checks if the tests collection already exists using listCollections().
+If it doesn't exist, Test.createCollection() is called to create the collection with the specified options.
+
+Database Restrictions
+If the collection already exists, the capped setting will not be applied because MongoDB doesn't allow
+modifying collection options without dropping it first.
+
+Insert and Retrieve Documents
+A document is saved into the collection, and all documents are retrieved and displayed.
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+// Define a schema with autoCreate disabled and capped collection settings
+const schema = new Schema(
+  { name: String },
+  {
+    autoCreate: false, // Prevent automatic collection creation
+    capped: { size: 1024 }, // Create a capped collection with a size of 1024 bytes
+  }
+);
+
+const Test = mongoose.model('Test', schema);
+
+// Connect to MongoDB
+async function run() {
+  await mongoose.connect('mongodb://localhost:27017/mydatabase', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  console.log('Connected to MongoDB');
+
+  // Manually create the collection
+  const exists = await mongoose.connection.db.listCollections({ name: 'tests' }).hasNext();
+  if (!exists) {
+    console.log('Creating capped collection...');
+    await Test.createCollection(); // Create the collection with capped settings
+  } else {
+    console.log('Collection already exists. Cannot apply capped settings.');
+  }
+
+  // Insert a document into the collection
+  const doc = new Test({ name: 'Example' });
+  await doc.save();
+
+  console.log('Document saved:', doc);
+
+  // Fetch and display the document
+  const docs = await Test.find();
+  console.log('All documents in collection:', docs);
+
+  await mongoose.disconnect();
+}
+
+run().catch((err) => console.error(err));
+
+
+Connected to MongoDB
+Creating capped collection...
+Document saved: { _id: ObjectId("..."), name: 'Example' }
+All documents in collection: [ { _id: ObjectId("..."), name: 'Example' } ]
+
+If the tests collection already exists:
+
+Connected to MongoDB
+Collection already exists. Cannot apply capped settings.
+Document saved: { _id: ObjectId("..."), name: 'Example' }
+All documents in collection: [ { _id: ObjectId("..."), name: 'Example' } ]
+
+
+MORE ON CAPPED:
+
+The option capped: { size: 1024 } in MongoDB (and Mongoose) specifies that the collection should be capped, meaning it is 
+a fixed-size collection with the following behaviors:
+
+Fixed Storage Size:
+The collection's total size is limited to 1024 bytes (in this example).
+When the total data stored in the collection exceeds the specified size, MongoDB overwrites the oldest documents to make space for new ones.
+
+Efficient Access:
+Capped collections maintain the order of insertion, which makes them faster for operations like sequential reads or retrieving the most recent documents.
+
+Restriction on Updates:
+Documents in capped collections cannot be updated in a way that increases their size.
+The size of individual documents must remain constant or smaller.
+
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+// Define a schema with capped collection settings
+const logSchema = new Schema(
+  {
+    message: String,
+    level: String,
+  },
+  {
+    capped: { size: 1024 }, // The collection can store up to 1024 bytes of data
+  }
+);
+
+const Log = mongoose.model('Log', logSchema);
+
+async function run() {
+  await mongoose.connect('mongodb://localhost:27017/mydatabase', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  console.log('Connected to MongoDB');
+
+  // Create the capped collection
+  await Log.createCollection();
+  console.log('Capped collection created');
+
+  // Insert some log messages
+  await Log.create([
+    { message: 'Log 1', level: 'info' },
+    { message: 'Log 2', level: 'warning' },
+    { message: 'Log 3', level: 'error' },
+  ]);
+
+  console.log('Logs inserted');
+
+  // Insert more logs to exceed the capped size
+  await Log.create([
+    { message: 'Log 4', level: 'info' },
+    { message: 'Log 5', level: 'error' },
+  ]);
+
+  // Fetch all logs (older logs will be overwritten if size exceeds 1024 bytes)
+  const logs = await Log.find();
+  console.log('Current Logs:', logs);
+
+  await mongoose.disconnect();
+  console.log('Disconnected from MongoDB');
+}
+
+run().catch((err) => console.error(err));
+
+
+Connected to MongoDB
+Capped collection created
+Logs inserted
+Current Logs: [
+  { _id: ..., message: 'Log 3', level: 'error' },
+  { _id: ..., message: 'Log 4', level: 'info' },
+  { _id: ..., message: 'Log 5', level: 'error' }
+]
+Disconnected from MongoDB
+
+
+if we hadnt mentioned capped: it would stored all of it.
+
+
+
+
+Feature              	Model.create()	                              Model.insertMany()
+Single/Multiple Docs	Supports both single and multiple inserts	    Only for multiple inserts
+Validation	          Full schema validation                       	Full validation, but middleware bypassed
+Performance	          Slower for bulk inserts                      	Optimized for bulk inserts
+Returns	              Mongoose model instances	                    Plain JavaScript objects by default
+Middleware           	Runs pre/post hooks like save	                Skips pre-save hooks by default
+Use Case	            Insert docs that need full Mongoose features  Bulk inserts with better performance
