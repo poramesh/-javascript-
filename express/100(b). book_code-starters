@@ -667,9 +667,11 @@ router.get('/', async (req, res) => {
   let searchOptions = {}
   if (req.query.name != null && req.query.name !== '') {
     searchOptions.name = new RegExp(req.query.name, 'i') //i flag, it is capital insensitive.
+
   }
   try {
     const authors = await Author.find(searchOptions)
+// When you pass this object to Author.find(searchOptions), Mongoose will translate it into a query like db.authors.find({ name: /John/i }).
     res.render('authors/index', {
       authors: authors,
       searchOptions: req.query //to repopulated the field
@@ -678,6 +680,26 @@ router.get('/', async (req, res) => {
     res.redirect('/')
   }
 })
+
+
+
+if it had multiple vlaues then
+
+let searchOptions = {};
+if (req.query.name != null && req.query.name !== '') {
+  searchOptions.name = new RegExp(req.query.name, 'i'); // Case-insensitive regex search for name.
+}
+
+if (req.query.age != null && req.query.age !== '') {
+  searchOptions.age = req.query.age; // Add a condition for the age field.
+}
+
+
+db.authors.find({
+  name: /John/i,
+  age: 30
+});
+
 
 index.ejs
 
