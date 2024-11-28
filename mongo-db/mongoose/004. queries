@@ -1,0 +1,173 @@
+
+
+1. Basic Query
+
+Goal: Retrieve all books in the Book collection.
+
+const books = await Book.find().exec();
+console.log(books);
+
+Explanation:
+Book.find() creates a query object to fetch all documents.
+.exec() executes the query and retrieves the data.
+books will be an array of all documents in the collection.
+
+
+2. Adding a Single Filter
+
+Find all books with the title "Harry Potter".
+
+const books = await Book.find({ title: 'Harry Potter' }).exec();
+console.log(books);
+
+Explanation:
+{ title: 'Harry Potter' } is the query filter.
+Only books with an exact match for title will be retrieved.
+
+
+3. Using .regex() for Partial Matches
+
+Goal: Find all books where the title contains "Potter" (case-insensitive).
+
+const books = await Book.find().regex('title', new RegExp('Potter', 'i')).exec();
+console.log(books);
+
+Explanation:
+.regex('title', new RegExp('Potter', 'i')) adds a condition for the title field to match the provided regex.
+'i' makes the match case-insensitive.
+
+
+4. Combining Multiple Filters
+
+Goal: Find all books where the title contains "Harry" and the author is "J.K. Rowling".
+
+const books = await Book.find()
+  .regex('title', new RegExp('Harry', 'i'))
+  .where('author').equals('J.K. Rowling')
+  .exec();
+console.log(books);
+
+Explanation:
+.regex('title', new RegExp('Harry', 'i')) filters books with a title containing "Harry".
+.where('author').equals('J.K. Rowling') adds a filter for the author.
+
+
+
+5. Adding Date Filters
+
+Goal: Find books published after January 1, 2000.
+
+const books = await Book.find()
+  .where('publishDate').gte('2000-01-01')
+  .exec();
+console.log(books);
+
+
+Explanation:
+.where('publishDate').gte('2000-01-01') adds a condition to filter books with publishDate greater than or equal to January 1, 2000.
+
+
+
+6. Combining Date and Regex Filters
+
+Goal: Find books where the title contains "Magic" and were published before 2010.
+
+const books = await Book.find()
+  .regex('title', new RegExp('Magic', 'i'))
+  .where('publishDate').lt('2010-01-01')
+  .exec();
+console.log(books);
+
+Explanation:
+.regex('title', ...) matches books with "Magic" in the title.
+.lt('2010-01-01') filters books published before 2010.
+
+7. Dynamic Query Building (Conditionally Adding Filters)
+
+Scenario: The user sends a search form with optional fields: title, author, publishedAfter, publishedBefore. Apply only the filters provided by the user.
+
+let query = Book.find();
+
+if (req.query.title && req.query.title !== '') {
+  query = query.regex('title', new RegExp(req.query.title, 'i'));
+}
+
+if (req.query.author && req.query.author !== '') {
+  query = query.where('author').equals(req.query.author);
+}
+
+if (req.query.publishedAfter && req.query.publishedAfter !== '') {
+  query = query.where('publishDate').gte(req.query.publishedAfter);
+}
+
+if (req.query.publishedBefore && req.query.publishedBefore !== '') {
+  query = query.where('publishDate').lte(req.query.publishedBefore);
+}
+
+const books = await query.exec();
+console.log(books);
+
+
+Explanation:
+Dynamically adds filters to the query object based on user input.
+The final query combines all provided conditions into one database query.
+
+
+8. Sorting Results
+Goal: Find all books where the title contains "Adventure" and sort them by publishDate in descending order.
+
+
+const books = await Book.find()
+  .regex('title', new RegExp('Adventure', 'i'))
+  .sort({ publishDate: -1 }) // -1 for descending, 1 for ascending
+  .exec();
+console.log(books);
+
+Explanation:
+.sort({ publishDate: -1 }) sorts the results by publishDate in descending order.
+
+
+9. Limiting and Skipping Results
+Goal: Get the first 5 books where the author is "J.R.R. Tolkien", skipping the first 2 results.
+
+const books = await Book.find()
+  .where('author').equals('J.R.R. Tolkien')
+  .limit(5)
+  .skip(2)
+  .exec();
+console.log(books);
+
+Explanation:
+.limit(5) restricts the number of documents returned to 5.
+.skip(2) skips the first 2 documents that match the query.
+
+
+
+
+You can skip .exec() if:
+
+You're using await with the query.
+The query is simple and doesn’t involve chaining additional methods like .sort() or .limit().
+
+Example:
+const books = await Book.find({ title: new RegExp('magic', 'i') });
+console.log(books);
+
+
+When Should You Use .exec()?
+
+You should use .exec() when:
+You’re chaining methods:
+
+const books = await Book.find()
+  .regex('title', /harry/i)
+  .sort({ publishDate: -1 })
+  .exec();
+
+You prefer clarity between query creation and execution:
+
+let query = Book.find({ author: 'J.K. Rowling' });
+// Build the query further
+query = query.sort({ publishDate: 1 });
+// Execute the query
+const books = await query.exec();
