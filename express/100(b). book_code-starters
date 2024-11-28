@@ -758,6 +758,29 @@ renderNewPage(res,new Book())
 // All Books Route
 router.get('/', async (req, res) => {
   let query = Book.find()
+
+/***
+Book.find({ title: new RegExp(req.query.title, 'i') });
+But this approach is less flexible if you need to add additional filters dynamically.
+
+you can notice how we defined query once and use it to exec at once. 
+
+
+{
+  "title": { "$regex": "exampleTitle", "$options": "i" },
+  "publishDate": { "$lte": "2023-12-31", "$gte": "2022-01-01" }
+}
+
+.exec() triggers the execution of the query.
+The final query object, with all accumulated filters, is sent to MongoDB for processing.
+
+query = query.regex('title', ...).lte('publishDate', ...).gte('publishDate', ...);
+
+Using .exec() is considered a good practice because it clearly separates the query-building phase from the query-execution phase
+
+
+***/
+
   if (req.query.title != null && req.query.title != '') {
     query = query.regex('title', new RegExp(req.query.title, 'i'))
   }
