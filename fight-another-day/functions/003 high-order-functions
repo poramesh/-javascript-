@@ -96,6 +96,38 @@ MAP()
 The map() function takes an array of values and applies a transformation to each value in the array. It does not mutate the original array. 
 It is often used to transform an array of data into a new array with a different structure.
 
+syntax
+array.map((element, index, array) => {
+  // Return the transformed value
+});
+
+using index:
+
+const fruits = ['apple', 'banana', 'cherry'];
+
+const fruitDescriptions = fruits.map((fruit, index) => {
+  return `${index + 1}: ${fruit}`;
+});
+
+console.log(fruitDescriptions);
+// Output: ["1: apple", "2: banana", "3: cherry"]
+
+
+in react:
+
+const items = ['React', 'Vue', 'Angular'];
+
+const itemList = items.map((item, index) => (
+  <li key={index}>{item}</li>
+));
+
+// Rendered HTML:
+// <ul>
+//   <li>React</li>
+//   <li>Vue</li>
+//   <li>Angular</li>
+// </ul>
+
 
 Example 1: Suppose we want to add 10 to every element in a array. We can use the map() method to map over every element in the array to add 10 to it.
 
