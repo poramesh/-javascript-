@@ -387,3 +387,48 @@ export default SectionListBasics;
 
 
 
+
+
+Key Props of SectionList:
+
+
+sections:
+This prop contains an array of objects, each representing a section.
+Each section object has two main properties:
+title: The title of the section (often displayed as the section header).
+data: An array of items belonging to that section.
+
+Example:
+sections={[
+  { title: 'A', data: ['Apple', 'Avocado', 'Apricot'] },
+  { title: 'B', data: ['Banana', 'Blueberry', 'Blackberry'] }
+]}
+
+renderItem:
+A function that renders the individual items within each section.
+It receives an object with an item property (the data of each individual item in the section).
+You can access item and render it according to your needs.
+
+Example:
+renderItem={({ item }) => <Text>{item}</Text>}
+
+renderSectionHeader:
+A function that renders the header for each section.
+It receives an object with a section property, which contains the title of the section (and optionally other metadata).
+This function is used to render the section's title at the top of each group of items.
+
+Example:
+renderSectionHeader={({ section }) => <Text>{section.title}</Text>}
+
+
+keyExtractor:
+A function that extracts a unique key for each item in the list. This is required for rendering lists in React Native for efficient re-rendering.
+It receives an individual item (item) and should return a unique key for that item.
+If no keyExtractor is provided, React Native uses the key prop for each item.
+
+Example:
+keyExtractor={(item) => item}  // For unique items like strings or numbers
+
+
+
+
