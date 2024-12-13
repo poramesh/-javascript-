@@ -1,0 +1,389 @@
+Introduction to React Native
+
+React Native is a popular framework for building cross-platform mobile applications using a single codebase.
+
+
+Benefits:
+Write once, run on both iOS and Android.
+Supports native components for better performance and user experience.
+Big companies like Meta, Discord, Tesla, and Amazon use React Native.
+Features hot reloading, strong community support, and is easy to learn for JavaScript/React developers.
+
+
+
+Core Components in React Native
+
+View
+
+Acts as a container for other components (similarto <div> in HTML).
+Uses Flexbox by default for layout.
+
+import { View, Text, StyleSheet } from 'react-native';
+
+const App = () => (
+    <View style={styles.container}>
+        <Text>Hello, React Native!</Text>
+    </View>
+);
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
+
+export default App;
+
+
+
+
+Text
+
+Used for displaying text in the app.
+Styled using the style prop or StyleSheet.
+
+<Text style={{ fontSize: 20, color: 'blue' }}>Welcome to React Native!</Text>
+
+
+
+
+
+
+Touchable Components
+
+Add interactivity (like buttons).
+
+TouchableOpacity: Reduces opacity when pressed.
+TouchableHighlight: Shows an underlay color when pressed.
+TouchableWithoutFeedback: No visual feedback.
+
+import { TouchableOpacity, Text } from 'react-native';
+
+const MyButton = ({ onPress, title }) => (
+    <TouchableOpacity onPress={onPress} style={{ padding: 10, backgroundColor: 'blue' }}>
+        <Text style={{ color: 'white' }}>{title}</Text>
+    </TouchableOpacity>
+);
+
+
+
+
+
+Image
+
+Used to display images.
+
+import { Image } from 'react-native';
+
+const App = () => (
+    <Image source={{ uri: 'https://example.com/image.png' }} style={{ width: 100, height: 100 }} />
+);
+
+
+
+
+
+FlatList
+
+Efficiently renders large lists with smooth scrolling.
+
+import { FlatList, Text, View } from 'react-native';
+
+const DATA = [
+    { id: '1', title: 'Item 1' },
+    { id: '2', title: 'Item 2' },
+    { id: '3', title: 'Item 3' },
+];
+
+const App = () => (
+    <FlatList
+        data={DATA}
+        renderItem={({ item }) => (
+            <View>
+                <Text>{item.title}</Text>
+            </View>
+        )}
+        keyExtractor={item => item.id}
+    />
+);
+
+
+data: An array of data to render.
+Example: [{ id: '1', title: 'Item 1' }, ...].
+
+renderItem: A function that defines how each item should be displayed.
+Example: const renderItem = ({ item }) => <Text>{item.title}</Text>;
+
+keyExtractor: A function to generate unique keys for each item.
+Example: keyExtractor={(item) => item.id}
+
+
+Does it map around again?
+No, the keyExtractor does not "map around" again. It only ensures that each list item has a unique key for React to use in rendering. 
+React uses this key to track which items need to be updated when the list changes, so it does not re-render the entire list unnecessarily.
+
+In simpler terms, when the data changes, React can quickly identify which item has changed based on the key and update only that part of the list,
+improving performance. The keyExtractor is a way to tell React how to uniquely identify each item in the list.
+
+_________________________________________________
+const DATA = [
+    { id: '1', title: 'Item 1' },
+    { id: '1', title: 'Item 2' },  // Same key as the first item
+    { id: '3', title: 'Item 3' },
+];
+
+If you use id as the key here, React won't be able to distinguish between the two items with the same id of '1'. 
+As a result:
+React might think both items are the same and might not update one of them properly when the data changes.
+The UI could show incorrect or duplicate information
+__________________________________________________________
+additional props:
+
+horizontal: 
+If true, renders the list horizontally. Default is false.
+
+numColumns: 
+Number of columns to display in a grid layout.
+
+ListHeaderComponent:
+A component rendered at the top of the list.
+
+ListFooterComponent:
+A component rendered at the bottom of the list.
+
+onEndReached:
+A callback triggered when the list is about to reach the end.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+React        	Android View  	iOS View	       Web Analog             	Description
+<View>    	  <ViewGroup>	   <UIView>	        A non-scrolling <div>  	 A container that supports layout with flexbox, style, some touch handling, and accessibility controls
+<Text>	      <TextView>	   <UITextView>	     <p>	                   Displays, styles, and nests strings of text and even handles touch events
+<Image>	      <ImageView>	   <UIImageView>	   <img>	                 Displays different types of images
+<ScrollView>	<ScrollView>	 <UIScrollView>	   <div>	                 A generic scrolling container that can contain multiple components and views
+<TextInput>	  <EditText>	   <UITextField>	   <input type="text">	    Allows the user to enter text
+
+
+
+
+
+import React from 'react';
+import {View, Text, Image, ScrollView, TextInput} from 'react-native';
+
+const App = () => {
+  return (
+    <ScrollView>
+      <Text>Some text</Text>
+      <View>
+        <Text>Some more text</Text>
+        <Image
+          source={{
+            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+          }}
+          style={{width: 200, height: 200}}
+        />
+      </View>
+      <TextInput
+        style={{
+          height: 40,
+          borderColor: 'gray',
+          borderWidth: 1,
+        }}
+        defaultValue="You can type in me"
+      />
+    </ScrollView>
+  );
+};
+
+export default App;
+
+
+
+
+handling text input:
+
+
+
+import React, {useState} from 'react';
+import {Text, TextInput, View} from 'react-native';
+
+const PizzaTranslator = () => {
+  const [text, setText] = useState('');
+  return (
+    <View style={{padding: 10}}>
+      <TextInput
+        style={{height: 40}}
+        placeholder="Type here to translate!"
+        onChangeText={newText => setText(newText)}
+        defaultValue={text}
+      />
+      <Text style={{padding: 10, fontSize: 42}}>
+        {text
+          .split(' ')
+          .map(word => word && '🍕')
+          .join(' ')}
+      </Text>
+    </View>
+  );
+};
+
+export default PizzaTranslator;
+
+
+
+
+when i enter this:
+pooja pooja pooja 
+it displayes three pizzas:
+🍕 🍕 🍕
+
+
+
+using scrollView:
+
+The ScrollView is a generic scrolling container that can contain multiple components and views. The scrollable items can be heterogeneous,
+and you can scroll both vertically and horizontally (by setting the horizontal property).
+
+This example creates a vertical ScrollView with both images and text mixed together.
+
+import React from 'react';
+import {Image, ScrollView, Text} from 'react-native';
+
+const logo = {
+  uri: 'https://reactnative.dev/img/tiny_logo.png',
+  width: 64,
+  height: 64,
+};
+
+const App = () => (
+  <ScrollView>
+    <Text style={{fontSize: 96}}>Scroll me plz</Text>
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Text style={{fontSize: 96}}>If you like</Text>
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Text style={{fontSize: 96}}>Scrolling down</Text>
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Text style={{fontSize: 96}}>What's the best</Text>
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Text style={{fontSize: 96}}>Framework around?</Text>
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Image source={logo} />
+    <Text style={{fontSize: 80}}>React Native</Text>
+  </ScrollView>
+);
+
+export default App;
+
+
+
+ScrollViews can be configured to allow paging through views using swiping gestures by using the pagingEnabled props. Swiping
+horizontally between views can also be implemented on Android using the ViewPager component.
+
+On iOS a ScrollView with a single item can be used to allow the user to zoom content. Set up the maximumZoomScale and minimumZoomScale 
+props and your user will be able to use pinch and expand gestures to zoom in and out.
+
+The ScrollView works best to present a small number of things of a limited size. All the elements and views of a ScrollView are rendered,
+even if they are not currently shown on the screen. If you have a long list of items which cannot fit on the screen, 
+you should use a FlatList instead. So let's learn about list views next.
+
+
+
+
+
+
+The SectionList component in React Native is used to render a list of sections with distinct headers, where each section contains multiple items. 
+It is essentially an enhanced version of the regular FlatList, providing a way to display grouped data with headers for each group.
+
+
+
+import React from 'react';
+import {SectionList, StyleSheet, Text, View} from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 22,
+  },
+  sectionHeader: {
+    paddingTop: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(247,247,247,1.0)',
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+});
+
+const SectionListBasics = () => {
+  return (
+    <View style={styles.container}>
+      <SectionList
+        sections={[
+          {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
+          {
+            title: 'J',
+            data: [
+              'Jackson',
+              'James',
+              'Jillian',
+              'Jimmy',
+              'Joel',
+              'John',
+              'Julie',
+            ],
+          },
+        ]}
+        renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
+        renderSectionHeader={({section}) => (
+          <Text style={styles.sectionHeader}>{section.title}</Text>
+        )}
+        keyExtractor={item => `basicListEntry-${item}`} 
+      />
+    </View>
+  );
+};
+
+export default SectionListBasics;
+
+
+
