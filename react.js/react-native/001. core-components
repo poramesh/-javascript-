@@ -83,6 +83,25 @@ const App = () => (
 
 
 
+Safe Area View
+
+Ensures content is not overlapped by devices' hardware features (e.g., notch, home indicator).
+
+
+import { SafeAreaView, Text } from 'react-native';
+
+const SafeAreaContent = () => {
+  return (
+    <SafeAreaView>
+      <Text>This content is inside the safe area!</Text>
+    </SafeAreaView>
+  );
+};
+
+export default SafeAreaContent;
+
+
+
 
 
 FlatList
