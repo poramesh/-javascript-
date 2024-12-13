@@ -11,32 +11,51 @@ Over-the-air updates.
 Expo Router and File-Based Routing
 Expo Router simplifies navigation with a file-based routing system.
 
-Setup:
 
-Install Expo CLI: npm install -g expo-cli
+Setting Up the Environment
 
-Create a new project: npx create-expo-app my-app
 
-Navigate to the project directory and start the development server:
 
-cd my-app
-npm start
+Create a New Expo Project: Run the following command to create a new Expo project
+
+npx create-expo-app my-app
 
 
 
 
-Setup File-Based Routing:
 
-Install dependencies: npx expo install expo-router react-native-screens react-native-safe-area-context expo-status-bar
+Install dependencies: 
 
-Modify package.json:
+npx expo install expo-router react-native-screens react-native-safe-area-context expo-status-bar
+
+//These dependencies enable features like file-based routing, safe area handling, deep linking, device constants, and status bar management.
+
+
+
+
+Modify entry point, package.json:
 
 {
   "main": "expo-router/entry"
 }
 
+Modified the main field in package.json to use expo-router for file-based routing
 
-Create a new folder app and add route files:
+
+
+
+
+setup the initial files by Creatin a folder named app and within it, a file named layout.jsx to handle the layout for the application
+
+app/layout.jsx
+
+import { Slot } from 'expo-router';
+
+export default function Layout() {
+    return <Slot />;
+}
+
+
 
 app/index.js:
 
@@ -64,6 +83,31 @@ const styles = StyleSheet.create({
     },
 });
 
+
+
+
+
+
+Modify App Configuration:
+
+Set up deep linking in the app.json by adding a scheme field:
+
+{
+  "expo": {
+    "scheme": "my-app-scheme"
+  }
+}
+
+
+
+staring the app:
+
+This will start the metro bundler, and a QR code will appear. Use the Expo Go app (available on iOS/Android) to scan the QR code and view the app on your mobile device
+
+npx expo start -c
+
+
+
 Using Tailwind-like Styling with NativeWind:
 
 import { Text, View } from 'react-native';
@@ -78,18 +122,35 @@ const App = () => (
 
 
 
-Notes on Setting Up NativeWind and Tailwind CSS with Expo for React Native
+styling with Setting Up NativeWind and Tailwind CSS with Expo for React Native
 
-Installing NativeWind and Tailwind CSS 
 
-Install NativeWind: npm install nativewind
-Install Tailwind CSS as a Dev Dependency: Run the command: npm install --save-dev tailwindcss
-Initialize Tailwind CSS: Run the following command to generate the tailwind.config.js file: npx tailwindcss init
+Install NativeWind: 
+
+npm install nativewind
+
+
+
+Install Tailwind CSS as a Dev Dependency: 
+
+npm install --save-dev tailwindcss
+
+
+
+
+Initialize Tailwind CSS: 
+Run the following command to generate the tailwind.config.js file: 
+
+npx tailwindcss init
+
+
 
 Configuring Tailwind
 Update tailwind.config.js:
 
 Add the following content configuration to track files for styling:
+
+// tailwind.config.js
 
 content: [
     "./app/**/*.{js,jsx,ts,tsx}",
@@ -105,16 +166,13 @@ module.exports = {
 };
 
 
-Restart the Server:
-After modifying the Babel configuration, restart the server by pressing R in the terminal.
 
-Applying Tailwind Classes
-Replace Stylesheet with Tailwind Classes:
+Applying Tailwind Classes:
 
-Remove the StyleSheet imports and definitions in your index.jsx file.
+Replace Stylesheet with Tailwind Classes so remove the StyleSheet imports and definitions in your index.jsx file.
+Replace style attributes with Tailwind's className. 
 
-Replace style attributes with Tailwind's className. For example:
-
+For example:
 <Text className="text-3xl text-center">Hello World</Text>
 
 
@@ -125,6 +183,9 @@ Setting Up a Tailwind Theme
 Extend Colors and Fonts in Tailwind Configuration:
 
 Add custom colors and fonts in tailwind.config.js under the extend section:
+
+ 
+//tailwind.config.js
 
 theme: {
     extend: {
@@ -142,8 +203,8 @@ Import Assets and Fonts:
 
 Download the required assets (e.g., fonts, images) and place them in the assets folder.
 Create a constants folder to manage imports for easier access.
-Loading Fonts with Expo
 
+Loading Fonts with Expo
 Install Fonts:
 
 Use the useFonts hook from expo-font to load the fonts:
@@ -165,9 +226,99 @@ useEffect(() => {
 }, [fontsLoaded, error]);
 
 
-Final Steps
+and now you may use Tailwind classes in your components to apply styles dynamically.
 
-Test Tailwind Classes:
 
-Use Tailwind classes in your components to apply styles dynamically.
-Start Building Your App:
+
+
+
+
+
+
+
+
+
+
+
+File-Based Routing in Expo (like Next.js)
+
+
+Creating Screens:
+
+Create a new file index.jsx for the homepage:
+
+import { Text, View } from 'react-native';
+
+export default function Index() {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Aura</Text>
+        </View>
+    );
+}
+
+
+Creating Navigation (Links):
+
+To navigate between screens, use the Link component from expo-router:
+
+import { Link } from 'expo-router';
+
+export default function Index() {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Link href="/profile">Go to Profile</Link>
+        </View>
+    );
+}
+
+When users click the "Go to Profile" link, they are directed to the /profile screen.
+
+
+Adding More Screens:
+
+To create a profile screen, create profile.jsx in the app folder:
+
+export default function Profile() {
+    return <Text>This is the profile page!</Text>;
+}
+
+
+
+Navigation with Stack in Expo Router
+
+
+For more complex navigation (like in multi-page apps), you can use Stack navigation:
+
+Using Stack.Screen for navigation:
+
+import { Stack } from 'expo-router';
+
+export default function Layout() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="profile" />
+        </Stack.Navigator>
+    );
+}
+
+
+Stack.Navigator wraps all your screens, and Stack.Screen defines the individual pages, just like how you’d do it in React Router (for web).
+
+
+Navigating Between Screens:
+
+Inside index.jsx, use Link to navigate:
+
+
+import { Link } from 'expo-router';
+
+export default function Index() {
+    return (
+        <View>
+            <Link href="/profile">Go to Profile</Link>
+        </View>
+    );
+}
+
