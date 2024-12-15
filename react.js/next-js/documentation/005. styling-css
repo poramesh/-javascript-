@@ -1,0 +1,241 @@
+Next.js provides several ways to use CSS in your application, scuh as
+
+CSS Modules
+Global CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+External Stylesheets
+
+
+
+CSS Modules
+
+CSS Modules locally scope CSS by generating unique class names. This allows you to use the same
+class in different files without worrying about collisions.
+To start using CSS Modules, create a new file with the extension .module.css and import it into any component inside the app directory:
+
+app/blog/styles.module.css
+
+.blog {
+  padding: 24px;
+}
+
+app/blog/page.tsx
+
+import styles from './styles.module.css'
+ 
+export default function Page({ children }: { children: React.ReactNode }) {
+  return <main className={styles.blog}>{children}</main>
+}
+
+
+Global CSS
+
+You can use global CSS to apply styles across your application.
+To use global styles, create a new CSS file, for example app/global.css:
+
+app/global.css
+
+body {
+  padding: 20px 20px 60px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+Import the file in the root layout (app/layout.js) to apply the styles to every route in your application:
+
+app/layout.tsx
+
+// These styles apply to every route in the application
+import './global.css'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+
+Good to know: Global styles can be imported into any layout, page, or component inside the app directory. However, since Next.js uses React's built-in 
+support for stylesheets to integrate with Suspense. This built-in support currently does not remove stylesheets as you navigate between routes. 
+Therefore, we recommend using global styles for truly global CSS, and CSS Modules for scoped CSS.
+
+
+
+
+
+Tailwind CSS
+
+Tailwind CSS is a utility-first CSS framework that integrates seamlessly with Next.js.
+
+Installing Tailwind: To start using Tailwind, install the Tailwind CSS packages and run the init command to generate both the 
+tailwind.config.js and postcss.config.js files
+
+Terminal
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+Configuring Tailwind
+Inside your Tailwind configuration file, add paths to the files that will use the Tailwind class names:
+
+tailwind.config.ts
+
+import type { Config } from 'tailwindcss'
+ 
+const config: Config = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    // Or if using `src` directory:
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+export default config
+
+
+
+//The glob pattern './app/**/*.{js,ts,jsx,tsx,mdx}' means "match any .js, .ts, .jsx, .tsx, or .mdx file inside the app
+directory and all its subdirectories, regardless of depth."
+
+>This ./app/ part specifies the base directory to start from.
+it means inside the app folder (relative to where the pattern is being used, typically the project root or configuration file).
+
+>The ** is a glob pattern that means "match any directory, at any level."
+
+> The * symbol is used to match any filename. It matches any filename with the extension specified after the dot (for example, .js, .ts, .jsx, etc.).
+
+The following files would be matched by this pattern:
+app/index.js
+app/components/Header.tsx
+app/pages/about.mdx
+app/utils/helpers.ts
+app/subfolder/file.jsx
+app/subfolder/deep/another-file.tsx
+
+
+
+
+
+Using Tailwind
+
+Add the Tailwind directives to your Global Stylesheet:
+
+app/globals.css
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+///**************
+@tailwind base; will be replaced with Tailwind’s reset styles and base styles.
+@tailwind components; will be replaced with predefined components like buttons, forms, etc.
+@tailwind utilities; will be replaced with utility classes like text-center, p-4, etc.
+
+
+in this file below we havent used Tailwind CSS explicitly. It only imports a global CSS file (./globals.css), but Tailwind (if used) would typically
+be included in this file (or elsewhere in the project) as a CSS framework.
+
+The metadata object is an object that holds information about the page, like its title and description. This information is used by Next.js 
+for things like setting the <title> tag in the HTML document, providing page descriptions for search engines, and controlling other aspects of the document.
+
+
+why type?
+The keyword type is used in TypeScript to import only types (not actual JavaScript code) from a module.
+When you use import type, you're specifically importing the type definitions for Metadata and not the actual value or class.
+
+Why use import type?
+This helps with performance because you're not importing any actual code; you're only bringing in the type definitions.
+It provides better type safety during development, as TypeScript will ensure that the metadata object follows the structure defined by the Metadata type.
+ such as title and description, and that they are of the correct types (e.g., title is a string).
+
+**************/
+
+Then, import the styles in the root layout:
+
+
+app/layout.tsx
+
+import type { Metadata } from 'next'
+import './globals.css'       // These styles apply to every route in the application
+ 
+export const metadata: Metadata = {
+  title: 'Create Next App',
+  description: 'Generated by create next app',
+}
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+
+js equivalent:
+
+import './globals.css'   // These styles apply to every route in the application
+ 
+export const metadata = {
+  title: 'Create Next App',
+  description: 'Generated by create next app',
+}
+ 
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+
+Lastly, you can start writing Tailwind's utility classes in your application.
+
+app/page.tsx
+
+export default function Page() {
+  return <h1 className="text-3xl font-bold underline">Hello, Next.js!</h1>
+}
+
+
+
+
+
+External stylesheets
+
+Stylesheets published by external packages can be imported anywhere in the app directory, including colocated components:
+
+app/layout.tsx
+
+import 'bootstrap/dist/css/bootstrap.css'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className="container">{children}</body>
+    </html>
+  )
+}
+
+External stylesheets must be directly imported from an npm package or downloaded and colocated with
+your codebase. You cannot use <link rel="stylesheet" />.
+
+
