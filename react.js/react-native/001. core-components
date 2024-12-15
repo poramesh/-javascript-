@@ -59,13 +59,59 @@ TouchableOpacity: Reduces opacity when pressed.
 TouchableHighlight: Shows an underlay color when pressed.
 TouchableWithoutFeedback: No visual feedback.
 
-import { TouchableOpacity, Text } from 'react-native';
 
+ex:
+
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+
+// Custom Button Component
 const MyButton = ({ onPress, title }) => (
-    <TouchableOpacity onPress={onPress} style={{ padding: 10, backgroundColor: 'blue' }}>
-        <Text style={{ color: 'white' }}>{title}</Text>
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
 );
+
+// Main App Component
+const App = () => {
+    // Button Press Handler
+    const handlePress = () => {
+        Alert.alert('Button Pressed!', 'You clicked the custom button.');
+    };
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Welcome to My App!</Text>
+            <MyButton onPress={handlePress} title="Click Me" />
+        </View>
+    );
+};
+
+// Styles
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+    },
+    title: {
+        fontSize: 20,
+        marginBottom: 20,
+    },
+    button: {
+        padding: 10,
+        backgroundColor: 'blue',
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        textAlign: 'center',
+    },
+});
+
+export default App;
 
 
 
