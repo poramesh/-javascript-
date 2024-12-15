@@ -184,3 +184,10 @@ Navigation:
 When you navigate from the home screen to the details screen, the details screen is pushed onto the stack.
 Going back will pop the details screen off the stack.
 
+
+
+a lil about metro bundler:
+
+Metro Bundler is a JavaScript bundler designed specifically for React Native projects.
+It packages your code (and its dependencies) into a format that can be run in the app, whether it's for Android, iOS, or the web.
+
