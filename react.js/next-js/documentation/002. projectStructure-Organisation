@@ -1,0 +1,467 @@
+Folder and file conventions
+
+
+
+Top-level folders
+
+Top-level folders are used to organize your application's code and static assets.
+
+Route segments to path segments
+app =>	App Router
+pages	=> Pages Router
+public	=> Static assets to be served
+src	=> Optional application source folder , we could have app and page folder inside src 
+
+
+
+
+Top-level files
+
+Top-level files are used to configure your application, manage dependencies, run middleware, integrate monitoring tools, and define environment variables.
+
+Next.js	
+next.config.js =>	Configuration file for Next.js
+package.json =>	Project dependencies and scripts
+instrumentation.ts =>	OpenTelemetry and Instrumentation file
+middleware.ts	Next.js => request middleware
+.env	=> Environment variables
+.env.local	=> Local environment variables
+.env.production => 	Production environment variables
+.env.development	=> Development environment variables
+.eslintrc.json	=> Configuration file for ESLint
+.gitignore	=> Git files and folders to ignore
+next-env.d.ts	=> TypeScript declaration file for Next.js
+tsconfig.json	=> Configuration file for TypeScript
+jsconfig.json	=> Configuration file for JavaScript
+
+
+
+Routing Files
+
+layout	=> .js .jsx .tsx	 => Layout
+page	=> .js .jsx .tsx	 => Page
+loading	=> .js .jsx .tsx	=> Loading UI
+not-found	=> .js .jsx .tsx	=> Not found UI
+error	=> .js .jsx .tsx	=> Error UI
+global-error	=> .js .jsx .tsx => 	Global error UI
+route	=> .js .ts	=> API endpoint
+template	=> .js .jsx .tsx =>	Re-rendered layout
+default =>	.js .jsx .tsx =>	Parallel route fallback page
+
+
+
+Nested routes
+
+folder	=> Route segment
+folder/folder =>	Nested route segment
+
+
+
+Dynamic routes
+
+[folder]	=> Dynamic route segment
+[...folder] =>	Catch-all route segment
+[[...folder]]	=> Optional catch-all route segment
+
+
+
+Route Groups and private folders
+
+(folder)	=> Group routes without affecting routing
+_folder =>	Opt folder and all child segments out of routing
+
+
+
+Parallel and Intercepted Routes
+
+@folder	=> Named slot
+(.)folder	=> Intercept same level
+(..)folder =>	Intercept one level above
+(..)(..)folder	=>Intercept two levels above
+(...)folder	=> Intercept from root
+
+
+Metadata file conventions
+
+App icons
+
+favicon	=> .ico	=> Favicon file
+icon	=> .ico .jpg .jpeg .png .svg	=> App Icon file
+icon	=> .js .ts .tsx => 	Generated App Icon
+apple-icon	=> .jpg .jpeg, .png =>	Apple App Icon file
+apple-icon	=> .js .ts .tsx	=> Generated Apple App Icon
+
+
+Open Graph and Twitter images
+
+opengraph-image	=> .jpg .jpeg .png .gif =>	Open Graph image file
+opengraph-image	=> .js .ts .tsx	=> Generated Open Graph image
+twitter-image	=> .jpg .jpeg .png .gif =>	Twitter image file
+twitter-image	=> .js .ts .tsx	=> Generated Twitter image
+
+
+SEO(search engine optimization)
+
+sitemap => 	.xml =>	Sitemap file
+sitemap	=> .js .ts	=> Generated Sitemap
+robots	=> .txt => 	Robots file
+robots	=> .js .ts	=> Generated Robots file
+
+
+
+
+
+
+Component hierarchy
+
+The React components defined in special files of a route segment are rendered in a specific hierarchy:
+
+layout.js
+template.js
+error.js (React error boundary)
+loading.js (React suspense boundary)
+not-found.js (React error boundary)
+page.js or nested layout.js
+
+
+for more go to this link; https://nextjs.org/docs/app/getting-started/project-structure 
+the pics helps you understand it better
+
+i will try my best to put it here.
+
+App (Root)
+└── ----layout.js
+    ├── template.js
+    │── loading.js (React Suspense Boundary)
+    │── error.js (React Error Boundary)
+    │---not-found.js (React Error Boundary for 404 pages)
+    │── page.js or nested layout.js (Child Pages or Nested Routes)
+
+
+component hierarcy.
+
+<Layout>
+<Template>
+<ErrorBoundary fallback = {<Error />}>
+<Suspense fallback={<Loading />}>
+<Page />
+</ErrorBpundary>
+</Tempalate>
+</layout>
+
+
+
+1. <Layout>:
+
+Purpose:
+The root-level component that provides a consistent layout for your application. This might include elements like headers, sidebars, and footers.
+It wraps all other components to ensure a common structure.
+
+Example Content:
+
+const Layout = ({ children }) => (
+  <div>
+    <Header />
+    <Sidebar />
+    <main>{children}</main>
+    <Footer />
+  </div>
+);
+
+
+2. <Template>:
+
+Purpose:
+Acts as a flexible wrapper for child components, such as <Page> or nested routes.
+Useful when you want to add a placeholder for rendering different pages dynamically or applying additional layout structures.
+
+Example Content:
+
+const Template = ({ children }) => (
+  <div className="template-wrapper">
+    {children}
+  </div>
+);
+
+
+
+3. <ErrorBoundary fallback={<Error />}>:
+
+
+Purpose:
+A React Error Boundary that catches runtime errors in its child components (like <Page />) and prevents the entire app from crashing.
+When an error is caught, it displays the specified fallback component (in this case, <Error />).
+
+Props:
+fallback: The UI to display when an error occurs.
+
+Example Content:
+import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+
+
+4. <Suspense fallback={<Loading />}>:
+
+Purpose:
+A React Suspense boundary that handles asynchronous rendering.
+If the child component (like <Page />) is not ready (e.g., waiting for lazy-loaded code or fetched data), 
+the fallback component (in this case, <Loading />) is displayed.
+
+Props:
+fallback: The UI to show while loading.
+
+Example Content:
+
+const Loading = () => <div>Loading...</div>;
+
+5. <Page />:
+
+Purpose:
+Represents the actual content for the current route or page.
+It’s the innermost component in this hierarchy and typically fetches or renders specific data for a given route.
+
+Example Content:
+
+const Page = () => <div>Welcome to the Page!</div>;
+
+Flow of Execution
+
+<Layout>:
+Sets the global layout for the app (e.g., header, sidebar, footer).
+Wraps the <Template> and its child components.
+
+<Template>:
+Serves as an intermediary layer for additional structure or styling around routes or pages.
+<ErrorBoundary>:
+Monitors <Suspense> and <Page /> for runtime errors.
+If an error occurs, it renders the <Error /> fallback.
+<Suspense>:
+Handles asynchronous loading for <Page />.
+While waiting, it displays the <Loading /> fallback.
+<Page />:
+The actual content for the current route.
+
+
+When a page loads:
+The app renders the <Layout> for consistent structure.
+Inside the <Layout>, the <Template> wraps the page content.
+If there’s an error in <Page />, the <ErrorBoundary> catches it and displays <Error />.
+If <Page /> is loading data or code asynchronously, <Suspense> shows <Loading /> until ready.
+Once everything is ready, <Page /> renders the final content.
+
+
+
+when it is nested it looks liek this:
+
+In a nested route, the components of a segment will be nested inside the components of its parent segment.
+
+
+
+dashboard 
+└── ----layout.js
+    │── loading.js 
+    │── error.js 
+    ├── settings.js
+            ├── layout.js
+            ├── error.js
+            │---loadnig.js 
+            │── page.js 
+
+
+component hierarcy.
+
+<Layout>
+<ErrorBoundary fallback = {<Error />}>
+<Suspense fallback={<Loading />}>
+<Layout>
+<ErrorBoundary fallback = {<Error />}>
+<Suspense fallback={<Loading />}>
+<Page />
+</Suspense>
+</ErrorBoundary>
+</Layout>
+</ErrorBpundary>
+</layout>
+
+
+
+
+
+
+
+Organizing Your Project in Next.js
+
+
+Next.js is flexible about how you organize and colocate your project files, but it does provide useful features to guide your 
+organization. The app directory and file conventions play a key role in structuring your project.
+
+1. Colocation in Next.js
+
+Route Structure: In the app directory, nested folders define route segments, and each folder corresponds to a route segment in the URL.
+
+Important Rule: A route is not publicly accessible unless a page.js or route.js file is added in the respective folder. Even if a route 
+is accessible, only the content returned by page.js or route.js is sent to the client.
+
+Route Not Accessible Without page.js or route.js
+
+/app
+  ├── folder1
+  │    ├── otherFile.js    // Not accessible, no page.js or route.js
+  │
+  └── folder2
+       ├── page.js         // Publicly accessible route
+
+Explanation: Folder2 will expose a route only after page.js is added.
+
+Files That Make Routes Publicly Accessible
+
+/app
+  ├── folder1
+  │    ├── route.js        // Publicly accessible route
+  │
+  └── folder2
+       ├── page.js         // Publicly accessible route
+
+Explanation: Adding a page.js or route.js to the folder exposes the route publicly.
+
+Files in Folder Are Not Routable Without page.js or route.js
+
+/app
+  ├── folder1
+  │    ├── component.js    // Not routable, no page.js or route.js
+  │    ├── util.js         // Not routable
+  │
+  └── folder2
+       ├── page.js         // Publicly accessible route
+
+Explanation: Even if there are project files inside a folder, without a page.js or route.js, the folder contents won’t be routable.
+
+2. Private Folders
+
+Private Folders: A folder can be marked as private by prefixing it with an underscore _ (e.g., _folderName). This tells Next.js that the
+folder and its contents should not be considered by the routing system.
+
+Example Folder Structure Using Private Folders
+
+/app
+  ├── _privateFolder
+  │    ├── privateFile.js    // Not routable
+  │
+  └── folder2
+       ├── page.js           // Publicly accessible route
+
+
+Good to Know:
+
+Private folders help you organize internal files (e.g., UI logic, utilities).
+They prevent potential conflicts with Next.js' routing system.
+
+
+3. Route Groups
+
+Route Groups: Create route groups by wrapping a folder in parentheses (folderName). Route groups are not included in the URL path but are used for organizational purposes.
+
+Example Folder Structure with Route Groups
+
+/app
+  ├── (admin)
+  │    ├── page.js          // URL: /admin/page
+  │    ├── dashboard.js
+  │
+  └── (user)
+       ├── page.js          // URL: /user/page
+
+Good to Know:
+Route groups are useful for organizing routes by site sections or team.
+You can have multiple layouts within the same route segment.
+
+
+4. Using the src Directory
+
+Optional src Directory: You can store application code inside a src directory to separate your app logic from project configuration files.
+Example Folder Structure with src Directory
+
+/src
+  ├── app
+  │    ├── page.js
+  │    ├── layout.js
+  │
+  └── components
+       ├── Header.js
+       ├── Sidebar.js
+
+
+Good to Know:
+The src directory helps you organize application files separately from configuration and root files.
+
+
+5. Common Strategies for Project Organization
+
+Here are some common strategies for organizing your project:
+
+Store Project Files Outside of the app Directory
+Store all shared application code (like components, hooks, utilities) outside the app directory. Keep app purely for routing purposes.
+
+/components
+  ├── Header.js
+  ├── Sidebar.js
+/app
+  ├── dashboard
+  │    ├── page.js
+  └── profile
+       ├── page.js
+
+Store Project Files Inside the app Directory
+Store application code inside the app directory itself, alongside routing logic.
+
+
+/app
+  ├── dashboard
+  │    ├── page.js
+  │    ├── Header.js
+  └── profile
+       ├── page.js
+       ├── Sidebar.js
+
+
+
+Split Project Files by Feature or Route
+Split files by feature or route for better organization. Place route-specific code inside the route segments.
+
+
+/app
+  ├── dashboard
+  │    ├── page.js
+  │    ├── Header.js
+  │    ├── utils.js
+  └── profile
+       ├── page.js
+       ├── ProfileHeader.js
+
+
+Good to Know:
+Private Folders: While not a framework convention, using private folders helps with internal file organization and avoids naming conflicts.
+Route Groups: Using route groups allows for better organization of routes, especially when working with multiple layouts or grouped routes.
+
