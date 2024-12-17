@@ -112,6 +112,11 @@ x: number and y: number specify the parameter types.
 : number after the parentheses specifies the return type.
 
 
+
+const add = (x: number, y: number): number => {
+  return x + y;
+};
+
 2. Optional Parameters
 Use ? to make a parameter optional.
 
