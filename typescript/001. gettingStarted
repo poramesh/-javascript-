@@ -1,0 +1,231 @@
+What is TypeScript?
+TypeScript is a superset of JavaScript that adds static typing.
+It compiles (or "transpiles") into plain JavaScript, which browsers and Node.js understand.
+It helps catch errors at compile time instead of runtime.
+
+
+Prerequisites
+Basic knowledge of JavaScript (variables, functions, objects, arrays, and loops).
+Node.js and npm installed to run TypeScript code locally.
+
+To check if Node.js and npm are installed, run:
+
+node -v
+npm -v
+
+Lesson 1: Setting Up TypeScript
+
+1. Install TypeScript
+Install TypeScript globally using npm:
+
+npm install -g typescript
+
+Verify the installation:
+
+tsc --version
+
+2. Set up a TypeScript Project
+Create a new folder for your project:
+
+mkdir typescript-learning
+cd typescript-learning
+
+Initialize the project with a TypeScript configuration file:
+tsc --init //This creates a tsconfig.json file, which contains the settings for your TypeScript project.
+
+Create a new file: index.ts (the .ts extension is for TypeScript files).
+
+
+3. Compile TypeScript
+Write this in your index.ts file:
+
+let message: string = "Hello, TypeScript!";
+console.log(message);
+
+To compile the file into JavaScript:
+tsc index.ts
+
+This generates an index.js file. Run it with Node.js:
+node index.js
+
+You should see: Hello, TypeScript!
+
+
+
+
+Lesson 2: Basic Types
+
+1. Type Annotations
+In TypeScript, you can explicitly declare the type of a variable.
+
+let name: string = "Alice";
+let age: number = 30;
+let isStudent: boolean = true;
+
+console.log(name, age, isStudent);
+
+//
+string: For text values.
+number: For numeric values.
+boolean: For true/false.
+
+
+
+2. Type Inference
+TypeScript can infer the type based on the value you assign.
+
+let city = "London"; // Type inferred as string
+let year = 2024;     // Type inferred as number
+
+
+3. Arrays
+You can define arrays with types:
+
+let numbers: number[] = [1, 2, 3, 4];
+let names: string[] = ["Alice", "Bob", "Charlie"];
+
+Alternative syntax: let numbers: Array<number> = [1, 2, 3];
+
+
+4. Any Type
+The any type allows any value but should be avoided when possible because it disables TypeScript's benefits.
+
+let anything: any = "Hello";
+anything = 10;
+
+
+
+
+
+
+Lesson 3: Functions
+
+1. Function Types
+You can specify the types for parameters and return values.
+
+function add(x: number, y: number): number {
+  return x + y;
+}
+
+console.log(add(2, 3)); // Output: 5
+x: number and y: number specify the parameter types.
+: number after the parentheses specifies the return type.
+
+
+2. Optional Parameters
+Use ? to make a parameter optional.
+
+function greet(name: string, age?: number): void {
+  console.log(`Hello, ${name}`);
+  if (age) {
+    console.log(`You are ${age} years old.`);
+  }
+}
+greet("Alice");       // OK
+greet("Bob", 25);     // OK
+
+
+3. Default Parameters
+You can provide default values for parameters:
+
+function greet(name: string, greeting: string = "Hello") {
+  console.log(`${greeting}, ${name}`);
+}
+
+greet("Alice");                // Output: Hello, Alice
+greet("Bob", "Good morning");  // Output: Good morning, Bob
+
+
+
+
+
+
+Lesson 4: Objects and Interfaces
+
+1. Type for Objects
+You can define an object with a specific type structure:
+
+let user: { name: string; age: number } = {
+  name: "Alice",
+  age: 30,
+};
+
+console.log(user.name); // Output: Alice
+
+2. Interfaces
+An interface is a cleaner way to define object types.
+
+interface User {
+  name: string;
+  age: number;
+}
+
+let user: User = {
+  name: "Alice",
+  age: 30,
+};
+
+You can reuse User as a type for multiple objects.
+
+
+
+
+Lesson 5: Union and Literal Types
+
+1. Union Types
+Union types allow a variable to have multiple types.
+
+let id: string | number;
+id = "123";
+id = 456;
+
+
+2. Literal Types
+Literal types allow a value to be a specific string, number, or boolean.
+
+type Direction = "up" | "down" | "left" | "right";
+
+let move: Direction;
+
+move = "up";    // OK
+move = "right"; // OK
+// move = "forward"; ❌ Error: Not assignable to type 'Direction'.
+
+
+Lesson 6: Generics
+
+Generics allow you to write reusable code that works with different types.
+
+function identity<T>(value: T): T {
+  return value;
+}
+
+console.log(identity<string>("Hello")); // Output: Hello
+console.log(identity<number>(123));     // Output: 123
+
+Here:
+
+<T> is a generic type placeholder.
+identity works for any type (string, number, etc.).
+
+
+Lesson 7: Type Aliases
+Type Aliases let you create custom type names for complex types.
+
+1. Basic Example
+
+type Point = {
+  x: number;
+  y: number;
+};
+
+let point: Point = { x: 10, y: 20 };
+
+2. Using Union Types with Type Aliases
+
+type ID = string | number;
+
+let userId: ID;
+UserId = "abc123"; // OK
+userId = 123;      // OK
+
