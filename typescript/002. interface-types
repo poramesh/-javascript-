@@ -1,0 +1,216 @@
+
+Difference between interface and type
+
+
+
+Declaration Merging
+
+Interface allows for declaration merging. This means that if you define the same interface multiple times, TypeScript will 
+automatically merge their definitions together.
+This is especially useful when extending existing interfaces, like when working with external libraries or frameworks.
+
+Example of Declaration Merging with Interface:
+
+interface Person {
+  name: string;
+}
+
+// Another declaration of the same interface
+interface Person {
+  age: number;
+}
+
+const person: Person = {
+  name: 'Alice',
+  age: 25
+};
+// No error because TypeScript merged the interface definitions
+
+Type, on the other hand, does not support declaration merging. If you try to declare 
+the same type twice, TypeScript will throw an error.
+
+Example of Error with Type:
+
+type Person = {
+  name: string;
+};
+
+// Trying to define 'Person' again
+type Person = {
+  age: number;
+};  // Error: Duplicate identifier 'Person
+
+
+
+
+2. Extending
+Interface can extend other interfaces using the extends keyword. This allows you to create
+new interfaces that inherit the properties of other interfaces.
+
+Example of Extending Interfaces:
+
+interface Animal {
+  name: string;
+}
+
+interface Dog extends Animal {
+  breed: string;
+}
+
+const dog: Dog = {
+  name: 'Rex',
+  breed: 'Golden Retriever'
+};
+
+Here, Dog extends Animal, which means it has all the properties of Animal (name), plus its own (breed).
+
+Type can also extend other types using the & (intersection) operator. It allows you to combine multiple types into one.
+
+Example of Extending Types:
+
+type Animal = {
+  name: string;
+};
+
+type Dog = Animal & {
+  breed: string;
+};
+
+const dog: Dog = {
+  name: 'Rex',
+  breed: 'Golden Retriever'
+};
+Here, Dog is the intersection of Animal and a new type { breed: string }, combining the properties of both.
+
+
+
+
+3. Type Alias (Union, Intersection, etc.)
+Type is more flexible than interface because it can represent unions, intersections, and even mapped types,
+which is not something an interface can do directly.
+
+Example of Union Type (with Type):
+
+type ID = string | number;  // Union type (ID can be either string or number)
+
+let userId: ID = 'abc123';  // Valid
+userId = 12345;             // Also valid
+
+Example of Intersection Type (with Type):
+
+type Address = {
+  street: string;
+  city: string;
+};
+
+type Contact = {
+  phone: string;
+  email: string;
+};
+
+type Person = Address & Contact;  // Intersection type
+
+const person: Person = {
+  street: '123 Main St',
+  city: 'Springfield',
+  phone: '555-5555',
+  email: 'person@example.com'
+};
+
+Here, Person is an intersection of Address and Contact, so it must have all properties from both types.
+
+Interface cannot directly handle union types or intersection types in the same way. While you can extend interfaces to
+achieve something similar, union and intersection types are unique to type.
+
+
+
+
+4. Use Case Comparison
+
+Interface: Best for Object-Oriented Programming and Extending
+Interfaces are primarily used for describing the shape of objects and are designed to be more extensible and flexible in 
+object-oriented scenarios. They are commonly used when defining classes, since classes can implement an interface.
+
+Example with Interface for Object-Oriented Programming:
+
+interface Shape {
+  area(): number;
+}
+
+class Circle implements Shape {
+  constructor(public radius: number) {}
+
+  area() {
+    return Math.PI * this.radius ** 2;
+  }
+}
+
+const circle = new Circle(5);
+console.log(circle.area());  // Output: 78.53981633974483
+
+
+Type: Best for Complex or Flexible Types (Union, Intersection)
+type is more versatile, as it can represent not only objects but also unions, intersections, tuples, and other complex types. 
+It’s great for cases where you need more flexibility in the shape of the data.
+
+Example with Type for Union Types:
+
+type Status = 'active' | 'inactive';  // Union type
+
+function changeStatus(status: Status) {
+  console.log(status);
+}
+
+changeStatus('active');  // Valid
+changeStatus('inactive');  // Valid
+// changeStatus('pending');  // Error: Argument of type 'pending' is not assignable to parameter of type 'Status'.
+
+
+5. Inheritance
+Interface can be used to define how classes or objects should look. It’s a cornerstone of TypeScript's object-oriented programming 
+features, where interfaces are often implemented by classes.
+
+interface Animal {
+  sound: string;
+  makeSound(): void;
+}
+
+class Dog implements Animal {
+  sound = 'bark';
+  makeSound() {
+    console.log(this.sound);
+  }
+}
+
+const dog = new Dog();
+dog.makeSound();  // Output: bark
+
+Type can also define structures, but it cannot be implemented by a class directly. You can only use type to define a shape or structure that
+classes can follow indirectly, typically with type assertions or other constructs.
+
+6. Syntax Differences
+Interface Syntax:
+
+interface Person {
+  name: string;
+  age: number;
+}
+
+Type Alias Syntax:
+
+type Person = {
+  name: string;
+  age: number;
+};
+Both are similar in syntax when used to define object shapes, but type is more versatile as it can handle more complex structures.
+
+
+
+
+Use interface when you want to define the shape of an object or class, especially when dealing with
+object-oriented programming (e.g., extending or implementing).
+Use type when you need more flexibility, such as working with unions, intersections, or 
+complex types that go beyond just object shapes.
+
+In most cases where you're defining object shapes, either one can work. But for flexibility in
+combining types and advanced scenarios, type is often preferred
