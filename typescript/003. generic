@@ -1,0 +1,169 @@
+typescript
+
+
+Generics in TypeScript (and programming in general) allow you to create reusable code that works with multiple types while
+maintaining type safety. Instead of specifying a particular type (e.g., string, number, boolean),
+you can define a placeholder type that is determined when the code is used.
+
+Generics are denoted using type parameters like <T> (where T is a commonly used name for "type"). 
+They allow you to write code that is flexible, reusable, and type-safe.
+
+
+Generics help you:
+
+Write reusable logic that works with any type.
+Maintain type safety by avoiding any (which disables type checking).
+Avoid code duplication while keeping strong typing.
+
+
+1. Generic Function
+
+Here’s a simple example of a generic function.
+
+function identity<T>(value: T): T {
+  return value;
+}
+
+console.log(identity<string>("Hello")); // Output: Hello
+console.log(identity<number>(42));      // Output: 42
+
+Explanation:
+
+<T> is the generic type parameter (like a placeholder for a type).
+value: T specifies that the input parameter value can be of any type T.
+The return type T ensures that the function returns a value of the same type as the input.
+
+
+When calling identity:
+We specify the type explicitly using <string> or <number>.
+TypeScript infers that the return type will match the type of the input.
+
+
+2. Generics with Arrays
+
+A function that returns the first element of an array:
+
+function getFirstElement<T>(array: T[]): T {
+  return array[0];
+}
+
+console.log(getFirstElement<string>(["apple", "banana"])); // Output: apple
+console.log(getFirstElement<number>([1, 2, 3]));           // Output: 1
+
+
+Explanation:
+T[] means the function accepts an array of type T.
+The return type T ensures the returned element is of the same type as the array’s elements.
+
+
+3. Generics with Interfaces
+
+You can use generics in interfaces to make them reusable:
+
+interface Box<T> {
+  value: T;
+}
+
+const numberBox: Box<number> = { value: 42 };
+const stringBox: Box<string> = { value: "Hello" };
+
+console.log(numberBox.value); // Output: 42
+console.log(stringBox.value); // Output: Hello
+
+
+Explanation:
+Box<T> is a generic interface where T is a type parameter.
+value: T means the value property can be of any type T.
+When creating objects, T is replaced with number or string.
+
+
+4. Generics in React Components
+
+You can define React components with generics for type-safe props.
+
+type ListProps<T> = {
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
+};
+
+function List<T>({ items, renderItem }: ListProps<T>) {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{renderItem(item)}</li>
+      ))}
+    </ul>
+  );
+}
+
+// Usage
+<List items={[1, 2, 3]} renderItem={(num) => <strong>{num}</strong>} />;
+<List items={["A", "B", "C"]} renderItem={(str) => <em>{str}</em>} />;
+
+
+5. Generic Constraints
+
+You can add constraints to generics so that they only accept certain types.
+
+function printLength<T extends { length: number }>(value: T): void {
+  console.log(value.length);
+}
+
+printLength("Hello");       // OK: String has length
+printLength([1, 2, 3]);     // OK: Array has length
+printLength({ length: 10 }); // OK: Object has length
+
+// printLength(42);          ❌ Error: number does not have a length property
+
+Explanation:
+
+T extends { length: number } means T must be a type with a length property.
+This allows you to call .length on value without errors.
+
+
+
+6. Generics with Classes
+
+You can create classes that work with multiple types.
+
+class Storage<T> {
+  private data: T;
+
+  constructor(initialData: T) {
+    this.data = initialData;
+  }
+
+  getData(): T {
+    return this.data;
+  }
+
+  setData(newData: T): void {
+    this.data = newData;
+  }
+}
+
+const numberStorage = new Storage<number>(10);
+numberStorage.setData(42);
+console.log(numberStorage.getData()); // Output: 42
+
+const stringStorage = new Storage<string>("Hello");
+console.log(stringStorage.getData()); // Output: Hello
+
+
+
+7. Generics with Promises
+
+Generics help type the result of a promise.
+
+function fetchData(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve("Data loaded!"), 1000);
+  });
+}
+
+fetchData().then((data) => console.log(data)); // Output: Data loaded!
+
+Here:
+Promise<string> means the promise resolves with a string value.
+
+
