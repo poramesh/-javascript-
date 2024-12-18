@@ -13,7 +13,7 @@ We'll use React with TypeScript to build the app. You can create a new React pro
 2. Creating the Project
 Let's start by setting up the project using Create React App.
 
-npx create-react-app todo-app --template typescript
+npx create-react-app@latest todo-app --template typescript
 cd todo-app
 
 This will create a new React project with TypeScript. Now, let’s start building the Todo App.
@@ -230,7 +230,7 @@ const TodoApp: React.FC = () => {
 
   // Add a new todo
   const addTodo = () => {
-    if (newTodoText.trim()) {
+    if (newTodoText.trim()) { //This means it strips off any spaces, tabs, or line breaks from the start and end of the string, " Hello World ".trim() would result in "Hello World".
       const newTodo: Todo = {
         id: Date.now(),  // Using the current timestamp as the ID
         text: newTodoText,
