@@ -160,4 +160,23 @@ This way, you can control how functions (or other properties) are included in th
 
 
 
+Key Differences
+Arrays ([]):
+
+Store multiple values.
+Example:
+
+Users = [{id: "12", name: "Pooja"}, {id: "13", name: "Aki"}]
+Here, Users[0] is {id: "12", name: "Pooja"}, and Users[1] is {id: "13", name: "Aki"}.
+
+
+Comma-separated expressions (()):
+
+Only the last value is assigned to the variable.
+Example:
+Users = ({id: "12", name: "Pooja"}, {id: "13", name: "Aki"});
+console.log(Users); // {id: "13", name: "Aki"}
+
+
+
 
