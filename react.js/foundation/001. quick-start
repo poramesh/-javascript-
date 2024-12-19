@@ -397,7 +397,28 @@ function MyButton() {
 Notice how onClick={handleClick} has no parentheses at the end! Do not call the event handler function: you only need to pass it down. 
 React will call your event handler when the user clicks the button.
 
+********
+Do not include parentheses (i.e., onClick={handleClick()}), because doing so will immediately invoke the function during rendering, instead of waiting for the button click.
 
+There are cases where you might need to invoke a function with arguments or wrap it in an anonymous function. In such cases, you use an arrow function:
+
+Example with Arguments:
+
+function MyButton() {
+  function handleClick(message) {
+    console.log(message);
+  }
+
+  return (
+    <button onClick={() => handleClick('Button was clicked!')}>
+      Click me
+    </button>
+  );
+}
+Here, the arrow function ensures handleClick('Button was clicked!') is executed only when the button is clicked, not during rendering.
+
+
+**********
 
 Updating the screen 
 
