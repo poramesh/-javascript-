@@ -40,19 +40,44 @@ Dates, RegExps, undefined, etc.
 
 JSON:
 
-{
-  "name": "Alice",
-  "age": 25,
-  "isStudent": false
-}
+[
+  {
+    "name": "Alice",
+    "age": 25,
+    "isStudent": false
+  },
+  {
+    "name": "Bob",
+    "age": 30,
+    "isStudent": true
+  }
+]
+
 JavaScript Object:
 
-const person = {
-  name: "Alice",
-  age: 25,
-  isStudent: false,
-  greet: function() { console.log("Hello!"); }  // JavaScript object can include methods
-};
+const people = [
+  {
+    name: "Alice",
+    age: 25,
+    isStudent: false,
+    greet: function() {
+      console.log("Hello, I'm Alice!");
+    }
+  },
+  {
+    name: "Bob",
+    age: 30,
+    isStudent: true,
+    greet: function() {
+      console.log("Hi there, I'm Bob!");
+    }
+  }
+];
+
+// Example usage:
+people[0].greet(); // Output: Hello, I'm Alice!
+people[1].greet(); // Output: Hi there, I'm Bob!
+
 
 5. Conversion:
 
