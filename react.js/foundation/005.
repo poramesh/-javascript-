@@ -1,0 +1,94 @@
+Component Mounting and Unmounting:
+
+Mounting: When a component is rendered for the first time (i.e., it's being added to the DOM), it is considered "mounted." React 
+performs any side effects (like calling useEffect) at this point.
+
+Unmounting: When a component is removed from the DOM (e.g., if it is no longer part of the component tree), it is considered 
+"unmounted." React cleans up any side effects or event listeners associated with the component.
+
+
+
+Re-renders:
+
+A re-render occurs when a component's state or props change. React updates the component and re-renders it, but this doesn't necessarily 
+mean that the component is unmounted and mounted again. React simply updates the DOM with the new state/props.
+
+
+In the Context of useEffect:
+
+When you use useEffect with an empty dependency array ([]), React runs the effect only once, when the component first mounts.
+
+Initial Mount: The effect runs for the first time when the component is added to the DOM.
+
+Subsequent Re-renders: After that, any subsequent re-renders (due to state or props changes) won't trigger the effect again. The effect is not 
+re-executed unless the component is unmounted and mounted again 
+(e.g., if the component is removed from the DOM and then re-added).
+
+Example:
+Imagine a component that fetches data when it is mounted, and you want to ensure it only happens once, even if the component re-renders:
+
+import React, { useState, useEffect } from 'react';
+
+const DataFetcher = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    console.log("Fetching data...");
+    // Simulate a fetch operation
+    setData("Some data");
+  }, []); // Empty dependency array, will run only once
+
+  return (
+    <div>
+      <h1>Data: {data}</h1>
+    </div>
+  );
+};
+
+
+First Mount: When DataFetcher is first rendered, React calls useEffect and logs "Fetching data...". 
+The setData function updates the data state.
+
+Subsequent Re-renders: If the component re-renders due to state or props updates, the useEffect hook won't run again because
+it has an empty dependency array []. The effect will run only once, on the first mount.
+
+Unmounting and Re-mounting: If the DataFetcher component is removed from the DOM (unmounted) and then re-rendered
+(mounted again), the useEffect hook will run again because the component is being mounted from scratch.
+
+
+
+What Does This Mean for Re-renders?
+
+Re-renders (due to state or props changes) do not trigger the useEffect hook if it has an empty dependency array. This is because Reac
+t does not treat re-renders as remounts of the component.
+
+If the component is unmounted (removed from the DOM) and mounted again (re-rendered in the DOM), the effect will run again
+as if it’s being executed for the first time.
+
+Example of Unmounting and Re-mounting:
+If you conditionally render a component, like this:
+
+const ParentComponent = () => {
+  const [show, setShow] = useState(true);
+
+  return (
+    <div>
+      <button onClick={() => setShow(!show)}>Toggle Component</button>
+      {show && <DataFetcher />}
+    </div>
+  );
+};
+
+
+First Mount: When DataFetcher is first rendered, it will run the useEffect and log "Fetching data...".
+
+Re-rendering ParentComponent: If you click the button and re-render ParentComponent, the DataFetcher component will not re-run its useEffect.
+
+Unmounting DataFetcher: If you click the button again to hide the DataFetcher (unmount it), and then click it back to show it again (re-mount it),
+the useEffect hook will run again because DataFetcher is mounted from scratch.
+
+
+In summary:
+
+Re-renders (state or props changes) do not re-trigger the useEffect when using an empty dependency array [].
+The effect only re-runs if the component is unmounted and then mounted again (i.e., when it is removed from the DOM and re-added).
