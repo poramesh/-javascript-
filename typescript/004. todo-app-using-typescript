@@ -357,3 +357,510 @@ This will open the app in your browser. You'll have a fully functional Todo app 
 Add Todos – By typing in the input box and clicking "Add Todo".
 Toggle Todos – By clicking on the todo item.
 Delete Todos – By clicking the "Delete" button.
+
+
+
+
+
+
+
+
+
+
+
+_________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+Let's enhance our Todo App by adding the following features:
+
+Persist Data: Save todos to localStorage so the data persists even after refreshing the page.
+Edit Todos: Add an option to edit a todo item.
+Mark All as Completed: Add a button to mark all todos as completed at once.
+Filters: Add filters to view "All", "Active", or "Completed" todos.
+
+1. Persist Data to localStorage
+
+To make the todos persist even after refreshing the page, we need to load the todos from localStorage on app load and save 
+them back to localStorage whenever they are updated.
+
+Modifying TodoApp to Persist Data
+Load Todos from localStorage: On component mount, load the todos from localStorage.
+Save Todos to localStorage: Whenever the todos change, save the updated list to localStorage.
+
+
+
+
+****************
+What is localStorage?
+>localStorage is a part of the Web Storage API that allows websites to store data in the browser persistently
+(even if the user closes the browser or navigates to another page).
+>The data stored in localStorage is stored as key-value pairs, where both the key and the value are strings.
+>The data does not expire and remains in the browser's storage until it is cleared by the user or explicitly removed by the web application.
+
+
+localStorage.getItem("todos")
+The method getItem() retrieves a value from localStorage by its key.
+In this case, getItem("todos") is looking for the value stored under the key "todos".
+
+
+Storing Data:
+Before you can retrieve the todos, you need to store it in localStorage. 
+For example:
+
+const todos = ["Buy groceries", "Do homework", "Clean the house"];
+localStorage.setItem("todos", JSON.stringify(todos));
+
+Here, the todos array is converted to a JSON string using JSON.stringify() and then stored in 
+localStorage under the key "todos".
+
+Retrieving Data:
+Later, you can retrieve the stored data:
+
+const savedTodos = localStorage.getItem("todos");
+console.log(savedTodos); // This will log the stringified array, e.g., '["Buy groceries", "Do homework", "Clean the house"]'
+
+
+Parsing Data:
+
+Since localStorage only stores strings, the retrieved value (in savedTodos) is still a string. If it was an 
+object or array, you’ll need to parse it back to the original format using JSON.parse():
+
+const todosArray = JSON.parse(savedTodos);
+console.log(todosArray);  // This will log the array: ["Buy groceries", "Do homework", "Clean the house"]
+
+
+*******************
+
+// src/components/TodoApp.tsx
+import React, { useState, useEffect } from "react";
+import { Todo } from "../types";
+import TodoItem from "./TodoItem";
+
+const TodoApp: React.FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState<string>("");
+
+  // Load todos from localStorage when the component mounts
+  useEffect(() => {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos));
+    }
+  }, []);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  // Add a new todo
+  const addTodo = () => {
+    if (newTodoText.trim()) {
+      const newTodo: Todo = {
+        id: Date.now(),
+        text: newTodoText,
+        completed: false,
+      };
+      setTodos([...todos, newTodo]);
+      setNewTodoText(""); // Clear input field
+    }
+  };
+
+  // Toggle completion of a todo
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  // Delete a todo
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  return (
+    <div className="todo-app">
+      <h1>Todo App</h1>
+      <input
+        type="text"
+        value={newTodoText}
+        onChange={(e) => setNewTodoText(e.target.value)}
+        placeholder="Add a new todo"
+      />
+      <button onClick={addTodo}>Add Todo</button>
+
+      <div className="todo-list">
+        {todos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TodoApp;
+
+
+
+
+2. Edit Todos
+Now let's add an option to edit a todo. We'll add an "Edit" button next to each todo, and when clicked, it will allow you to edit the todo text.
+
+Modifying the TodoItem Component
+Add an "Edit" button that will toggle between "Edit" and "Save" modes.
+
+// src/components/TodoItem.tsx
+import React, { useState } from "react";
+import { Todo } from "../types";
+
+type TodoItemProps = {
+  todo: Todo;
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
+  onEdit: (id: number, newText: string) => void;
+};
+
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete, onEdit }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(todo.text);
+
+  const handleEditClick = () => {
+    if (isEditing) {
+      onEdit(todo.id, editText);
+    }
+    setIsEditing(!isEditing);
+  };
+
+  return (
+    <div className="todo-item">
+      {isEditing ? (
+        <input
+          type="text"
+          value={editText}
+          onChange={(e) => setEditText(e.target.value)}
+        />
+      ) : (
+        <span
+          style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+          onClick={() => onToggle(todo.id)}
+        >
+          {todo.text}
+        </span>
+      )}
+      <button onClick={handleEditClick}>{isEditing ? "Save" : "Edit"}</button>
+      <button onClick={() => onDelete(todo.id)}>Delete</button>
+    </div>
+  );
+};
+
+export default TodoItem;
+Modifying the TodoApp Component to Handle Editing
+We need to handle the edit logic in TodoApp. We'll pass the onEdit function as a prop to TodoItem.
+
+tsx
+Copy code
+// src/components/TodoApp.tsx
+import React, { useState, useEffect } from "react";
+import { Todo } from "../types";
+import TodoItem from "./TodoItem";
+
+const TodoApp: React.FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState<string>("");
+
+  // Load todos from localStorage when the component mounts
+  useEffect(() => {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos));
+    }
+  }, []);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  // Add a new todo
+  const addTodo = () => {
+    if (newTodoText.trim()) {
+      const newTodo: Todo = {
+        id: Date.now(),
+        text: newTodoText,
+        completed: false,
+      };
+      setTodos([...todos, newTodo]);
+      setNewTodoText(""); // Clear input field
+    }
+  };
+
+  // Toggle completion of a todo
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  // Delete a todo
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  // Edit a todo
+  const editTodo = (id: number, newText: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text: newText } : todo
+    ));
+  };
+
+  return (
+    <div className="todo-app">
+      <h1>Todo App</h1>
+      <input
+        type="text"
+        value={newTodoText}
+        onChange={(e) => setNewTodoText(e.target.value)}
+        placeholder="Add a new todo"
+      />
+      <button onClick={addTodo}>Add Todo</button>
+
+      <div className="todo-list">
+        {todos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onEdit={editTodo}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TodoApp;
+3. Mark All as Completed
+We’ll add a button to mark all todos as completed at once.
+
+tsx
+Copy code
+// src/components/TodoApp.tsx
+import React, { useState, useEffect } from "react";
+import { Todo } from "../types";
+import TodoItem from "./TodoItem";
+
+const TodoApp: React.FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState<string>("");
+
+  // Load todos from localStorage when the component mounts
+  useEffect(() => {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos));
+    }
+  }, []);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  // Add a new todo
+  const addTodo = () => {
+    if (newTodoText.trim()) {
+      const newTodo: Todo = {
+        id: Date.now(),
+        text: newTodoText,
+        completed: false,
+      };
+      setTodos([...todos, newTodo]);
+      setNewTodoText(""); // Clear input field
+    }
+  };
+
+  // Toggle completion of a todo
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  // Delete a todo
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  // Edit a todo
+  const editTodo = (id: number, newText: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text: newText } : todo
+    ));
+  };
+
+  // Mark all todos as completed
+  const markAllCompleted = () => {
+    setTodos(todos.map(todo => ({ ...todo, completed: true })));
+  };
+
+  return (
+    <div className="todo-app">
+      <h1>Todo App</h1>
+      <input
+        type="text"
+        value={newTodoText}
+        onChange={(e) => setNewTodoText(e.target.value)}
+        placeholder="Add a new todo"
+      />
+      <button onClick={addTodo}>Add Todo</button>
+      <button onClick={markAllCompleted}>Mark All Completed</button>
+
+      <div className="todo-list">
+        {todos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onEdit={editTodo}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TodoApp;
+4. Filters
+Let’s add filters to show "All", "Active", or "Completed" todos.
+
+We'll add buttons to toggle between filters.
+
+tsx
+Copy code
+// src/components/TodoApp.tsx
+import React, { useState, useEffect } from "react";
+import { Todo } from "../types";
+import TodoItem from "./TodoItem";
+
+type Filter = "all" | "active" | "completed";
+
+const TodoApp: React.FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState<string>("");
+  const [filter, setFilter] = useState<Filter>("all");
+
+  // Load todos from localStorage when the component mounts
+  useEffect(() => {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos));
+    }
+  }, []);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  // Add a new todo
+  const addTodo = () => {
+    if (newTodoText.trim()) {
+      const newTodo: Todo = {
+        id: Date.now(),
+        text: newTodoText,
+        completed: false,
+      };
+      setTodos([...todos, newTodo]);
+      setNewTodoText(""); // Clear input field
+    }
+  };
+
+  // Toggle completion of a todo
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  // Delete a todo
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  // Edit a todo
+  const editTodo = (id: number, newText: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text: newText } : todo
+    ));
+  };
+
+  // Mark all todos as completed
+  const markAllCompleted = () => {
+    setTodos(todos.map(todo => ({ ...todo, completed: true })));
+  };
+
+  // Filter todos based on the selected filter
+  const filteredTodos = todos.filter(todo => {
+    if (filter === "all") return true;
+    if (filter === "active") return !todo.completed;
+    if (filter === "completed") return todo.completed;
+    return true;
+  });
+
+  return (
+    <div className="todo-app">
+      <h1>Todo App</h1>
+      <input
+        type="text"
+        value={newTodoText}
+        onChange={(e) => setNewTodoText(e.target.value)}
+        placeholder="Add a new todo"
+      />
+      <button onClick={addTodo}>Add Todo</button>
+      <button onClick={markAllCompleted}>Mark All Completed</button>
+
+      <div>
+        <button onClick={() => setFilter("all")}>All</button>
+        <button onClick={() => setFilter("active")}>Active</button>
+        <button onClick={() => setFilter("completed")}>Completed</button>
+      </div>
+
+      <div className="todo-list">
+        {filteredTodos.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onEdit={editTodo}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TodoApp;
+5. Final Touches
+Now you have an enhanced Todo App with:
+
+Persistence (using localStorage)
+Edit functionality
+Mark all completed
+Filter functionality
