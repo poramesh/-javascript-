@@ -30,6 +30,22 @@ and also  you can just
 
 and then do npm install and then add the code structure to the project by adding the file and then run npm start
 
+
+**You can also follow this tutorial using your local development environment. To do this, you need to:
+
+Install Node.js
+
+In the CodeSandbox tab you opened earlier, press the top-left corner button to open the menu, and then choose Download Sandbox in that menu 
+to download an archive of the files locally
+
+Unzip the archive, then open a terminal and cd to the directory you unzipped
+
+Install the dependencies with npm install
+
+Run npm start to start a local server and follow the prompts to view the code running in a browser
+
+If you get stuck, don’t let this stop you! Follow along online instead and try a local setup again later.**
+
 Ful code:
 
 app.js
