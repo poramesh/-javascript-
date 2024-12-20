@@ -1,0 +1,134 @@
+
+____________________________________________________________________________
+
+
+what does target could mean?
+
+In JavaScript, particularly in the context of event handling, target refers to the DOM element that triggered the event. It is a property of 
+the event object (e.target) and provides a reference to the HTML element where the event occurred.
+
+Key Points About target
+
+
+What It Represents:
+It refers to the actual element that initiated the event. For example, if a button is clicked, target will be the button element.
+
+Why It’s Useful:
+It allows you to access and interact with the triggering element's properties (e.g., value, checked, id, className).
+
+Common Properties Accessed via target:
+
+value: For text inputs, this retrieves the current text.
+checked: For checkboxes or radio buttons, this indicates whether the element is checked.
+id: The ID of the element.
+name: The name attribute of the element.
+type: The type of the input element (e.g., text, checkbox).
+
+Example Scenarios
+1. For a Text Input:
+
+<input
+  type="text"
+  onChange={(e) => console.log(e.target.value)}
+/>
+When the user types in the input box, e.target.value logs the text entered.
+
+2. For a Checkbox:
+
+<input
+  type="checkbox"
+  onChange={(e) => console.log(e.target.checked)}
+/>
+
+When the checkbox is checked or unchecked, e.target.checked logs true or false.
+
+3. Accessing Other Attributes:
+
+<button id="saveButton" onClick={(e) => console.log(e.target.id)}>
+  Save
+</button>
+
+When the button is clicked, e.target.id logs "saveButton".
+
+Relationship Between target and currentTarget
+
+target: Refers to the element that actually triggered the event (could be a child element).
+currentTarget: Refers to the element to which the event handler is attached.
+
+Example:
+
+<div onClick={(e) => console.log('target:', e.target, 'currentTarget:', e.currentTarget)}>
+  <button>Click Me</button>
+</div>
+
+If the button is clicked:
+e.target: Refers to the <button> element.
+e.currentTarget: Refers to the <div> element because the event handler is attached to the <div>.
+
+_______________________________________________________________________________________________________________
+
+
+
+the way the set property is updated
+
+
+Parent Component
+
+function ParentComponent() {
+  const [filterText, setFilterText] = React.useState("");
+
+  const handleFilterTextChange = (value) => {
+    if (value.length < 10) {
+      setFilterText(value);
+    }
+  };
+
+  return (
+    <ChildComponent onFilterTextChange={handleFilterTextChange} />
+  );
+}
+
+
+
+Child Component
+
+function ChildComponent({ onFilterTextChange }) {
+  return (
+    <input
+      type="text"
+      onChange={(e) => onFilterTextChange(e.target.value)}
+    />
+  );
+}
+
+
+
+
+and also we can do this:
+
+function App() {
+  const [filterText, setFilterText] = React.useState("");
+
+  return (
+    <div>
+      <FilterInput onFilterTextChange={setFilterText} />
+      <p>Current Filter: {filterText}</p>
+    </div>
+  );
+}
+
+function FilterInput({ onFilterTextChange }) {
+  return (
+    <input
+      type="text"
+      onChange={(e) => onFilterTextChange(e.target.value)}
+    />
+  );
+}
+
+Direct State Management: setFilterText is the state updater function from useState, so it's designed to handle updates directly.
+
+Flow of Execution:
+1. App passes setFilterText as onFilterTextChange to FilterInput.
+2. FilterInput calls onFilterTextChange whenever the input value changes.
+3. setFilterText updates the filterText state in App, causing the component to re-render and display the updated text.
