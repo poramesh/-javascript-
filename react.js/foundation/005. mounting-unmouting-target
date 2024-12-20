@@ -96,7 +96,7 @@ The effect only re-runs if the component is unmounted and then mounted again (i.
 
 
 
-
+____________________________________________________________________________
 
 
 what does target could mean?
@@ -162,3 +162,69 @@ If the button is clicked:
 e.target: Refers to the <button> element.
 e.currentTarget: Refers to the <div> element because the event handler is attached to the <div>.
 
+
+
+
+the way the set property is updated
+
+
+Parent Component
+
+function ParentComponent() {
+  const [filterText, setFilterText] = React.useState("");
+
+  const handleFilterTextChange = (value) => {
+    if (value.length < 10) {
+      setFilterText(value);
+    }
+  };
+
+  return (
+    <ChildComponent onFilterTextChange={handleFilterTextChange} />
+  );
+}
+
+
+
+Child Component
+
+function ChildComponent({ onFilterTextChange }) {
+  return (
+    <input
+      type="text"
+      onChange={(e) => onFilterTextChange(e.target.value)}
+    />
+  );
+}
+
+
+
+
+and also we can do this:
+
+function App() {
+  const [filterText, setFilterText] = React.useState("");
+
+  return (
+    <div>
+      <FilterInput onFilterTextChange={setFilterText} />
+      <p>Current Filter: {filterText}</p>
+    </div>
+  );
+}
+
+function FilterInput({ onFilterTextChange }) {
+  return (
+    <input
+      type="text"
+      onChange={(e) => onFilterTextChange(e.target.value)}
+    />
+  );
+}
+
+Direct State Management: setFilterText is the state updater function from useState, so it's designed to handle updates directly.
+
+Flow of Execution:
+1. App passes setFilterText as onFilterTextChange to FilterInput.
+2. FilterInput calls onFilterTextChange whenever the input value changes.
+3. setFilterText updates the filterText state in App, causing the component to re-render and display the updated text.
