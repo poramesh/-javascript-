@@ -277,6 +277,19 @@ Draw
 const squares = ['X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X'];
 calculateWinner(squares); // Returns null
 
+_________________________________
 
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './styles.css';
+
+import App from './App';
+
+
+Lines 1-5 bring all the necessary pieces together:
+React
+React’s library to talk to web browsers (React DOM)
+the styles for your components
+the component you created in App.js.
 
 
