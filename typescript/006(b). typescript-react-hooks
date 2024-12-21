@@ -1,0 +1,483 @@
+Writing TypeScript with React is very similar to writing JavaScript with React. The key difference when working with a component 
+is that you can provide types for your component’s props. These types can be
+used for correctness checking and providing inline documentation in editors.
+
+
+Taking the MyButton component from the Quick Start guide, we can add a type describing the title for the button:
+
+
+function MyButton({ title }: { title: string }) {
+  return (
+    <button>{title}</button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton title="I'm a button" />
+    </div>
+  );
+}
+
+
+This inline syntax is the simplest way to provide types for a component, though once you start to have a few 
+fields to describe it can become unwieldy. 
+Instead, you can use an interface or type to describe the component’s props:
+
+//App.tsx
+interface MyButtonProps {
+  /** The text to display inside the button */
+  title: string;
+  /** Whether the button can be interacted with */
+  disabled: boolean;
+}
+
+function MyButton({ title, disabled }: MyButtonProps) {
+  return (
+    <button disabled={disabled}>{title}</button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton title="I'm a disabled button" disabled={true}/>
+    </div>
+  );
+}
+
+
+
+
+Hooks:
+
+The type definitions from @types/react include types for the built-in Hooks, so you can use them in your components without any additional setup.
+
+
+useState 
+The useState Hook will re-use the value passed in as the initial state to determine what the type of the value should be. For example:
+
+// Infer the type as "boolean"
+const [enabled, setEnabled] = useState(false);
+
+
+ If you want to explicitly provide a type for the state, you can do so by providing a type argument to the useState call:
+
+// Explicitly set the type to "boolean"
+const [enabled, setEnabled] = useState<boolean>(false);
+
+This isn’t very useful in this case, but a common case where you may want to provide a type is when you have a union type. 
+For example, status here can be one of a few different strings:
+
+type Status = "idle" | "loading" | "success" | "error";
+const [status, setStatus] = useState<Status>("idle");
+
+Or, as recommended in Principles for structuring state, you can group related state as an object and describe the different possibilities via object types:
+
+type RequestState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success', data: any }
+  | { status: 'error', error: Error };
+
+//The | operator is used to join multiple types, and starting with | is just a syntactic style choice when defining union types.
+It helps with readability and clarity, especially when writing large or complex union types.
+This is equivalent to writing:
+
+
+type RequestState =
+  { status: 'idle' } |
+  { status: 'loading' } |
+  { status: 'success', data: any } |
+  { status: 'error', error: Error };
+But the first style is more readable, especially as the number of cases grows.
+
+const [requestState, setRequestState] = useState<RequestState>({ status: 'idle' });
+
+
+
+
+
+useReducer 
+
+
+The useReducer Hook is a more complex Hook that takes a reducer function and an initial state. The types for the reducer function 
+are inferred from the initial state. You can optionally provide a type argument to the useReducer call to provide a type for 
+the state, but it is often better to set the type on the initial state instead:
+
+
+in plain js:
+
+import { useReducer } from 'react';
+
+const initialState = { count: 0 };
+
+function stateReducer(state, action) {
+  switch (action.type) {
+    case "reset":
+      return initialState;
+    case "setCount":
+      return { ...state, count: action.value };
+    default:
+      throw new Error("Unknown action");
+  }
+}
+
+export default function App() {
+  const [state, dispatch] = useReducer(stateReducer, initialState);
+
+  const addFive = () => dispatch({ type: "setCount", value: state.count + 5 });
+  const reset = () => dispatch({ type: "reset" });
+
+  return (
+    <div>
+      <h1>Welcome to my counter</h1>
+
+      <p>Count: {state.count}</p>
+      <button onClick={addFive}>Add 5</button>
+      <button onClick={reset}>Reset</button>
+    </div>
+  );
+}
+???
+
+in ts:
+
+import {useReducer} from 'react';
+
+interface State {
+   count: number 
+};
+
+type CounterAction =
+  | { type: "reset" }
+  | { type: "setCount"; value: State["count"] }
+
+const initialState: State = { count: 0 }; // const initialState: { count: number } = { count: 0 }; works perfectly! This approach
+explicitly specifies the type of initialState without requiring a separate interface or type declaration.
+
+
+
+function stateReducer(state: State, action: CounterAction): State {
+  switch (action.type) {
+    case "reset":
+      return initialState;
+    case "setCount":
+      return { ...state, count: action.value };
+    default:
+      throw new Error("Unknown action");
+  }
+}
+
+export default function App() {
+  const [state, dispatch] = useReducer(stateReducer, initialState);
+
+  const addFive = () => dispatch({ type: "setCount", value: state.count + 5 });
+  const reset = () => dispatch({ type: "reset" });
+
+  return (
+    <div>
+      <h1>Welcome to my counter</h1>
+
+      <p>Count: {state.count}</p>
+      <button onClick={addFive}>Add 5</button>
+      <button onClick={reset}>Reset</button>
+    </div>
+  );
+}
+
+
+
+
+useContext 
+
+
+The useContext Hook is a React feature that allows components to access values from a Context without needing to explicitly pass 
+them as props through the component tree.
+
+It's particularly useful when you have data or state that multiple components need to access, such as a theme, user data, or authentication status.
+
+Passing Data Without Props
+
+Normally, you'd pass data down the component tree like this:
+
+function App() {
+  const theme = "dark";
+  return <Child theme={theme} />;
+}
+
+function Child({ theme }) {
+  return <Grandchild theme={theme} />;
+}
+
+function Grandchild({ theme }) {
+  return <p>Theme: {theme}</p>;
+}
+
+Here, theme is passed through every level of the component tree, even if intermediate components don't
+need it. This is called prop drilling.
+
+
+Using useContext, you can avoid this:
+
+
+const ThemeContext = createContext("light");
+
+function App() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <Child />
+    </ThemeContext.Provider>
+  );
+}
+
+function Child() {
+  return <Grandchild />;
+}
+
+function Grandchild() {
+  const theme = useContext(ThemeContext);
+  return <p>Theme: {theme}</p>;
+}
+
+In this example:
+
+ThemeContext.Provider provides the theme value to all its descendants.
+Grandchild can directly access the theme value using useContext(ThemeContext) without passing it through Child.
+
+The default value is "light" (used if no Provider is defined in the tree).
+
+
+
+Creating a Hook for Easier Access
+To make using useContext more convenient, it's common to create a custom hook:
+
+
+const useTheme = () => useContext(ThemeContext);
+
+function MyComponent() {
+  const theme = useTheme(); // No need to repeatedly use 'useContext(ThemeContext)'
+  return <p>Theme: {theme}</p>;
+}
+
+
+______________________
+
+import { createContext, useContext, useState } from 'react';
+
+const ThemeContext = createContext("system");  // Create the ThemeContext with a default value of "system"
+
+const useGetTheme = () => useContext(ThemeContext); // Custom hook to access the current theme value
+
+export default function MyApp() {
+  const [theme, setTheme] = useState("light"); // Manage theme state
+
+  return (
+    <ThemeContext.Provider value={theme}>
+      <MyComponent />
+    </ThemeContext.Provider>
+  );
+}
+
+function MyComponent() {
+  const theme = useGetTheme(); // Get the current theme from context
+
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+    </div>
+  );
+}
+
+
+//
+
+ThemeContext
+
+const ThemeContext = createContext("system");
+ThemeContext is created with createContext, which establishes a React Context with a default value of "system".
+This context is like a "store" that holds the current value of the theme across the application.
+
+
+ThemeContext.Provider
+
+<ThemeContext.Provider value={theme}>
+The Provider is used to wrap parts of the component tree and provide a value (theme in this case) to all its descendant components.
+The value={theme} prop specifies the context value to be shared. Here, theme is managed by useState in MyApp and can dynamically change.
+
+
+useContext(ThemeContext)
+const useGetTheme = () => useContext(ThemeContext);
+The useContext hook is used to access the current value of the context (ThemeContext).
+useContext retrieves the nearest ThemeContext.Provider value in the component tree. If no Provider is found, it defaults to 
+the value specified in createContext ("system").
+
+
+
+
+the same in app.tsx
+
+import { createContext, useContext, useState } from 'react';
+
+type Theme = "light" | "dark" | "system";
+const ThemeContext = createContext<Theme>("system");
+
+const useGetTheme = () => useContext(ThemeContext);
+
+export default function MyApp() {
+  const [theme, setTheme] = useState<Theme>('light');
+
+  return (
+    <ThemeContext.Provider value={theme}>
+      <MyComponent />
+    </ThemeContext.Provider>
+  )
+}
+
+function MyComponent() {
+  const theme = useGetTheme();
+
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+    </div>
+  )
+}
+
+
+
+This technique works when you have a default value which makes sense - but there are occasionally cases when you do not, 
+and in those cases null can feel reasonable as a default value. However, to allow the type-system to understand your code,
+you need to explicitly set ContextShape | null on the createContext.
+
+
+
+
+import { createContext, useContext, useState, useMemo } from 'react';
+
+// This is a simpler example, but you can imagine a more complex object here
+type ComplexObject = {
+  kind: string
+};
+
+// The context is created with `| null` in the type, to accurately reflect the default value.
+const Context = createContext<ComplexObject | null>(null);
+
+// The `| null` will be removed via the check in the Hook.
+const useGetComplexObject = () => {
+  const object = useContext(Context);
+  if (!object) { throw new Error("useGetComplexObject must be used within a Provider") }
+  return object;
+}
+
+export default function MyApp() {
+  const object = useMemo(() => ({ kind: "complex" }), []);
+
+  return (
+    <Context.Provider value={object}>
+      <MyComponent />
+    </Context.Provider>
+  )
+}
+
+function MyComponent() {
+  const object = useGetComplexObject();
+
+  return (
+    <div>
+      <p>Current object: {object.kind}</p>
+    </div>
+  )
+}
+
+
+
+
+useMemo:
+
+useMemo is a React Hook that optimizes performance by memoizing the result of a computation. It helps avoid re-calculating expensive
+computations during every render unless the dependencies change.
+
+
+const memoizedValue = useMemo(() => computeValue, [dependencies]);
+
+computeValue: A function that calculates the value to memoize.
+dependencies: An array of variables that the computeValue function depends on.
+
+
+When to Use useMemo
+Expensive Calculations: Use it to memoize the result of a costly calculation.
+Avoid Unnecessary Re-Rendering: Use it to prevent re-computation of derived values if the inputs haven't changed.
+Optimizing Component Performance: Particularly useful for avoiding performance bottlenecks in components with large lists or heavy computations.
+
+
+How It Works?
+1. React runs the computeValue function and stores its result (memoizedValue).
+2. On subsequent renders:
+React reuses the stored result if none of the dependencies have changed.
+If any dependency changes, computeValue is recalculated.
+
+
+import React, { useMemo, useState } from 'react';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+
+  const expensiveCalculation = (num) => {
+    console.log('Calculating...');
+    return num * 2; // Simulate a heavy computation
+  };
+
+  const memoizedValue = useMemo(() => expensiveCalculation(count), [count]);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <h2>Memoized Value: {memoizedValue}</h2>
+      <button onClick={() => setCount((prev) => prev + 1)}>Increment</button>
+    </div>
+  );
+}
+
+if const memoizedValue = useMemo(() => expensiveCalculation(count), []); // Bad: No dependencies
+it won't know to recalculate expensiveCalculation(count) when count changes.
+
+
+another example:
+
+
+import React, { useMemo, useState } from 'react';
+
+export default function App() {
+  const [query, setQuery] = useState('');
+  const [items] = useState(['Apple', 'Banana', 'Cherry', 'Date']);
+
+  const filteredItems = useMemo(() => {
+    console.log('Filtering...');
+    return items.filter((item) => item.toLowerCase().includes(query.toLowerCase()));
+  }, [query, items]);
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <ul>
+        {filteredItems.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+If you don't use useMemo, the expensive computation or filtering logic would execute on every render, even if the relevant dependencies haven't changed. 
+This can lead to performance issues.
+
+
