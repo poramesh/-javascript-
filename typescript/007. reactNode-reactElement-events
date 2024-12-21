@@ -1,0 +1,136 @@
+DOM Events 
+
+When working with DOM events in React, the type of the event can often be inferred from the event handler. However, when you want to extract
+a function to be passed to an event handler, you will need to explicitly set the type of the event.
+
+
+Simple Examples
+
+
+1. Using React.ReactNode
+If you want to accept any type of renderable content (like text, elements, arrays, or even null):
+
+import React from "react";
+
+function Card({ children }: { children: React.ReactNode }) {
+  return <div className="card">{children}</div>;
+}
+
+// Usage
+<Card>
+  <h1>Hello</h1> {/* React element */}
+  <p>This is a description.</p> {/* React element */}
+  Some text {/* String */}
+  {42} {/* Number */}
+  {null} {/* Nothing */}
+</Card>;
+
+
+Here, all types of content are valid because React.ReactNode is flexible.
+
+
+
+
+2. Using React.ReactElement
+If you want to accept only a single React element:
+
+
+import React from "react";
+
+function Card({ children }: { children: React.ReactElement }) {
+  return <div className="card">{children}</div>;
+}
+
+<Card>
+  <h1>Hello</h1> {/* Valid: React element */}
+</Card>;
+
+// Invalid: Will throw a TypeScript error
+<Card>
+  {"Some text"} {/* Invalid: String is not a React element */}
+</Card>;
+
+<Card>
+  {42} {/* Invalid: Number is not a React element */}
+</Card>;
+
+
+
+Here, only a valid React element (e.g., <h1>, <p>, or a custom component) is allowed.
+
+
+
+__________________________________________________________________________________________
+
+import { useState } from 'react';
+
+export default function Form() {
+  const [value, setValue] = useState("Change me");
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setValue(event.currentTarget.value);
+  }
+
+  return (
+    <>
+      <input value={value} onChange={handleChange} />
+      <p>Value: {value}</p>
+    </>
+  );
+}
+
+
+React.ChangeEvent
+
+This is a TypeScript type provided by React.
+It represents a generic event triggered by an HTML input element when its value changes.
+It is used for typing event objects in React event handlers (like onChange, onInput, etc.).
+
+
+<HTMLInputElement>
+
+This specifies the type of HTML element the event is associated with.
+In this case, it refers to an <input> element (like <input type="text" />).
+You can replace HTMLInputElement with other specific HTML elements, such as HTMLTextAreaElement or HTMLSelectElement,
+depending on the event's source.
+
+
+What Does the event Object Contain?
+The event object in React.ChangeEvent is similar to the native DOM Event but enhanced for React.
+
+
+
+Key properties include:
+
+event.target: The element that triggered the event (e.g., the <input>).
+event.target.value: The current value of the input field.
+event.target.checked: For checkbox inputs, whether it is checked or not.
+event.preventDefault(): Prevents the default behavior of the event (e.g., form submission).
+event.stopPropagation(): Stops the event from propagating to parent elements.
+
+
+
+Other Common Event Types
+
+Here are examples of other event types you might encounter in React:
+
+Mouse Events:
+
+function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  console.log("Button clicked", event.clientX, event.clientY);
+}
+
+
+Keyboard Events:
+
+function handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+  console.log("Key pressed:", event.key);
+}
+
+
+Form Events:
+
+function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault(); // Prevent form submission
+  console.log("Form submitted!");
+}
