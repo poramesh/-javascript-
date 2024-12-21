@@ -19,7 +19,75 @@ Android, iOS, and web share a unified navigation structure.
 
 
 
-1 Add a new screen to the stack
+
+
+
+
+____________________________________________________________________________________________________
+
+
+Key Features of Stack in expo-router:
+
+Screen Management:
+The Stack allows you to define and navigate between multiple screens.
+Each new screen is added on top of the stack, and you can go back to the previous screen by popping the current one.
+
+Routing Integration:
+It integrates with the expo-router routing system, which uses a file-based approach. 
+
+Customizable Navigation:
+You can customize the header, animations, and behavior for each screen in the stack.
+Example: Setting screen-specific options like titles or hiding the header.
+
+Example:
+Here’s how the Stack works with expo-router:
+
+// app/layout.js
+import { Stack } from "expo-router";
+
+export default function RootLayout() {
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: true, // Show headers for all screens
+      }}
+    />
+  );
+}
+
+// app/index.js
+export default function HomeScreen() {
+  return <Text>Home Screen</Text>;
+}
+
+// app/details.js
+export default function DetailsScreen() {
+  return <Text>Details Screen</Text>;
+}
+
+
+
+How It Works???
+
+File-Based Routing:
+app/index.js maps to the home screen.
+app/details.js maps to another screen.
+
+Navigation:
+When you navigate from the home screen to the details screen, the details screen is pushed onto the stack.
+Going back will pop the details screen off the stack.
+
+
+
+
+
+
+_____________________________________________
+
+
+
+
+1. Add a new screen to the stack
 
 Let's create a new file named about.tsx inside the app directory. It displays the screen name when the user navigates to the /about route.
 
@@ -177,7 +245,7 @@ To test this, navigate to http:localhost:8081/123 URL in the web browser since i
 The app should display the NotFoundScreen component:
 
 
-I SAVED THE FILE WITH _ instead of + and i eneded up going to some strange pAGE wiht site map link and all.
+I SAVED THE FILE WITH _ instead of - and i eneded up going to some strange pAGE wiht site map link and all.
 
 
 
@@ -255,7 +323,9 @@ export default function TabLayout() {
 
 Tabs.Screen component works in a similar way and accepts same props as Stack.Screen component. The only difference is the navigation pattern on the device.
 
-
+In file-based routing (e.g., Expo Router):
+The stack navigator is the root layout.
+The tab navigator is nested within a screen of the stack
 
 
 5. Update bottom tab navigator appearance
@@ -276,6 +346,26 @@ From the icon set, we can provide custom icon names.
 app/(tabs)/_layout.tsx
 
 
+
+
+Tab Navigator:
+
+The Tab.Navigator defines a bottom tab navigator. This creates a tab bar at the bottom of the screen, with i
+cons representing the Home and Settings screens.
+
+Screens:
+
+Tab.Screen components correspond to the individual screens within the tab navigator.
+The HomeScreen and SettingsScreen are rendered when their respective tabs are selected.
+
+Tab Bar Placement:
+
+By default, the tab bar will be at the bottom of the screen because we are using a bottom
+tab navigator (createBottomTabNavigator).
+The tabBarIcon controls the appearance of the icon for each tab. It changes based on whether 
+the tab is active or inactive, using the color prop.
+
+
 import { Tabs } from 'expo-router';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -293,7 +383,8 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} /> //The focused param allows us to change a tab's icon and label behavior when it is active and inactive.
+            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} /> //The focused param allows us to change a tab's icon and label behavior
+when it is active and inactive.
           ),
         }}
       />
@@ -309,6 +400,14 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+When you define tabBarIcon, React Navigation automatically passes the color prop into it. The color comes from either the active or inactive
+state of the tab, depending on whether it is focused.
+
+The Tabs.Navigator or its theme configuration determines the active and inactive colors.
+These colors are passed to the tabBarIcon function via the color parameter.
+The Ionicons component uses the color to display the appropriate visual style.
+
 
 
 Let's also change the background color of the tab bar and header using screenOptions prop:
@@ -337,3 +436,17 @@ The header's background is set to #25292e using the headerStyle property. We hav
 headerTintColor applies #fff to the header label
 tabBarStyle.backgroundColor applies #25292e to the tab bar
 
+
+
+
+
+
+
+__________________________________________________________________________________________________________
+The tab bar is typically placed at the bottom for bottom tab navigators, and it automatically updates
+its appearance based on which tab is selected.
+
+The content for each tab (screen) is shown in the main content area above the tab bar.
+
+React Navigation automatically handles the layout: the tab bar is placed at the bottom, and only the screen corresponding to the selected 
+tab is rendered. You can customize the behavior, appearance, and colors of the tab bar and its icons using options.
