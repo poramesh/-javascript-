@@ -130,62 +130,6 @@ const styles = StyleSheet.create({
 
 
 
-Key Features of Stack in expo-router:
-
-Screen Management:
-The Stack allows you to define and navigate between multiple screens.
-Each new screen is added on top of the stack, and you can go back to the previous screen by popping the current one.
-
-Routing Integration:
-It integrates with the expo-router routing system, which uses a file-based approach. 
-For example:
-Files in the pages/ directory are automatically mapped to screens.
-A file named index.js or index.tsx becomes the root screen.
-Other files like [id].js define dynamic routes.
-
-Customizable Navigation:
-You can customize the header, animations, and behavior for each screen in the stack.
-Example: Setting screen-specific options like titles or hiding the header.
-Example:
-Here’s how the Stack works with expo-router:
-
-// app/layout.js
-import { Stack } from "expo-router";
-
-export default function RootLayout() {
-  return (
-    <Stack
-      screenOptions={{
-        headerShown: true, // Show headers for all screens
-      }}
-    />
-  );
-}
-
-// app/index.js
-export default function HomeScreen() {
-  return <Text>Home Screen</Text>;
-}
-
-// app/details.js
-export default function DetailsScreen() {
-  return <Text>Details Screen</Text>;
-}
-
-
-
-How It Works???
-
-File-Based Routing:
-app/index.js maps to the home screen.
-app/details.js maps to another screen.
-
-Navigation:
-When you navigate from the home screen to the details screen, the details screen is pushed onto the stack.
-Going back will pop the details screen off the stack.
-
-
-
 a lil about metro bundler:
 
 Metro Bundler is a JavaScript bundler designed specifically for React Native projects.
