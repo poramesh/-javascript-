@@ -23,6 +23,8 @@ For multiple services, you only need to run one command per container.
 Standardizes the development environment, reducing errors and setup complexity.
 You can run different versions of the same application without conflicts.
 Focus on development rather than environment setup.
+
+
 Improving Deployment with Containers:
 
 Before Docker, deployments required developers to:
@@ -31,9 +33,10 @@ Developing an application without Docker follows a more traditional approach, in
 installed directly on your machine
 
 1. Local Development Environment Setup
-Installing Dependencies: Developers manually install all the required software, libraries, and services.
-For example, to develop a Node.js application using MongoDB, you would need:
 
+Installing Dependencies: Developers manually install all the required software, libraries, and services.
+
+For example, to develop a Node.js application using MongoDB, you would need:
 Node.js: Install the Node.js runtime.
 MongoDB: Install a local instance of MongoDB on your machine or use a cloud database service.
 Other libraries: Use package managers (like npm or yarn) to install any additional libraries your application needs.
@@ -41,10 +44,12 @@ Configuring Environment Variables: You may need to set environment variables or 
 application connects to services like databases or APIs.
 
 2. Development Process
+
 Writing Code: Develop the application locally using your preferred code editor or IDE. This often involves:
 
 Creating files and folders for your application structure.
 Writing code in JavaScript (or other languages), managing routes, business logic, and database interactions.
+
 Running the Application: You would typically run your application directly on your local machine:
 
 For a Node.js app, you might use:
@@ -52,6 +57,7 @@ node server.js
 You would access the application through a browser at http://localhost:3000 (or another configured port).
 
 3. Database Interaction
+
 Local Database Setup: You would start a local MongoDB server, and ensure it's running while developing. You might run MongoDB using:
 mongod
 
@@ -59,20 +65,24 @@ Connecting to the Database: Ensure your application can connect to the local Mon
 connection string in your application’s code or configuration files.
 
 4. Testing
+
 Manual Testing: You might test the application manually by navigating through its features in a web browser.
 Unit and Integration Testing: You could write test scripts and execute them using a testing framework (like Jest or Mocha for JavaScript).
 
 5. Version Control
+
 Using Git: As you develop, you would use a version control system like Git to track changes:
 Regularly commit code changes with clear messages.
 Create branches for new features or bug fixes, merging them back to the main branch when complete.
 
 6. Continuous Integration/Deployment (CI/CD)
+
 Setting Up CI/CD Tools: If using CI/CD, you might set up a tool like Jenkins, GitLab CI, or CircleCI. This would involve:
 Configuring build pipelines to run tests and build artifacts from your code.
 You would configure the CI tool to run scripts that build the application and execute tests upon code changes.
 
 7. Deployment
+
 Manual Deployment: To deploy to a development or production server, you would typically:
 SSH into the server and pull the latest code from your version control repository.
 Install any required dependencies directly on the server.
@@ -81,10 +91,12 @@ Setting Up the Server: If not already configured, you may need to set up the ser
 configuring firewalls, and setting up database connections.
 
 8. Monitoring and Maintenance
+
 Log Monitoring: You would check logs for errors and performance issues.
 Updates and Fixes: Regularly apply updates to the application, libraries, and services as needed.
 
 Summary of Challenges Without Docker:
+
 Environment Inconsistencies: Differences between development, testing, and production environments can lead to bugs that are hard to trace.
 Dependency Management: Conflicts between library versions can arise if multiple projects are run on the same machine.
 Setup Complexity: New team members may face challenges when setting up their local environments.
