@@ -30,6 +30,32 @@ EXPOSE 5000
 # Specify the command to run the application
 CMD ["flask", "run", "--host=0.0.0.0"]
 
+//
+What is --host=0.0.0.0?
+0.0.0.0 is a special IP address that tells Flask (or any application) to listen on all available network interfaces.
+This means the Flask application will accept connections from:
+Inside the Docker container.
+Other containers in the same Docker network.
+External clients, if the container's ports are mapped to the host.
+
+Without --host=0.0.0.0, Flask defaults to binding only to 127.0.0.1 (localhost). In this case:
+The application would only accept connections from inside the container.
+External connections (e.g., from your browser or tools on your host system) would fail, even if the container's port is exposed.
+
+and
+
+docker run -d -p 5000:5000 my-flask-app
+
+Flask, by default, listens on port 5000 inside the container.
+
+-p <host-port>:<container-port>
+<host-port> (5000 in this case): The port on your host machine that will be used to access the application running inside the container.
+<container-port> (5000 in this case): The port inside the container where the application is listening.
+
+//
+
+
+
 
   /your-flask-app
 │
