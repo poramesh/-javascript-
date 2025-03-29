@@ -745,7 +745,6 @@ Result: This creates a new table named EmptyEmployees with the same schema as th
 
 
 INSERT INTO
-
 The INSERT INTO SELECT statement allows you to take existing data from one table (the source table) and insert it into another table (the target table).
 
 The INSERT INTO SELECT statement adds new records to the target table but does not affect the existing records.
@@ -760,7 +759,6 @@ WHERE condition;
 
 
 Example
-
 Let’s consider two tables: Employees and ArchivedEmployees. We want to move employees who have left the 
 company from the Employees table to the ArchivedEmployees table.
 
@@ -793,8 +791,6 @@ SELECT SupplierName, City, Country FROM Suppliers;
 
 
 The SQL CASE Expression
-
-
 The CASE expression goes through conditions and returns a value when the first condition is met (like an if-then-else statement). So,
 once a condition is true, it will stop reading and return the result. If no conditions are true, it returns the value in the ELSE clause.
 
@@ -827,7 +823,6 @@ END);
 
 
 SQL Null Handling Functions: IFNULL(), ISNULL(), COALESCE(), and NVL()
-
 These functions are used in SQL to handle NULL values and return alternative values when expressions are NULL. Here's a brief overview with an example using a "Products" table.
 
 Example Products Table
@@ -838,26 +833,592 @@ P_Id	ProductName	UnitPrice	UnitsInStock	UnitsOnOrder
 
 
 When calculating the total value of stock (using the formula UnitPrice * (UnitsInStock + UnitsOnOrder)), a NULL value in the "UnitsOnOrder" column will result in a NULL total.
-
 Solutions
 MySQL: Using IFNULL():
 
 In the expression IFNULL(UnitsOnOrder, 0), the 0 serves as the alternative value that will be returned if UnitsOnOrder is NULL
-
 SELECT ProductName, UnitPrice * (UnitsInStock + IFNULL(UnitsOnOrder, 0)) AS TotalValue
 FROM Products;
 
 Using COALESCE():
-
 SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0)) AS TotalValue
 FROM Products;
 
 SQL Server: Using ISNULL():
-
-
 SELECT ProductName, UnitPrice * (UnitsInStock + ISNULL(UnitsOnOrder, 0)) AS TotalValue
 FROM Products;
 
 Using COALESCE():
 SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0)) AS TotalValue
 FROM Products;
+
+
+Single line comments start with --.
+Any text between -- and the end of the line will be ignored (will not be executed).
+The following example uses a single-line comment as an explanation:
+
+Example:
+-- Select all:
+SELECT * FROM Customers;
+eg: SELECT * FROM Customers -- WHERE City='Berlin';
+
+
+Multi-line comments start with /* and end with */.
+
+Any text between /* and */ will be ignored.
+The following example uses a multi-line comment as an explanation:
+
+Example
+/*Select all the columns
+of all the records
+in the Customers table:*/
+SELECT * FROM Customers;
+
+
+
+MySQL LOGICAL OPERATORS:
+
+Operator	Description	Example
+ALL	      TRUE if all of the subquery values meet the condition	
+AND	      TRUE if all the conditions separated by AND is TRUE	
+ANY	      TRUE if any of the subquery values meet the condition	
+BETWEEN	  TRUE if the operand is within the range of comparisons	
+EXISTS	  TRUE if the subquery returns one or more records	
+IN	      TRUE if the operand is equal to one of a list of expressions	
+LIKE	    TRUE if the operand matches a pattern	
+NOT	      Displays a record if the condition(s) is NOT TRUE	
+OR	      TRUE if any of the conditions separated by OR is TRUE	
+SOME	    TRUE if any of the subquery values meet the condition	
+
+
+**************************
+
+
+The MySQL CREATE DATABASE Statement
+The CREATE DATABASE statement is used to create a new SQL database.
+
+Syntax: CREATE DATABASE databasename;
+eg: CREATE DATABASE testDB;
+
+Tip: Make sure you have admin privilege before creating any database. Once a database is created, you can check it 
+in the list of databases with the following SQL command: SHOW DATABASES;
+
+
+The MySQL DROP DATABASE Statement
+The DROP DATABASE statement is used to drop an existing SQL database.
+
+Syntax: DROP DATABASE databasename;
+eg: DROP DATABASE testDB;
+
+
+The MySQL CREATE TABLE Statement
+The CREATE TABLE statement is used to create a new table in a database.
+
+Syntax: CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+   ....
+);
+eg: CREATE TABLE Persons (
+    PersonID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Address varchar(255),
+    City varchar(255)
+);
+The column parameters specify the names of the columns of the table.
+The datatype parameter specifies the type of data the column can hold (e.g. varchar, integer, date, etc.).
+
+
+Create Table Using Another Table
+A copy of an existing table can also be created using CREATE TABLE.
+
+The new table gets the same column definitions. All columns or specific columns can be selected.
+If you create a new table using an existing table, the new table will be filled with the existing values from the old table.
+
+Syntax: CREATE TABLE new_table_name AS
+    SELECT column1, column2,...
+    FROM existing_table_name
+    WHERE ....;
+The following SQL creates a new table called "TestTables" (which is a copy of the "Customers" table): 
+eg: CREATE TABLE TestTable AS
+SELECT customername, contactname
+FROM customers;
+
+
+The MySQL DROP TABLE Statement
+The DROP TABLE statement is used to drop an existing table in a database.
+Syntax: DROP TABLE table_name;
+eg: DROP TABLE Shippers;
+
+
+MySQL TRUNCATE TABLE
+The TRUNCATE TABLE statement is used to delete the data inside a table, but not the table itself.
+Syntax: 
+TRUNCATE TABLE table_name;
+
+
+MySQL ALTER TABLE Statement
+The ALTER TABLE statement is used to add, delete, or modify columns in an existing table.
+The ALTER TABLE statement is also used to add and drop various constraints on an existing table.
+
+To add a column in a table, use the following syntax:
+ALTER TABLE table_name
+ADD column_name datatype;
+The following SQL adds an "Email" column to the "Customers" table:
+Example: ALTER TABLE Customers
+ADD Email varchar(255);
+
+
+ALTER TABLE - DROP COLUMN
+To delete a column in a table, use the following syntax (notice that some database systems don't allow deleting a column):
+Syntax: ALTER TABLE table_name
+DROP COLUMN column_name;
+The following SQL deletes the "Email" column from the "Customers" table:
+Example: ALTER TABLE Customers
+DROP COLUMN Email;
+
+
+ALTER TABLE - MODIFY COLUMN
+To change the data type of a column in a table, use the following syntax:
+Sytax: ALTER TABLE table_name
+MODIFY COLUMN column_name datatype;
+eg: ALTER TABLE Persons
+MODIFY  COLUMN DateOfBirth YEAR;
+
+
+Create Constraints
+Constraints can be specified when the table is created with the CREATE TABLE statement, or after the table is created with the ALTER TABLE statement.
+
+SQL constraints are used to specify rules for the data in a table.
+Constraints are used to limit the type of data that can go into a table. This ensures the accuracy and reliability 
+of the data in the table. If there is any violation between the constraint and the data action, the action is aborted.
+Constraints can be column level or table level. Column level constraints apply to a column, and table level constraints apply to the whole table.
+
+The following constraints are commonly used in SQL:
+NOT NULL - Ensures that a column cannot have a NULL value
+UNIQUE - Ensures that all values in a column are different
+PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Uniquely identifies each row in a table
+FOREIGN KEY - Prevents actions that would destroy links between tables
+CHECK - Ensures that the values in a column satisfies a specific condition
+DEFAULT - Sets a default value for a column if no value is specified
+CREATE INDEX - Used to create and retrieve data from the database very quickly
+
+
+
+MySQL NOT NULL Constraint
+By default, a column can hold NULL values.
+The NOT NULL constraint enforces a column to NOT accept NULL values.
+This enforces a field to always contain a value, which means that you cannot insert a new record, or
+update a record without adding a value to this field.
+
+Ex: CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255) NOT NULL,
+    Age int
+);
+
+NOT NULL on ALTER TABLE
+To create a NOT NULL constraint on the "Age" column when the "Persons" table is already created, use the following SQL:
+Example
+ALTER TABLE Persons
+MODIFY Age int NOT NULL;
+
+
+MySQL UNIQUE Constraint
+The UNIQUE constraint ensures that all values in a column are different.
+Both the UNIQUE and PRIMARY KEY constraints provide a guarantee for uniqueness for a column or set of columns.
+A PRIMARY KEY constraint automatically has a UNIQUE constraint.
+****However, you can have many UNIQUE constraints per table, but only one PRIMARY KEY constraint per table.***
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    UNIQUE (ID)
+);
+
+To name a UNIQUE constraint, and to define a UNIQUE constraint on multiple columns, use the following SQL syntax:
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT UC_Person UNIQUE (ID,LastName)
+);
+
+Uses CONSTRAINT UC_Person UNIQUE (ID, LastName), where UC_Person is the constraint name.
+Ensures that each (ID, LastName) combination is unique.
+You explicitly name the constraint (UC_Person), making it easier to reference in error messages or when modifying the table later.
+
+(or)
+If you need a combination of columns to be unique, you can use a composite unique constraint.
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    ProductID INT,
+    OrderDate DATE,
+    UNIQUE (CustomerID, ProductID) -- Ensures no duplicate product orders per customer
+);
+
+Defines a composite unique constraint on (CustomerID, ProductID), ensuring no customer orders the same product more than once.
+Unlike the first example, this constraint is unnamed, meaning the database will automatically generate a constraint name.
+Functionally, it works the same as the first example, but you won’t have a custom constraint name like UC_Person.
+
+
+Adding a Unique Constraint to an Existing Table
+If you forgot to add a unique constraint during table creation, you can add it later.
+ALTER TABLE Employees
+ADD CONSTRAINT UQ_Employees_Email UNIQUE (Email);
+
+ALTER TABLE Persons
+ADD UNIQUE (ID);
+
+DROP a UNIQUE Constraint
+ALTER TABLE Persons
+DROP INDEX UC_Person;
+
+
+MySQL PRIMARY KEY Constraint
+The PRIMARY KEY constraint uniquely identifies each record in a table.
+Primary keys must contain UNIQUE values, and cannot contain NULL values.
+A table can have only ONE primary key; and in the table, this primary key can consist of single or multiple columns (fields).
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (ID)
+);
+
+To allow naming of a PRIMARY KEY constraint, and for defining a PRIMARY KEY constraint on multiple columns, use the following SQL syntax:
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT PK_Person PRIMARY KEY (ID,LastName)
+);
+
+PRIMARY KEY on ALTER TABLE
+ex:ALTER TABLE Persons
+ADD PRIMARY KEY (ID);
+ex:ALTER TABLE Persons
+ADD CONSTRAINT PK_Person PRIMARY KEY (ID,LastName);
+
+DROP a PRIMARY KEY Constraint
+ALTER TABLE Persons
+DROP PRIMARY KEY;
+
+
+BOTH COMPSOTE PK AND UNIQUE DOES THE SAME THINGY, ITS JUST IT ALLOWS NULL IN UNIQUE.
+Use Composite PRIMARY KEY when:
+The columns together define the row uniquely.
+You need to enforce strict non-nullable uniqueness.
+Example: (OrderID, ProductID), (StudentID, CourseID), (MatchID, PlayerID).
+
+Use Composite UNIQUE Constraint when:
+You need to ensure uniqueness but allow NULLs.
+It's not the primary way of identifying records.
+Example: (DepartmentID, Email), (Country, PhoneNumber), (Username, WebsiteID).
+
+
+
+
+
+MySQL FOREIGN KEY Constraint
+The FOREIGN KEY constraint is used to prevent actions that would destroy links between tables.
+A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table.
+The table with the foreign key is called the child table, and the table with the primary key is called the referenced or parent table.
+
+Look at the following two tables:
+Persons Table
+PersonID	LastName	FirstName	Age
+1	Hansen	Ola	30
+2	Svendson	Tove	23
+3	Pettersen	Kari	20
+
+Orders Table
+OrderID	OrderNumber	PersonID
+1	77895	3
+2	44678	3
+3	22456	2
+4	24562	1
+
+Notice that the "PersonID" column in the "Orders" table points to the "PersonID" column in the "Persons" table.
+The "PersonID" column in the "Persons" table is the PRIMARY KEY in the "Persons" table.
+The "PersonID" column in the "Orders" table is a FOREIGN KEY in the "Orders" table.
+The FOREIGN KEY constraint prevents invalid data from being inserted into the foreign key column, because
+it has to be one of the values contained in the parent table.
+
+
+FOREIGN KEY on CREATE TABLE
+The following SQL creates a FOREIGN KEY on the "PersonID" column when the "Orders" table is created:
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+To allow naming of a FOREIGN KEY constraint, and for defining a FOREIGN KEY constraint on multiple columns, use the following SQL syntax:
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    CONSTRAINT FK_PersonOrder FOREIGN KEY (PersonID)
+    REFERENCES Persons(PersonID)
+);
+
+
+FOREIGN KEY on ALTER TABLE
+To create a FOREIGN KEY constraint on the "PersonID" column when the "Orders" table is already created, use the following SQL:
+ALTER TABLE Orders
+ADD FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
+
+To allow naming of a FOREIGN KEY constraint, and for defining a FOREIGN KEY constraint on multiple columns, use the following SQL syntax:
+ALTER TABLE Orders
+ADD CONSTRAINT FK_PersonOrder
+FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
+
+
+DROP a FOREIGN KEY Constraint
+To drop a FOREIGN KEY constraint, use the following SQL:
+ALTER TABLE Orders
+DROP FOREIGN KEY FK_PersonOrder;
+
+
+
+MySQL CHECK Constraint
+The CHECK constraint is used to limit the value range that can be placed in a column.
+If you define a CHECK constraint on a column it will allow only certain values for this column.
+If you define a CHECK constraint on a table it can limit the values in certain columns based on values in other columns in the row.
+
+CHECK on CREATE TABLE
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CHECK (Age>=18)
+);
+
+To allow naming of a CHECK constraint, and for defining a CHECK constraint on multiple columns, use the following SQL syntax:
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255),
+    CONSTRAINT CHK_Person CHECK (Age>=18 AND City='Sandnes')
+);
+
+CHECK on ALTER TABLE
+To create a CHECK constraint on the "Age" column when the table is already created, use the following SQL:
+ALTER TABLE Persons
+ADD CHECK (Age>=18);
+
+To allow naming of a CHECK constraint, and for defining a CHECK constraint on multiple columns, use the following SQL syntax:
+ALTER TABLE Persons
+ADD CONSTRAINT CHK_PersonAge CHECK (Age>=18 AND City='Sandnes');
+
+DROP a CHECK Constraint
+To drop a CHECK constraint, use the following SQL:
+ALTER TABLE Persons
+DROP CHECK CHK_PersonAge;
+
+
+
+MySQL DEFAULT Constraint
+The DEFAULT constraint is used to set a default value for a column.
+The default value will be added to all new records, if no other value is specified.
+
+DEFAULT on CREATE TABLE
+The following SQL sets a DEFAULT value for the "City" column when the "Persons" table is created:
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'Sandnes'
+);
+
+The DEFAULT constraint can also be used to insert system values, by using functions like CURRENT_DATE():
+CREATE TABLE Orders (
+    ID int NOT NULL,
+    OrderNumber int NOT NULL,
+    OrderDate date DEFAULT CURRENT_DATE()
+);
+
+DEFAULT on ALTER TABLE
+To create a DEFAULT constraint on the "City" column when the table is already created, use the following SQL:
+ALTER TABLE Persons
+ALTER City SET DEFAULT 'Sandnes';
+
+DROP a DEFAULT Constraint
+To drop a DEFAULT constraint, use the following SQL:
+ALTER TABLE Persons
+ALTER City DROP DEFAULT;
+
+
+MySQL CREATE INDEX Statement
+The CREATE INDEX statement is used to create indexes in tables.
+Indexes are used to retrieve data from the database more quickly than otherwise. The users
+cannot see the indexes, they are just used to speed up searches/queries.
+Note: Updating a table with indexes takes more time than updating a table without (because the indexes also need an update).
+So, only create indexes on columns that will be frequently searched against.
+
+
+CREATE INDEX Syntax
+Creates an index on a table. Duplicate values are allowed:
+CREATE INDEX index_name
+ON table_name (column1, column2, ...);
+
+CREATE UNIQUE INDEX Syntax
+Creates a unique index on a table. Duplicate values are not allowed:
+CREATE UNIQUE INDEX index_name
+ON table_name (column1, column2, ...);
+
+MySQL CREATE INDEX Example
+The SQL statement below creates an index named "idx_lastname" on the "LastName" column in the "Persons" table:
+CREATE INDEX idx_lastname
+ON Persons (LastName);
+
+If you want to create an index on a combination of columns, you can list the column names within the parentheses, separated by commas:
+CREATE INDEX idx_pname
+ON Persons (LastName, FirstName);
+
+
+DROP INDEX Statement
+The DROP INDEX statement is used to delete an index in a table.
+ALTER TABLE table_name
+DROP INDEX index_name;
+
+EX:
+
+Example: Creating an Index on a Table
+Let’s say you have a table called Employees with the following structure:
+
+EmployeeID	FirstName	LastName	Department	Salary
+1	John	Doe	HR	50000
+2	Jane	Smith	IT	60000
+3	Michael	Johnson	IT	55000
+4	Emma	Williams	Marketing	45000
+5	Daniel	Brown	HR	52000
+
+Creating an Index on Department and Salary
+CREATE INDEX idx_department_salary
+ON Employees (Department, Salary);
+
+What Does This Do?
+Creates an index called idx_department_salary on the Employees table.
+The index is created on the Department and Salary columns.
+This index will speed up queries that filter on both Department and Salary columns.
+
+How It Helps?
+When you run a query like:
+SELECT * FROM Employees
+WHERE Department = 'IT' AND Salary > 50000;
+The database will use the index idx_department_salary to quickly find the rows that match both the Department and Salary conditions instead of scanning the entire table.
+
+
+MySQL AUTO_INCREMENT Keyword
+MySQL uses the AUTO_INCREMENT keyword to perform an auto-increment feature.
+By default, the starting value for AUTO_INCREMENT is 1, and it will increment by 1 for each new record.
+The following SQL statement defines the "Personid" column to be an auto-increment primary key field in the "Persons" table:
+
+CREATE TABLE Persons (
+    Personid int NOT NULL AUTO_INCREMENT,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (Personid)
+);
+
+To let the AUTO_INCREMENT sequence start with another value, use the following SQL statement:
+ALTER TABLE Persons AUTO_INCREMENT=100;
+When we insert a new record into the "Persons" table, we do NOT have to specify a value for
+the "Personid" column (a unique value will be added automatically):
+
+INSERT INTO Persons (FirstName,LastName)
+VALUES ('Lars','Monsen');
+
+
+
+MySQL Date Data Types
+MySQL comes with the following data types for storing a date or a date/time value in the database:
+DATE - format YYYY-MM-DD
+DATETIME - format: YYYY-MM-DD HH:MI:SS
+TIMESTAMP - format: YYYY-MM-DD HH:MI:SS
+YEAR - format YYYY or YY
+Note: The date data type are set for a column when you create a new table in your database!
+
+Working with Dates
+Look at the following table:
+
+OrderId	ProductName	OrderDate
+1	Geitost	2008-11-11
+2	Camembert Pierrot	2008-11-09
+3	Mozzarella di Giovanni	2008-11-11
+4	Mascarpone Fabioli	2008-10-29
+
+Now we want to select the records with an OrderDate of "2008-11-11" from the table above.
+
+We use the following SELECT statement:
+SELECT * FROM Orders WHERE OrderDate='2008-11-11'
+
+
+
+View
+A view is essentially a virtual table. It is not a physical table but rather a stored query that you can treat 
+like a table. When you query a view, the SQL engine runs the underlying query and presents the result as if it were a table.
+
+Fields in a view can come from one or more real tables.
+Views can also include SQL functions and allow complex logic in a simpler, reusable form.
+
+Example 1: Create a View for Customers from Brazil
+Let’s create a view that shows customers only from Brazil:
+
+CREATE VIEW Brazil_Customers AS
+SELECT CustomerName, ContactName
+FROM Customers
+WHERE Country = 'Brazil';
+Here, we created a view called Brazil_Customers.
+
+It includes the columns CustomerName and ContactName from the Customers table.
+The view will only include customers where the Country is Brazil.
+Now, whenever you need to see Brazilian customers, you can query the view instead of repeatedly writing the SELECT query:
+
+SELECT * FROM Brazil_Customers;
+
+
+The following SQL creates a view that selects every product in the "Products" table with a price higher than the average price:
+
+Example: CREATE VIEW [Products Above Average Price] AS
+SELECT ProductName, Price
+FROM Products
+WHERE Price > (SELECT AVG(Price) FROM Products);
+
+We can query the view above as follows: Example:
+SELECT * FROM [Products Above Average Price];
+
+
+CREATE OR REPLACE VIEW Syntax
+The following SQL adds the "City" column to the "Brazil Customers" view:
+Example: CREATE OR REPLACE VIEW [Brazil Customers] AS
+SELECT CustomerName, ContactName, City
+FROM Customers
+WHERE Country = 'Brazil';
+
+MySQL Dropping a View
+A view is deleted with the DROP VIEW statement.
+DROP VIEW view_name;
+
+The following SQL drops the "Brazil Customers" view:
+DROP VIEW [Brazil Customers];
