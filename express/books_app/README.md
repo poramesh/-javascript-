@@ -3,12 +3,13 @@ A simple web application built with Node.js, Express.js, and MongoDB that allows
 
 ## Features
 
-- Add new books with title, author, and description
-- View a list of all books
-- Edit existing book details
-- Delete books from the collection
-- MongoDB for data persistence
-- EJS for server-side rendering
+- Create, read, update, and delete books
+- Create, read, update, and delete authors
+- Associate each book with an author (a book cannot be created without an author)
+- Upload book cover images
+- Filter/search books using regular expressions
+- EJS templates for dynamic server-side views
+- MongoDB with Mongoose for data storage
 
 ## Tech Stack
 
