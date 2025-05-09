@@ -27,6 +27,7 @@ http://localhost:3000/ or the port specified.
 
 ## Folder Structure
 
+```
 books_app/
 ├── public/         # Static files (CSS, JS, images)
 ├── routes/         # Express routes
@@ -34,3 +35,4 @@ books_app/
 ├── models/         # Mongoose schemas
 ├── app.js          # Main server file
 ├── package.json    # Project metadata and dependencies
+```
