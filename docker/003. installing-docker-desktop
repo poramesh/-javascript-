@@ -113,6 +113,41 @@ sudo apt update
 
 
 
+--------------------------------
+
+
+Why is it showing poramesh@pooh:~$?
+
+The prompt follows this structure:
+<username>@<hostname>:<current-directory>$
+So in your case:
+poramesh = your Linux username (probably created during the Ubuntu WSL setup)
+pooh = your machine's hostname in WSL (automatically generated or set by you)
+~ = your home directory (short for /home/poramesh)
+$ = standard user prompt (vs # for root)
+
+If this isn’t your desired username, you can:
+
+Create a new user with sudo adduser <newname>, then
+
+Switch default user using this command in PowerShell:
+
+wsl -d Ubuntu -u <newname>
+Or set it permanently in /etc/wsl.conf.
+
+
+
+
+look you can switch to root from ubuntu terminal:
+
+poramesh@pooh:/$cd /
+poramesh@pooh:/$ /
+-bash: /: Is a directory
+poramesh@pooh:/$ ls
+Docker             boot  home  lib.usr-is-merged  media  proc  sbin                srv  usr
+bin                dev   init  lib64              mnt    root  sbin.usr-is-merged  sys  var
+bin.usr-is-merged  etc   lib   lost+found         opt    run   snap 
+
 _______________________________________
 why are we doing all this?
 
